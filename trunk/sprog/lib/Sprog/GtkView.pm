@@ -23,6 +23,7 @@ use Gtk2::SimpleMenu;
 use Sprog::GtkView::Chrome;
 use Sprog::GtkView::Toolbar;
 use Sprog::GtkView::AlertDialog;
+use Sprog::GtkView::AboutDialog;
 use Sprog::GtkGearView;
 
 
@@ -212,6 +213,15 @@ sub add_menubar {
 #        },
       ],
     },
+    _Help  => {
+      item_type  => '<Branch>',
+      children => [
+        _About => {
+          callback        => sub { $app->help_about },
+          callback_action => $action++,
+        },
+      ],
+    },
   ];
 
   my $menu = Gtk2::SimpleMenu->new(menu_tree => $menu_tree);
@@ -394,6 +404,13 @@ sub alert {
   Sprog::GtkView::AlertDialog->invoke($self->app_win, $message, $detail);
 
   return;
+}
+
+
+sub help_about {
+  my($self, $data) = @_;
+
+  Sprog::GtkView::AboutDialog->invoke($self->app_win, $data);
 }
 
 

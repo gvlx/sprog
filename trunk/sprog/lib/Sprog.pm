@@ -153,6 +153,14 @@ sub delete_gear_by_id {
   $self->view->delete_gear_view_by_id($id);
 }
 
+sub help_about {
+  shift->view->help_about({
+    app_detail       => "Sprog $VERSION",
+    copyright        => '(C) 2004-2005 Grant McLean <grantm@cpan.org>',
+    project_url      => 'http://sprog.sourceforge.net/',
+  });
+}
+
 =head1 NAME
 
 Sprog - GUI with a Perl centre
