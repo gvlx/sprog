@@ -11,6 +11,7 @@ __PACKAGE__->mk_accessors(qw(
   app
   gladexml
   gearlist_model
+  drag_index
 ));
 
 use Scalar::Util qw(weaken);
@@ -20,48 +21,22 @@ use constant COL_TYPE => 0;
 use constant COL_GEAR_INDEX => 0;
 use constant COL_GEAR_CLASS => 1;
 
-my $cog_pixbuf = Gtk2::Gdk::Pixbuf->new_from_xpm_data(
-  '47 24 3 1',
-  '  c None',
-  '# c #000000',
-  '. c #C9C9C9',
-  '                                               ',
-  '                                               ',
-  '                                               ',
-  '    #######         #######################    ',
-  '   ########         ########################   ',
-  '  ###....##         ##....................###  ',
-  '  ##.....##         ##.....................##  ',
-  '  ##.....#############.....................##  ',
-  '  ##.....#############.....................##  ',
-  '  ##.......................................##  ',
-  '  ##.......................................##  ',
-  '  ##.......................................##  ',
-  '  ##.......................................##  ',
-  '  ##.......................................##  ',
-  '  ###.....................................###  ',
-  '   ########.........########################   ',
-  '    #######.........#######################    ',
-  '         ##.........##                         ',
-  '         ##.........##                         ',
-  '         #############                         ',
-  '         #############                         ',
-  '                                               ',
-  '                                               ',
-  '                                               '
-);
-
+use constant ALPHA_THRESHOLD => 127;
 
 my $palette = undef;
 
+my $mini_icons;
+
 my @connector_types = (
-  'Any',
-  'None',
-  'Pipe',
-  'Record',
+  'Any'    => '.',
+  'None'   => '_',
+  'Pipe'   => 'P',
+  'Record' => 'R',
 );
 
-my @gear_classes = (
+my %type_map = @connector_types;
+
+my @gear_classes = (   # Hardcoded for now - better idea coming soon
   {
     class    => 'Sprog::Gear::ReadFile',
     title    => 'Read File',
@@ -82,7 +57,7 @@ my @gear_classes = (
   },
   {
     class => 'Sprog::Gear::FindReplace',
-    title    => 'Find/Replace',
+    title    => 'Find and Replace',
     type_in  => 'P',
     type_out => 'P',
   },
@@ -119,6 +94,8 @@ sub new {
 
   $palette = bless { @_ }, $class;
   $palette->{app} && weaken($palette->{app});
+
+  $mini_icons = Sprog::GtkView::Chrome::mini_icons();
 
   return $palette;
 }
@@ -187,9 +164,9 @@ sub initialise_models {
       or return $self->app->alert("input_menu combo has no storage");
 
     $model->clear;
-    foreach my $type (@connector_types) {
+    for(my $i = 0; $i < @connector_types; $i+=2) {
       my $iter = $model->append;
-      $model->set($iter, COL_TYPE, $type);
+      $model->set($iter, COL_TYPE, $connector_types[$i]);
     }
     $menu->set_active(0);
   }
@@ -222,12 +199,7 @@ sub initialise_models {
   );
   $gearlist->append_column($column);
 
-  $model->clear;
-  foreach my $i (0..$#gear_classes) {
-    my $iter = $model->append;
-    $model->set($iter, COL_GEAR_INDEX, $i);
-    $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]->{title});
-  }
+  $self->apply_filter;
 
   return 1;
 }
@@ -236,8 +208,10 @@ sub initialise_models {
 sub set_item_pixbuf {
   my($self, $tree_column, $cell, $model, $iter) = @_;
 
-  my($index) = $model->get($iter, COL_GEAR_INDEX);
-  $cell->set(pixbuf => $cog_pixbuf);
+  my($i) = $model->get($iter, COL_GEAR_INDEX);
+  my $icon_type = $gear_classes[$i]->{type_in} . $gear_classes[$i]->{type_out};
+  my $pixbuf = $mini_icons->{$icon_type} || $mini_icons->{PP};
+  $cell->set(pixbuf => $pixbuf);
 }
 
 
@@ -250,7 +224,7 @@ sub connect_signals {
   }
 
   my $button = $gladexml->get_widget('search');
-  $button->signal_connect(clicked => sub { $self->apply_filter(); });
+  $button->signal_connect(clicked => sub { $self->reset_filter(); }); #TODO
 
   $button = $gladexml->get_widget('reset');
   $button->signal_connect(clicked => sub { $self->reset_filter(); });
@@ -260,22 +234,43 @@ sub connect_signals {
     ['button1_mask'], ['copy'], Sprog::GtkView::drag_targets()
   );
 
-  my $colormap = $window->get_colormap;
-  my($drag_icon, $drag_mask) = Sprog::GtkView::Chrome::drag_icon($colormap);
-  $gearlist->drag_source_set_icon($colormap,  $drag_icon, $drag_mask);
-
-#  $gearlist->signal_connect(drag_begin    => \&src_drag_begin);
   $gearlist->signal_connect(
-    drag_data_get => sub { $self->drag_data_get(@_); }
+    cursor_changed => sub { $self->select_gear(@_);   }
+  );
+  $gearlist->signal_connect(
+    drag_begin     => sub { $self->drag_begin(@_);    }
+  );
+  $gearlist->signal_connect(
+    drag_data_get  => sub { $self->drag_data_get(@_); }
   );
 
 }
 
 
 sub apply_filter {
-  my($self, $menu) = @_;
+  my($self) = @_;
 
-  $self->app->not_implemented;
+  $self->drag_index(undef);
+
+  my $model = $self->gearlist_model;
+
+  my $gladexml = $self->gladexml;
+
+  my $menu_in = $gladexml->get_widget('input_menu');
+  my $type_in = $connector_types[$menu_in->get_active * 2 + 1];
+
+  my $menu_out = $gladexml->get_widget('output_menu');
+  my $type_out = $connector_types[$menu_out->get_active * 2 + 1];
+
+  my $types = qr/^$type_in$type_out/;
+  my @matches = grep { "$gear_classes[$_]->{type_in}$gear_classes[$_]->{type_out}" =~ $types } (0..$#gear_classes);
+
+  $model->clear;
+  foreach my $i (@matches) {
+    my $iter = $model->append;
+    $model->set($iter, COL_GEAR_INDEX, $i);
+    $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]->{title});
+  }
 }
 
 
@@ -286,13 +281,38 @@ sub reset_filter {
 }
 
 
-sub drag_data_get {
-  my($self, $gearlist, $context, $data, $info, $time) = @_;
+sub select_gear {
+  my($self, $gearlist) = @_;
 
   my $selection = $gearlist->get_selection  || return;
   my($path) = $selection->get_selected_rows || return;
-  my $index = $path->to_string;
-  my $gear_class = $gear_classes[$index]->{class};
+  $self->drag_index($path->to_string);
+}
+
+
+sub drag_begin {
+  my($self, $gearlist, $context) = @_;
+
+  my $i = $self->drag_index;
+  return unless defined($i);
+
+  my $icon_type = $gear_classes[$i]->{type_in} . $gear_classes[$i]->{type_out};
+  my $pixbuf = $mini_icons->{$icon_type} || $mini_icons->{PP};
+  my($drag_icon, $drag_mask) = $pixbuf->render_pixmap_and_mask(ALPHA_THRESHOLD);
+
+  my $colormap = $self->window->get_colormap;
+
+  $gearlist->drag_source_set_icon($colormap,  $drag_icon, $drag_mask);
+}
+
+
+sub drag_data_get {
+  my($self, $gearlist, $context, $data, $info, $time) = @_;
+
+  my $i = $self->drag_index;
+  return unless defined($i);
+
+  my $gear_class = $gear_classes[$i]->{class};
   $data->set($data->target, 8, $gear_class);
 }
 
