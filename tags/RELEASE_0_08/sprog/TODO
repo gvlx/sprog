@@ -1,0 +1,29 @@
+* Fix Drop Coordinates when palette is visible
+* POD viewer for reading gear documentation
+* Define gear properties (for browsing) in POD?
+* Cancel waiting events on stop
+* Fix detach resulting from click-without-drag
+* Split workspace/canvas out into its own class
+* Implement a console window (capture warnings, STDERR?, exceptions)
+* Allow output window to 'swallow' properties dialogs for other gears (eg: text in, pattern match etc)
+* Save view (and other) preferences - in 'Correct' way for each OS
+* Make floating palette an option
+* Clean up show/hide palette code to reduce coupling
+* Warn about unsaved changes (before load, new or exit)
+* Implement SIG_PIPE analog
+* Perl gear - unbind escape key from cancel (for vi users)
+* TextWindow - bind escape key to hide function
+* File browse - remember last directory
+* Implement ApacheCustomLogParse
+* Highlight selected gear
+* Drag and drop handling for file top gear
+* Track 'Head' gear on add/delete
+* Work out why replacement syntax error causes exit
+* File top gear: option to strip newlines
+* File top gear: newline: LF CRLF CR Auto
+* Command output gear (eg: gnuplot?)
+* Shrink the alert dialog after hiding details
+* Determine if calling ->destroy on a Gnome2::Canvas::Group is kocher
+* Cache the GearView paths
+
+* Register with www.gnomefiles.org GTK+ Software Repository

@@ -1,0 +1,103 @@
+=head1 NAME
+
+Sprog internals - notes for developers
+
+=head1 INTRODUCTION
+
+If you're intending to hack on Sprog, these notes may help ...
+
+The application uses an MVC(ish) architecture in which the Model is implemented
+in L<Sprog::Machine>, the View is L<Sprog::GtkView> and the two are tied
+together by the L<Sprog> class itself.
+
+A Sprog 'machine' is comprised of 'gears'.
+
+The L<Sprog::Machine> class implements the logic for connecting the gears as
+well as a simple event-driven scheduler.
+
+Gears inherit from L<Sprog::Gear.>  A gear passes data downstream to the next
+gear by sending a message:
+
+  $self->msg_out(line => $string);
+
+This example places a message of type 'line', with a single string argument in
+the next gear's input queue.  The scheduler would deliver the example message
+by calling the C<line()> method and passing it the string argument.  If the
+gear has no line argument, then the message is simply delivered to the next
+gear's input queue.
+
+=head1 EXAMPLE GEARS
+
+A simple gear to look at for a start is L<Sprog::Gear::UpperCase> which simply
+takes every line of input and converts it to upper case before passing it to
+the next gear.
+
+A more elaborate example is L<Sprog::Gear::Grep> which passes through any lines
+which match a specified pattern.  This gear has two configurable options: the
+pattern to match and a boolean flag controlling case-sensitivity.  The
+properties dialog (accessed via the right click menu) is handled automatically
+by the L<Sprog::Gear> base class.
+
+=head1 PROPERTIES DIALOGS
+
+A gear class would not normally handle GUI interactions itself.  If you really
+need to, you can implement a gear-view class which inherits from
+L<Sprog::GtkGearView> and implements your gear's user interface.  Your gear
+class would override the C<view_subclass()> method and have it return the name
+of your view class.  (See L<Sprog::Gear::TextWindow> and
+L<Sprog::GtkGearView::TextWindow> for example).
+
+If you only need a GUI for simple properties setting, then you can use the
+properties auto-dialog (PAD) framework your class will inherit from
+L<Sprog::Gear>.
+
+First, build your dialog box using the Glade GUI builder and save it to an XML
+.glade file.  Then paste the XML into your gear class file as the string
+returned by the C<dialog_xml()> method (you can just return the filename while
+you're trying things out).  That's all you need to do to have your dialog
+appear.
+
+The (PAD) framework uses the widget names in your dialog definition to connect
+widgets to properties in your class.  For example, if you assign the name
+'PAD.filename' to a GtkEntry widget, then when you press 'OK' to save the
+values in the dialog, the PAD framework will take the text contents from the
+widget and save pass them to the C<filename()> accessor method of your class.
+Only widgets named with the 'PAD.' prefix get this special treatment.
+
+The PAD framework currently only supports GtkEntry and GtkCheckButton widgets
+directly.  It also supports a GtkButton widget with 'browse_to_entry' behaviour
+- pressing the button pops up a file chooser, when a file is selected the
+filename is written to the named text entry (which in turn is associated with a
+property).  Support for more widget types and more reusable behaviours will be
+added as the need arises.
+
+The PAD framework is implemented in the L<Sprog::GtkGearView> and
+L<Sprog::GtkAutoDialog> classes.
+
+=head1 SCHEDULER
+
+The L<Sprog::Machine> class implements a simple scheduler based around the Gtk
+event loop.
+
+Before a machine starts 'running', the C<prime()> method is called on each
+gear in turn.  Gears can do whatever initialisation they need in this method,
+including registering themselves as data providers (usually only the first gear would do this).
+
+The scheduler will request data from a registered data provider by calling the
+C<send_data()> method.  The provider may immediately use its C<msg_out()>
+method to place a message in the input queue of the next downstream gear.  In
+real life, it's more likely that the provider would set up a Gtk IO event
+handler, to wait for data on a filehandle and call C<msg_out()> in this
+handler.
+
+The scheduler gives priority to gears at the end (bottom) of the machine.  A
+Gtk idle handler is used to call the C<turn_once()> method on each gear that
+has messages in its input queue.  When no gears have any queued messages left,
+the scheduler 'stalls' the machine (so it's not waiting in a busy loop) and
+calls each data provider's C<send_data()> method.  If a data provider provides
+data, the machine is unstalled.
+
+If a data provider is exhausted (eg: at the end of a file), it unregisters
+itself.  When a machine has no queued messages and no registered data providers,
+its job is done and the machine stops.
+
