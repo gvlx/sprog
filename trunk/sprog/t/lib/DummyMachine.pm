@@ -23,8 +23,9 @@ sub new {
 }
 
 
-sub enable_idle_handler    { 1; }
-sub register_data_provider { 1; }
+sub enable_idle_handler      { 1; }
+sub register_data_provider   { 1; }
+sub unregister_data_provider { 1; }
 
 
 1;
