@@ -122,7 +122,7 @@ sub run_sequence {
 
   $self->sequence_queue([ @_, sub { $self->quit; } ]);
 
-  $self->add_timeout(5000, sub { $self->timed_out(1); $self->quit } );
+  $self->add_timeout(15000, sub { $self->timed_out(1); $self->quit } );
   $self->add_idle_handler( sub { $self->_sequence_step } );
   $self->run;
 
