@@ -27,7 +27,7 @@ sub new {
     parts => {},
     @_
   }, $class;
-  $self->{app} && weaken($self->{app});
+  weaken($self->{app});
   return $self;
 }
 
@@ -70,8 +70,9 @@ sub save_to_file {
 sub load_from_file {
   my($self, $filename) = @_;
 
-  my @data = $self->_read_file($filename) || return;
-  $self->_create_gears_from_file(@data);
+  my($props, $gears) = $self->_read_file($filename) or return;
+
+  $self->_create_gears_from_file($gears);
   return 1;
 }
 
@@ -85,7 +86,12 @@ sub _read_file {
   local($/) = undef;
   my $yaml = <$in>;
 
-  my $data = YAML::Load($yaml);
+  my $data = eval { YAML::Load($yaml); };
+  $@ = '';
+
+  return $self->app->alert(
+    "Error reading $filename",  "Unrecognised data format"
+  ) unless(defined($data));
 
   my($app_id, $file_format, $machine_data, $gear_data) = @$data;
 
@@ -140,7 +146,7 @@ sub add_gear {
   };
   if($@) {
     $self->app->alert("Unable to create a $gear_class object", $@);
-    undef($@);
+    $@ = '';
     return;
   }
 
@@ -259,7 +265,7 @@ sub send_data {
 }
 
 
-sub turn_one_gear {
+sub turn_gears {
   my $self = shift;
 
   return 0 unless $self->running;
@@ -280,7 +286,7 @@ sub enable_idle_handler {
   my($self) = @_;
 
   return unless $self->stalled();
-  $self->app->add_idle_handler(sub { $self->turn_one_gear });
+  $self->app->add_idle_handler(sub { $self->turn_gears });
   $self->stalled(0);
 }
 
