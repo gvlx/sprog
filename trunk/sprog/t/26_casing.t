@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 27;
 
 use File::Spec;
 
@@ -33,6 +33,11 @@ isa_ok($sink,  'TextGear', 'output gear');
 my $data = "Line One\nLine Two\n";
 my @all = $data =~ /(.*?\n)/g;
 
+ok(!$input->has_input, 'has no input');
+ok($input->has_output, 'has output');
+is($input->title, 'Text Input', 'title looks ok');
+like($input->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
+  'Glade XML looks plausible for Text Input');
 
 ok($caser->has_input, 'has input');
 ok($caser->has_output, 'has output');
