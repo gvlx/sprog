@@ -1,8 +1,10 @@
 \.bak$
 \bCVS/
 \.cvsignore$
-\.(SKIP|bak|old|swp)$
+\.(SKIP|bak|old|swp|sprog)$
+^sprog$
 ^Makefile$
 blib
 ^Sprog-
 ^TODO
+^xx$
