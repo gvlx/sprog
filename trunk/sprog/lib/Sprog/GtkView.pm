@@ -506,6 +506,8 @@ sub show_palette {
 
   $self->toolbar->set_palette_active(TRUE);
   $self->palette_win->show;
+  $self->palette->search_entry->grab_focus;
+  $self->palette->search_button->grab_default;
   $self->palette_visible(1);
 }
 
