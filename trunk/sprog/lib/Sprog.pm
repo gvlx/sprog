@@ -208,7 +208,7 @@ hurdle.  Of course if you're running Debian GNU/Linux then you'll just need to
 run:
 
   apt-get install libgtk2-perl libgnome2-canvas-perl libgtk2-gladexml-perl \
-          libclass-accessor-perl
+          libclass-accessor-perl libyaml-perl
 
 =head1 SEE ALSO
 
