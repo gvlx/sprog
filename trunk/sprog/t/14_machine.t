@@ -36,11 +36,11 @@ isa_ok($grep,   'Sprog::Gear::Grep');
 isa_ok($case,   'Sprog::Gear::UpperCase');
 isa_ok($text,   'TextGear');
 
-like($app->run_machine, qr/^You must select an input file\s+<undef>/s,
+like($app->test_run_machine, qr/^You must select an input file\s+<undef>/s,
   'correct alerts generated from unconfigured ReadFile gear');
 
 $reader->filename(File::Spec->catfile('t', 'rgb.txt'));
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 like($text->text, qr/
   #FF0000 \s RED     \s+
   #00FF00 \s GREEN   \s+
@@ -52,7 +52,7 @@ like($text->text, qr/
 
 
 $grep->pattern('FFFF');
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 like($text->text, qr/
   #FFFF00 \s YELLOW  \s+
   #00FFFF \s CYAN    \s+
@@ -87,7 +87,7 @@ ok(defined($grep), 'machine contains the grep gear');
 ok(defined($text), 'machine contains the text gear');
 
 $grep->pattern('00FF');
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 like($text->text, qr/
   #00FF00 \s GREEN   \s+
   #0000FF \s BLUE    \s+

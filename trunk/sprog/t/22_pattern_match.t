@@ -43,17 +43,17 @@ is($ref->{NEXT}, $sink->id, 'successfully got next gear id for serialising');
 
 
 $reader->filename($data_file);
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], \@all, 'All lines passed through by default');
 
 
 $grep->pattern('');
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], \@all, 'All lines passed through by default 2');
 
 
 $grep->pattern('etc');
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/syslog.conf\n",
@@ -63,7 +63,7 @@ is_deeply([ $sink->lines ], [
 
 $grep->pattern('etc');
 $grep->ignore_case(0);
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/syslog.conf\n",
@@ -73,7 +73,7 @@ is_deeply([ $sink->lines ], [
 $grep->pattern('log');
 $grep->ignore_case(1);
 $grep->invert_match(1);
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/usr/bin/cat\n",

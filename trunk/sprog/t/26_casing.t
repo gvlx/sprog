@@ -45,7 +45,7 @@ is($caser->title, 'Uppercase', 'title looks ok');
 ok($caser->no_properties, 'has no properties');
 
 $input->text($data);
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 like($sink->text, qr/LINE ONE\s+LINE TWO/s,
   "data converted to upper case successfully");
 
@@ -66,7 +66,7 @@ is($caser->title, 'Lowercase', 'title looks ok');
 ok($caser->no_properties, 'has no properties');
 
 $input->text($data);
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 
 like($sink->text, qr/line one\s+line two/s,
   "data converted to lower case successfully");

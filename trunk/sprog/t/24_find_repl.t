@@ -44,18 +44,18 @@ is($subst->replacement, '', 'default replacement is blank');
 isa_ok($subst->last, 'LineGear', 'output gear');
 
 $reader->filename($data_file);
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], \@all, 'all lines passed through by default');
 
 
 $subst->pattern(undef);
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], \@all, 'all lines passed through by default 2');
 
 
 $subst->pattern('etc');
 $subst->replacement('ETC');
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/ETC/hosts\n",
   "/ETC/syslog.conf\n",
@@ -69,7 +69,7 @@ is_deeply([ $sink->lines ], [
 
 
 $subst->ignore_case(0);
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/ETC/hosts\n",
   "/ETC/syslog.conf\n",
@@ -85,7 +85,7 @@ is_deeply([ $sink->lines ], [
 $subst->ignore_case(1);
 $subst->pattern('log');
 $subst->replacement('TRUNK');
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/sysTRUNK.conf\n",
@@ -101,7 +101,7 @@ is_deeply([ $sink->lines ], [
 $subst->global_replace(0);
 $subst->pattern('log');
 $subst->replacement('TRUNK');
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/sysTRUNK.conf\n",
@@ -116,20 +116,20 @@ is_deeply([ $sink->lines ], [
 
 $subst->pattern('log(');
 $subst->replacement('TRUNK');
-like($app->run_machine, qr{^Error setting up find/replace\s*Unmatched}s,
+like($app->test_run_machine, qr{^Error setting up find/replace\s*Unmatched}s,
   "correct alert generated when error in pattern");
 
 
 $subst->pattern('log');
 $subst->replacement('$bogus');
-like($app->run_machine, qr{^Error setting up find/replace.*bogus}s,
+like($app->test_run_machine, qr{^Error setting up find/replace.*bogus}s,
   "correct alert generated when error in pattern");
 
 
 $subst->global_replace(1);
 $subst->pattern('/bin/(.*)');
 $subst->replacement('/\U$1\E');
-is($app->run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/syslog.conf\n",

@@ -129,7 +129,7 @@ my $head = $app->machine->head_gear;
 is($head, undef, 'correct value returned from head_gear');
 
 
-like($app->run_machine, qr/^You must add an input gear\s+<undef>/s,
+like($app->test_run_machine, qr/^You must add an input gear\s+<undef>/s,
   'correct alert when running an empty machine');
 $app->alerts('');
 
@@ -142,7 +142,7 @@ my $reader = $app->machine->head_gear;
 isa_ok($reader, 'Sprog::Gear::ReadFile', 'return value from head_gear');
 
 
-like($app->run_machine, qr/^You must complete your machine with an output gear\s+<undef>/s,
+like($app->test_run_machine, qr/^You must complete your machine with an output gear\s+<undef>/s,
   'correct alert when running an incomplete machine');
 $app->alerts('');
 
@@ -156,7 +156,7 @@ $reader->next($last);
 isa_ok($reader->last, 'AcceptNothingGear', 'the last gear');
 
 
-like($app->run_machine, qr/^I will not accept input!/,
+like($app->test_run_machine, qr/^I will not accept input!/,
   'building of gear chain was successfully aborted');
 $app->alerts('');
 
@@ -168,12 +168,12 @@ ok(!$reader->next, 'removed last gear');
 
 $INC{'StopOnInput.pm'} = __FILE__;
 $last = $app->machine->add_gear('StopOnInput');
-is($app->alerts, '', 'added a another test gear to the machine');
+is($app->alerts, '', 'added another test gear to the machine');
 $app->alerts('');
 $reader->next($last);
 $reader->filename(File::Spec->catfile('t', 'rgb.txt'));
 
-like($app->run_machine, qr/^Stopped/, 'stop method seems to work');
+like($app->test_run_machine, qr/^Stopped/, 'stop method seems to work');
 $app->alerts('');
 
 unlink($test_file);
