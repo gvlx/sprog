@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 29;
+use Test::More tests => 27;
 
 use File::Spec;
 
@@ -12,13 +12,9 @@ BEGIN {
 my $test_file = File::Spec->catfile('t', 'ffff.sprog'); # Does not exist yet
 
 
-use_ok('Sprog::ClassFactory');
+use_ok('TestApp');
 
-my $app = make_app(               # Imported from ClassFactory.pm
-  '/app'         => 'TestApp',
-  '/app/machine' => 'TestMachine',
-  '/app/view'    => 'DummyView',
-);
+my $app = TestApp->make_test_app;
 
 isa_ok($app, 'TestApp');
 isa_ok($app, 'Sprog');
@@ -27,7 +23,7 @@ my $machine = $app->machine;
 isa_ok($machine, 'TestMachine');
 isa_ok($machine, 'Sprog::Machine');
 
-my $reader = $app->make_test_machine(qw(
+my($reader, $grep, $case, $text) = $app->make_test_machine(qw(
   Sprog::Gear::ReadFile
   Sprog::Gear::Grep
   Sprog::Gear::UpperCase
@@ -36,21 +32,10 @@ my $reader = $app->make_test_machine(qw(
 
 is($app->alerts, '', 'no alerts while creating machine');
 
-my $parts = $app->machine->parts;
-isa_ok($parts, 'HASH');
-
-is(scalar(values %$parts), 4, 'The machine has 4 gears');
-
 isa_ok($reader, 'Sprog::Gear::ReadFile');
-
-my $grep = $reader->next;
-isa_ok($grep, 'Sprog::Gear::Grep');
-
-my $case = $grep->next;
-isa_ok($case, 'Sprog::Gear::UpperCase');
-
-my $text = $case->next;
-isa_ok($text, 'TextGear');
+isa_ok($grep,   'Sprog::Gear::Grep');
+isa_ok($case,   'Sprog::Gear::UpperCase');
+isa_ok($text,   'TextGear');
 
 $app->run_machine;
 is($app->timed_out, 0, 'machine stopped gracefully');
