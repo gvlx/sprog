@@ -20,6 +20,38 @@ use constant COL_TYPE => 0;
 use constant COL_GEAR_INDEX => 0;
 use constant COL_GEAR_CLASS => 1;
 
+my $cog_pixbuf = Gtk2::Gdk::Pixbuf->new_from_xpm_data(
+  '47 24 3 1',
+  '  c None',
+  '# c #000000',
+  '. c #C9C9C9',
+  '                                               ',
+  '                                               ',
+  '                                               ',
+  '    #######         #######################    ',
+  '   ########         ########################   ',
+  '  ###....##         ##....................###  ',
+  '  ##.....##         ##.....................##  ',
+  '  ##.....#############.....................##  ',
+  '  ##.....#############.....................##  ',
+  '  ##.......................................##  ',
+  '  ##.......................................##  ',
+  '  ##.......................................##  ',
+  '  ##.......................................##  ',
+  '  ##.......................................##  ',
+  '  ###.....................................###  ',
+  '   ########.........########################   ',
+  '    #######.........#######################    ',
+  '         ##.........##                         ',
+  '         ##.........##                         ',
+  '         #############                         ',
+  '         #############                         ',
+  '                                               ',
+  '                                               ',
+  '                                               '
+);
+
+
 my $palette = undef;
 
 my @connector_types = (
@@ -30,14 +62,54 @@ my @connector_types = (
 );
 
 my @gear_classes = (
-  'Sprog::Gear::ReadFile',
-  'Sprog::Gear::CommandIn',
-  'Sprog::Gear::Grep',
-  'Sprog::Gear::FindReplace',
-  'Sprog::Gear::PerlCode',
-  'Sprog::Gear::LowerCase',
-  'Sprog::Gear::UpperCase',
-  'Sprog::Gear::TextWindow',
+  {
+    class    => 'Sprog::Gear::ReadFile',
+    title    => 'Read File',
+    type_in  => '_',
+    type_out => 'P',
+  },
+  {
+    class => 'Sprog::Gear::CommandIn',
+    title    => 'Run Command',
+    type_in  => '_',
+    type_out => 'P',
+  },
+  {
+    class => 'Sprog::Gear::Grep',
+    title    => 'Pattern Match',
+    type_in  => 'P',
+    type_out => 'P',
+  },
+  {
+    class => 'Sprog::Gear::FindReplace',
+    title    => 'Find/Replace',
+    type_in  => 'P',
+    type_out => 'P',
+  },
+  {
+    class => 'Sprog::Gear::PerlCode',
+    title    => 'Perl Code',
+    type_in  => 'P',
+    type_out => 'P',
+  },
+  {
+    class => 'Sprog::Gear::LowerCase',
+    title    => 'Lowercase',
+    type_in  => 'P',
+    type_out => 'P',
+  },
+  {
+    class => 'Sprog::Gear::UpperCase',
+    title    => 'Uppercase',
+    type_in  => 'P',
+    type_out => 'P',
+  },
+  {
+    class => 'Sprog::Gear::TextWindow',
+    title    => 'Text Window',
+    type_in  => 'P',
+    type_out => '_',
+  },
 );
 
 sub new {
@@ -133,14 +205,13 @@ sub initialise_models {
     or return $self->app->alert("Can't find gear_list listbox");
 
   $gearlist->set_model($model);
+  $gearlist->set_rules_hint(TRUE);
 
   my($renderer, $column);
-  $renderer = Gtk2::CellRendererText->new;
-  $column   = Gtk2::TreeViewColumn->new_with_attributes (
-    "Index",
-    $renderer,
-    text => COL_GEAR_INDEX,
-  );
+  $renderer = Gtk2::CellRendererPixbuf->new;
+  $column   = Gtk2::TreeViewColumn->new;
+  $column->pack_start($renderer, FALSE);
+  $column->set_cell_data_func($renderer, sub { $self->set_item_pixbuf(@_); });
   $gearlist->append_column($column);
 
   $renderer = Gtk2::CellRendererText->new;
@@ -155,10 +226,18 @@ sub initialise_models {
   foreach my $i (0..$#gear_classes) {
     my $iter = $model->append;
     $model->set($iter, COL_GEAR_INDEX, $i);
-    $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]);
+    $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]->{title});
   }
 
   return 1;
+}
+
+
+sub set_item_pixbuf {
+  my($self, $tree_column, $cell, $model, $iter) = @_;
+
+  my($index) = $model->get($iter, COL_GEAR_INDEX);
+  $cell->set(pixbuf => $cog_pixbuf);
 }
 
 
@@ -213,7 +292,7 @@ sub drag_data_get {
   my $selection = $gearlist->get_selection  || return;
   my($path) = $selection->get_selected_rows || return;
   my $index = $path->to_string;
-  my $gear_class = $gear_classes[$index];
+  my $gear_class = $gear_classes[$index]->{class};
   $data->set($data->target, 8, $gear_class);
 }
 
