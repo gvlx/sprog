@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 23;
 
 use File::Spec;
 
@@ -9,71 +9,59 @@ BEGIN {
   unshift @INC, File::Spec->catfile('t', 'lib');
 }
 
-my $data = <<'EOF';
-Line One
-Line Two
-EOF
+use_ok('TestApp');
 
+my $app = TestApp->make_test_app;
+
+my($input, $caser, $sink) = $app->make_test_machine(qw(
+  Sprog::Gear::TextInput
+  Sprog::Gear::UpperCase
+  TextGear
+));
+is($app->alerts, '', 'no alerts while creating machine');
+
+isa_ok($input, 'Sprog::Gear::TextInput', 'input gear');
+isa_ok($input, 'Sprog::Gear::Top', 'input gear also');
+isa_ok($input, 'Sprog::Gear', 'input gear also');
+
+isa_ok($caser, 'Sprog::Gear::UpperCase', 'transform gear');
+isa_ok($caser, 'Sprog::Gear', 'transform gear also');
+
+isa_ok($sink,  'TextGear', 'output gear');
+
+
+my $data = "Line One\nLine Two\n";
 my @all = $data =~ /(.*?\n)/g;
 
-
-use_ok('TextGear');
-use_ok('Sprog::Gear::UpperCase');
-use_ok('Sprog::Gear::LowerCase');
-use_ok('Sprog::ClassFactory');
-
-my $app = make_app(               # Imported from ClassFactory.pm
-  '/app'         => 'DummyApp',
-  '/app/machine' => 'DummyMachine',
-);
-
-
-my $sink = TextGear->new(id => 2);
-isa_ok($sink, 'TextGear');
-$sink->prime;
-
-
-my $caser = Sprog::Gear::UpperCase->new();
-isa_ok($caser, 'Sprog::Gear::UpperCase');
-isa_ok($caser, 'Sprog::Gear');
 
 ok($caser->has_input, 'has input');
 ok($caser->has_output, 'has output');
 is($caser->title, 'Uppercase', 'title looks ok');
 ok($caser->no_properties, 'has no properties');
 
-$caser->next($sink);
-isa_ok($caser->last, 'TextGear');
-
-$caser->machine($app->machine);
-$caser->prime;
-
-$caser->msg_in(data => $data);
-$caser->turn_once;
-1 while($sink->turn_once);
-
+$input->text($data);
+is($app->run_machine, '', 'run completed without timeout or alerts');
 like($sink->text, qr/LINE ONE\s+LINE TWO/s,
   "data converted to upper case successfully");
 
 
-$caser = Sprog::Gear::LowerCase->new();
-isa_ok($caser, 'Sprog::Gear::LowerCase');
-isa_ok($caser, 'Sprog::Gear');
+($input, $caser, $sink) = $app->make_test_machine(qw(
+  Sprog::Gear::TextInput
+  Sprog::Gear::LowerCase
+  TextGear
+));
+is($app->alerts, '', 'no alerts while creating machine');
+
+isa_ok($caser, 'Sprog::Gear::LowerCase', 'transform gear');
+isa_ok($caser, 'Sprog::Gear', 'transform gear');
 
 ok($caser->has_input, 'has input');
 ok($caser->has_output, 'has output');
 is($caser->title, 'Lowercase', 'title looks ok');
 ok($caser->no_properties, 'has no properties');
 
-$caser->next($sink);
-isa_ok($caser->last, 'TextGear');
-
-$caser->machine($app->machine);
-$caser->prime;
-
-$caser->msg_in(data => $data);
-$caser->turn_once;
-1 while($sink->turn_once);
+$input->text($data);
+is($app->run_machine, '', 'run completed without timeout or alerts');
 
 like($sink->text, qr/line one\s+line two/s,
   "data converted to lower case successfully");
