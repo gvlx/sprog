@@ -61,6 +61,7 @@ sub load_from_file {
 
   my @data = $self->_read_file($filename) || return;
   $self->_create_gears_from_file(@data);
+  return 1;
 }
 
 
