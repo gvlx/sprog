@@ -185,12 +185,9 @@ Sprog - GUI with a Perl centre
 
 =head1 SYNOPSIS
 
-  #!/usr/bin/perl -w
+  use Sprog::ClassFactory;
 
-  use strict;
-  use Sprog;
-
-  Sprog->gtk_app->run;
+  make_app()->run(@ARGV);
 
 =head1 DESCRIPTION
 
@@ -228,7 +225,7 @@ hurdle.  Of course if you're running Debian GNU/Linux then you'll just need to
 run:
 
   apt-get install libgtk2-perl libgnome2-canvas-perl libgtk2-gladexml-perl \
-          libclass-accessor-perl libyaml-perl
+          libclass-accessor-perl libyaml-perl libpod-simple-perl
 
 =head1 SEE ALSO
 
