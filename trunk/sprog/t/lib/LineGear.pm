@@ -18,6 +18,14 @@ sub new {
 }
 
 
+sub prime {
+  my $self = shift;
+
+  $self->reset;
+  $self->SUPER::prime;
+}
+
+
 sub reset { shift->{lines} = [] };
 
 
