@@ -4,7 +4,7 @@ use strict;
 use Sprog::Machine;
 use Sprog::GtkView;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use base qw(Class::Accessor::Fast);
 
@@ -137,11 +137,14 @@ If you don't already have gtk2-perl installed then you may find that is a major
 hurdle.  Of course if you're running Debian GNU/Linux then you'll just need to
 run:
 
-  apt-get install libgtk2-perl libgtk2-gladexml-perl libclass-accessor-perl
+  apt-get install libgtk2-perl libgnome2-canvas-perl libgtk2-gladexml-perl \
+          libclass-accessor-perl
 
 =head1 SEE ALSO
 
 L<Sprog::internals> contains notes for developers.
+
+The Sprog web site is hosted by SourceForge at: L<http://sprog.sourceforge.net/>
 
 =head1 COPYRIGHT 
 
