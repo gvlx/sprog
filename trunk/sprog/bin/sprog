@@ -4,5 +4,5 @@ use strict;
 
 use Sprog ();
 
-Sprog->gtk_app->run;
+Sprog->gtk_app->run(@ARGV);
 
