@@ -122,4 +122,4 @@ use base qw(Sprog::Gear::PerlCode);
 sub _sub_preamble  { return; }
 sub _sub_postamble { return; }
 
-sub _suppress_used_once_warning { $Sprog::Gear::PerlCode::GearDefaultProps; }
+sub _suppress_used_once_warning { $Sprog::Gear::PerlBase::GearDefaultProps; }
