@@ -13,6 +13,10 @@ __PACKAGE__->mk_accessors(qw(
 ));
 
 use Scalar::Util qw(weaken);
+use YAML;
+
+use constant FILE_APPLICATION_ID         => 'Sprog';
+use constant FILE_FORMAT_CURRENT_VERSION => 1;
 
 
 sub new {
@@ -33,14 +37,94 @@ sub new {
 }
 
 
+sub save_to_file {
+  my($self, $filename) = @_;
+
+  my @gears = ();
+  foreach my $gear ( values %{$self->parts} ) {
+    push @gears, $gear->serialise;
+  }
+  open my $out, '>', $filename
+    or return $self->app->alert("Error saving file", "open($filename) - $!");
+
+  print $out YAML::Dump([
+    FILE_APPLICATION_ID,
+    FILE_FORMAT_CURRENT_VERSION,
+    {},          # Machine-level properties
+    \@gears      # Gears and their properties
+  ]);
+}
+
+
+sub load_from_file {
+  my($self, $filename) = @_;
+
+  my @data = $self->_read_file($filename) || return;
+  $self->_create_gears_from_file(@data);
+}
+
+
+sub _read_file {
+  my($self, $filename) = @_;
+
+  open my $in, '<', $filename
+    or return $self->app->alert("Error reading $filename", "$!");
+
+  local($/) = undef;
+  my $yaml = <$in>;
+
+  my $data = YAML::Load($yaml);
+
+  my($app_id, $file_format, $machine_data, $gear_data) = @$data;
+
+  return $self->app->alert(
+    "Unrecognised file type",  
+    "Expected Application ID: " .  FILE_APPLICATION_ID . "\nGot: $app_id"
+  ) if($app_id ne FILE_APPLICATION_ID);
+
+  return $self->app->alert(
+    "Unrecognised file version",  
+    "Expected Format Version: " .  FILE_FORMAT_CURRENT_VERSION
+      . "\nGot: $file_format"
+  ) if($file_format ne FILE_FORMAT_CURRENT_VERSION);
+
+  return($machine_data, $gear_data);
+}
+
+
+sub _create_gears_from_file {
+  my($self, $gears) = @_;
+
+  my $app = $self->app;
+
+  my %map;
+  foreach my $g (@$gears) {
+    my $gear = $app->add_gear_at_x_y($g->{CLASS}, $g->{X}, $g->{Y});
+    $map{$g->{ID}} = $gear;
+    while(my($p, $v) = each %{$g->{prop}}) {
+      $gear->$p($v);
+    }
+  }
+
+  foreach my $g (@$gears) {
+    if($g->{NEXT}) {
+      my $gear = $map{$g->{ID}};
+      $gear->next($map{$g->{NEXT}});
+    }
+  }
+
+}
+
+
 sub add_gear {
-  my($self, $gear_class) = @_;
+  my $self       = shift;
+  my $gear_class = shift;
   
   my $gear_id = $self->unique_id;
 
   my $gear = eval {
     $self->app->require_class($gear_class);
-    $gear_class->new( app => $self->app, machine => $self, id => $gear_id );
+    $gear_class->new( app => $self->app, machine => $self, id => $gear_id, @_ );
   };
   if($@) {
     $self->app->alert("Unable to create a $gear_class object", $@);

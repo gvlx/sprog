@@ -4,7 +4,7 @@ use strict;
 use Sprog::Machine;
 use Sprog::GtkView;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use base qw(Class::Accessor::Fast);
 
@@ -31,7 +31,15 @@ sub gtk_app {
   return $self;
 }
 
-sub run          { shift->view->run;                 }
+sub run {
+  my $self = shift;
+  
+  $self->load_from_file(shift) if(@_);
+
+  $self->view->run;
+}
+
+
 sub alert        { shift->view->alert(@_);           }
 sub drop_gear    { shift->view->drop_gear(@_);       }
 
@@ -44,7 +52,31 @@ sub not_implemented  { shift->alert('Not implemented');   }
 
 sub file_new         { shift->alert('Not implemented');   }
 sub file_open        { shift->alert('Not implemented');   }
-sub file_save        { shift->alert('Not implemented');   }
+
+
+sub file_save {
+  my $self = shift;
+
+  my $filename = $self->view->file_save_as_filename || return;
+  $self->machine->save_to_file($filename);
+}
+
+
+sub load_from_file {
+  my($self, $filename) = @_;
+
+  $self->machine->load_from_file($filename);
+}
+
+
+sub add_gear_at_x_y {
+  my($self, $gear_class, $x, $y) = @_;
+
+  my $gear = $self->machine->add_gear($gear_class, x => $x, y => $y);
+  $self->view->add_gear_view($gear);
+
+  return $gear;
+}
 
 sub show_palette     { shift->alert('Not implemented');   }
 
