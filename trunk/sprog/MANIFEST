@@ -37,3 +37,8 @@ MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
 README
 t/00_config.t
+t/01_factory.t
+t/lib/Dummy.pm
+t/lib/DummyApp.pm
+t/lib/DummyMachine.pm
+t/lib/DummyView.pm
