@@ -124,6 +124,11 @@ sub _build_menubar {
     _Help  => {
       item_type  => '<Branch>',
       children => [
+        _Contents => {
+          callback        => sub { $app->help_contents },
+          callback_action => $action++,
+          accelerator     => 'F1',
+        },
         _About => {
           callback        => sub { $app->help_about },
           callback_action => $action++,

@@ -8,6 +8,7 @@ __PACKAGE__->mk_accessors(qw(
   app_win
   chrome_class
   alert_class
+  help_class
   about_class
   menubar
   toolbar
@@ -49,11 +50,13 @@ sub new {
     '/app/view/alert_dialog' => 'Sprog::GtkView::AlertDialog',
     '/app/view/about_dialog' => 'Sprog::GtkView::AboutDialog',
     '/app/view/palette'      => 'Sprog::GtkView::Palette',
+    '/app/view/help_viewer'  => 'Sprog::GtkView::HelpViewer',
     '/app/view/gearview'     => 'Sprog::GtkGearView',
   );
 
   $self->chrome_class($app->load_class('/app/view/chrome'));
   $self->alert_class($app->load_class('/app/view/alert_dialog'));
+  $self->help_class($app->load_class('/app/view/help_viewer'));
   $self->about_class($app->load_class('/app/view/about_dialog'));
 
   $app->load_class('/app/view/gearview');
@@ -411,6 +414,13 @@ sub hide_palette {
   $self->toolbar->set_palette_active(FALSE);
   $self->palette_win->hide();
   $self->palette_visible(0);
+}
+
+
+sub show_help {
+  my($self, $topic) = @_;
+
+  $self->help_class->show_help($topic);
 }
 
 
