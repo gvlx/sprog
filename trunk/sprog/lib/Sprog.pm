@@ -9,6 +9,7 @@ our $VERSION = '0.07';
 use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw(
+  factory
   machine
   view
 ));
@@ -17,23 +18,23 @@ sub new {
   my $class = shift;
 
   my $self = bless { @_ }, $class;
-  $self->machine( Sprog::Machine->new(app => $self) );
+
+  my $factory = $self->{factory} || die "No class factory";
+
+  $factory->inject(   # set default classes if not already defined
+    '/app/machine' => 'Sprog::Machine',
+    '/app/view'    => 'Sprog::GtkView',
+  );
+  $self->machine( $factory->make_class('/app/machine', app => $self) );
+  $self->view   ( $factory->make_class('/app/view',    app => $self) );
 
   return $self;
 }
 
-sub gtk_app {
-  my($class) = @_;
-
-  my $self = $class->new;
-
-  $self->view( Sprog::GtkView->new(app => $self) );
-  return $self;
-}
 
 sub run {
   my $self = shift;
-  
+
   $self->load_from_file(shift) if(@_);
 
   $self->view->run;

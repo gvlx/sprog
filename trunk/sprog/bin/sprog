@@ -2,7 +2,7 @@
 
 use strict;
 
-use Sprog ();
+use Sprog::ClassFactory;
 
-Sprog->gtk_app->run(@ARGV);
+make_app()->run(@ARGV);
 
