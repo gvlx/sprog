@@ -12,6 +12,7 @@ __PACKAGE__->mk_accessors(qw(
   input_combo
   output_combo
   search_entry
+  search_button
   gearlist
   gearlist_model
   drag_index
@@ -134,8 +135,17 @@ sub _apply_filter {
   my $type_in  = $connector_types[$self->input_combo->get_active  * 2 + 1];
   my $type_out = $connector_types[$self->output_combo->get_active * 2 + 1];
 
+  my $text = $self->search_entry->get_text || '';
+  my $pattern = qr/\Q$text\E/i;
+
   my $types = qr/^$type_in$type_out$/;
-  my @matches = grep { "$gear_classes[$_]->{type_in}$gear_classes[$_]->{type_out}" =~ $types } (0..$#gear_classes);
+  my @matches;
+  foreach my $i (0..$#gear_classes) {
+    next unless
+      "$gear_classes[$i]->{type_in}$gear_classes[$i]->{type_out}" =~ $types;
+    next if $text && $gear_classes[$i]->{title} !~ $pattern;
+    push @matches, $i;
+  }
 
   $model->clear;
 
@@ -159,7 +169,8 @@ sub _apply_filter {
 sub _reset_filter {
   my $self = shift;
 
-  $self->app->not_implemented;
+  $self->search_entry->set_text('');
+  $self->_apply_filter;
 }
 
 
@@ -197,12 +208,12 @@ sub _build_combos {
   my $label_in = Gtk2::Label->new;
   $label_in->set_markup('<small>Connector In:</small>');
   $label_in->set_justify('left');
-  $table->attach($label_in, 0, 1, 0, 1, [ 'expand', 'fill'], [ 'fill'], 4, 2);
+  $table->attach($label_in, 0, 1, 0, 1, ['expand', 'fill'], ['fill'], 4, 2);
 
   my $label_out = Gtk2::Label->new;
   $label_out->set_markup('<small>Connector Out:</small>');
   $label_out->set_justify('left');
-  $table->attach($label_out, 1, 2, 0, 1, [ 'expand', 'fill'], [ 'fill'], 4, 2);
+  $table->attach($label_out, 1, 2, 0, 1, ['expand', 'fill'], ['fill'], 4, 2);
 
   my $combo_in = Gtk2::ComboBox->new_text;
   $self->input_combo($combo_in);
@@ -211,7 +222,7 @@ sub _build_combos {
   }
   $combo_in->set_active(0);
   $combo_in->signal_connect(changed => sub { $self->_apply_filter(); });
-  $table->attach($combo_in, 0, 1, 1, 2, [ 'expand', 'fill'], [ 'fill'], 4, 2);
+  $table->attach($combo_in, 0, 1, 1, 2, ['expand', 'fill'], ['fill'], 4, 2);
 
   my $combo_out = Gtk2::ComboBox->new_text;
   $self->output_combo($combo_out);
@@ -220,7 +231,7 @@ sub _build_combos {
   }
   $combo_out->set_active(0);
   $combo_out->signal_connect(changed => sub { $self->_apply_filter(); });
-  $table->attach($combo_out, 1, 2, 1, 2, [ 'expand', 'fill'], [ 'fill'], 4, 2);
+  $table->attach($combo_out, 1, 2, 1, 2, ['expand', 'fill'], ['fill'], 4, 2);
 
   return $table;
 }
@@ -233,16 +244,19 @@ sub _build_searchbox {
   
   my $entry = Gtk2::Entry->new;
   $entry->set_width_chars(9);
+  $entry->set('activates-default' => TRUE);
   $self->search_entry($entry);
-  $table->attach($entry, 0, 1, 0, 1, [ 'expand', 'fill'], [ 'fill'], 4, 2);
+  $table->attach($entry, 0, 1, 0, 1, ['expand', 'fill'], ['fill'], 4, 2);
   
   my $search_btn = Gtk2::Button->new('Search');
-  $search_btn->signal_connect(clicked => sub { $self->_reset_filter; });
-  $table->attach($search_btn, 1, 2, 0, 1, [ 'fill'], [ 'fill'], 0, 2);
+  $search_btn->can_default(TRUE);
+  $search_btn->signal_connect(clicked => sub { $self->_apply_filter; });
+  $self->search_button($search_btn);
+  $table->attach($search_btn, 1, 2, 0, 1, ['fill'], ['fill'], 0, 2);
 
   my $clear_btn = Gtk2::Button->new('Clear');
   $clear_btn->signal_connect(clicked => sub { $self->_reset_filter; });
-  $table->attach($clear_btn, 2, 3, 0, 1, [ 'fill'], [ 'fill'], 4, 2);
+  $table->attach($clear_btn, 2, 3, 0, 1, ['fill'], ['fill'], 4, 2);
 
   return $table;
 }
