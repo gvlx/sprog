@@ -230,10 +230,12 @@ sub drag_data_received {
   my $gear_class = $data->data;
   $context->finish (1, 0, $time);
 
-  my($cx, $cy) = $canvas->window_to_world($x, $y);
-  my $gear = $self->app->add_gear_at_x_y($gear_class, $cx, $cy) or return;
+  my $gear = $self->app->add_gear_at_x_y($gear_class, $x, $y) or return;
   my $gearview = $self->gear_view_by_id($gear->id);
+
+  my($cx, $cy) = $canvas->window_to_world($x, $y);
   $self->app->drop_gear($gearview, $cx, $cy);
+
   return;
 }
 
