@@ -144,8 +144,8 @@ sub stop_machine {
 sub machine_running {
   my $self = shift;
 
-  $self->view->running(@_);
-  $self->machine->running(@_);
+  $self->view->running(@_) if(@_);
+  return $self->machine->running(@_);
 }
 
 
