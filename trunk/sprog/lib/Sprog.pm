@@ -4,7 +4,7 @@ use strict;
 use Sprog::Machine;
 use Sprog::GtkView;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use base qw(Class::Accessor::Fast);
 
@@ -38,6 +38,8 @@ sub run {
 
   $self->view->run;
 }
+
+sub quit             { shift->view->quit();               }
 
 sub toggle_palette   { shift->view->toggle_palette();     }
 sub show_palette     { shift->view->show_palette();       }
