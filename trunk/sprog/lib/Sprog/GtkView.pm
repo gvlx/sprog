@@ -24,6 +24,7 @@ use Sprog::GtkView::Chrome;
 use Sprog::GtkView::Toolbar;
 use Sprog::GtkView::AlertDialog;
 use Sprog::GtkView::AboutDialog;
+use Sprog::GtkView::GearPalette;
 use Sprog::GtkGearView;
 
 
@@ -404,6 +405,29 @@ sub alert {
   Sprog::GtkView::AlertDialog->invoke($self->app_win, $message, $detail);
 
   return;
+}
+
+
+sub toggle_palette {
+  my($self) = @_;
+
+  Sprog::GtkView::GearPalette->toggle($self->app);
+}
+
+
+sub show_palette {
+  my($self) = @_;
+
+  $self->toolbar->set_palette_active(TRUE);
+  Sprog::GtkView::GearPalette->show($self->app);
+}
+
+
+sub hide_palette {
+  my($self) = @_;
+
+  $self->toolbar->set_palette_active(FALSE);
+  Sprog::GtkView::GearPalette->hide();
 }
 
 

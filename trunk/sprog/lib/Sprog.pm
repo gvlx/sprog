@@ -39,18 +39,20 @@ sub run {
   $self->view->run;
 }
 
+sub toggle_palette   { shift->view->toggle_palette();     }
+sub show_palette     { shift->view->show_palette();       }
+sub hide_palette     { shift->view->hide_palette();       }
 
-sub alert        { shift->view->alert(@_);           }
-sub drop_gear    { shift->view->drop_gear(@_);       }
+sub alert            { shift->view->alert(@_);            }
+sub not_implemented  { shift->alert('Not implemented');   }
 
-sub detach_gear  { shift->machine->detach_gear(@_);  }
+sub drop_gear        { shift->view->drop_gear(@_);        }
+sub detach_gear      { shift->machine->detach_gear(@_);   }
 
 sub add_idle_handler { shift->view->add_idle_handler(@_); }
 sub add_io_reader    { shift->view->add_io_reader(@_);    }
 
-sub not_implemented  { shift->alert('Not implemented');   }
-
-sub file_new         { shift->alert('Not implemented');   }
+sub file_new         { shift->not_implemented();          }
 
 
 sub file_open {
@@ -107,8 +109,6 @@ sub add_gear_at_x_y {
 
   return $gear;
 }
-
-sub show_palette     { shift->alert('Not implemented');   }
 
 sub run_machine {
   my $self = shift;

@@ -67,13 +67,15 @@ sub build_toolbar {
 
   $toolbar->append_space;
 
-  $self->{'run'} = $toolbar->insert_stock(
-    'gtk-add',
+  my $pbutton = Gtk2::Image->new_from_stock('gtk-add', 'large-toolbar');
+  $self->{'palette'} = $toolbar->append_element(
+    'togglebutton',
+    undef,  # No widget
+    undef,  # No text
     'Add parts to the machine',
-    undef,
-    sub { $app->show_palette; },
-    undef,
-    APPEND
+    undef,  # No private text
+    $pbutton,
+    sub { $app->toggle_palette; },
   );
 
   $toolbar->append_space;
@@ -97,6 +99,14 @@ sub build_toolbar {
   );
   $self->set_sensitive('stop' => FALSE);
 
+}
+
+
+sub set_palette_active {
+  my($self, $state) = @_;
+
+  my $button = $self->{palette} || return;
+  $button->set_active($state);
 }
 
 
