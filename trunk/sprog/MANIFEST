@@ -32,6 +32,7 @@ lib/Sprog/GtkView/HelpViewer.pm
 lib/Sprog/GtkView/Menubar.pm
 lib/Sprog/GtkView/Palette.pm
 lib/Sprog/GtkView/Toolbar.pm
+lib/Sprog/help/index.pod
 lib/Sprog/internals.pod
 lib/Sprog/Machine.pm
 Makefile.PL
