@@ -28,7 +28,8 @@ sub _data_ready {
     $self->msg_out(data => $buf);
   }
   else {
-    my $filename = ($self->can('filename') && $self->filename) || '';
+    my $filename = undef;
+    $filename = $self->filename if($self->can('filename'));
     $self->msg_out(file_end => $filename);
     $self->unregister();
     $self->fh(undef);
