@@ -115,6 +115,9 @@ sub set_toolbar_style   { $_[0]->toolbar->set_style($_[1]);            }
 sub  enable_tool_button { $_[0]->toolbar->set_sensitive($_[1], TRUE);  }
 sub disable_tool_button { $_[0]->toolbar->set_sensitive($_[1], FALSE); }
 
+sub  enable_menu_item   { $_[0]->menubar->set_sensitive($_[1], TRUE);  }
+sub disable_menu_item   { $_[0]->menubar->set_sensitive($_[1], FALSE); }
+
 
 sub _build_workbench {
   my($self) = @_;
@@ -227,11 +230,15 @@ sub running {
     if($_[0]) {
       $self->enable_tool_button('stop');
       $self->disable_tool_button('run');
+      $self->enable_menu_item('/Machine/Stop');
+      $self->disable_menu_item('/Machine/Run');
       $self->app->add_timeout(200, sub { $self->turn_cogs });
     }
     else {
       $self->disable_tool_button('stop');
       $self->enable_tool_button('run');
+      $self->disable_menu_item('/Machine/Stop');
+      $self->enable_menu_item('/Machine/Run');
     }
     $self->{running} = shift;
   }
