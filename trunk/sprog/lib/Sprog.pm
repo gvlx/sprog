@@ -1,84 +1,155 @@
-package Sprog;
+package Pstax;
 
-use 5.006;
 use strict;
-use warnings;
+use Pstax::Machine;
+use Pstax::GtkView;
 
-require Exporter;
+our $VERSION = '0.02';
 
-our @ISA = qw(Exporter);
+use base qw(Class::Accessor::Fast);
 
-# Items to export into callers namespace by default. Note: do not export
-# names by default without a very good reason. Use EXPORT_OK instead.
-# Do not simply export all your public functions/methods/constants.
+__PACKAGE__->mk_accessors(qw(
+  machine
+  view
+));
 
-# This allows declaration	use Sprog ':all';
-# If you do not need this, moving things directly into @EXPORT or @EXPORT_OK
-# will save memory.
-our %EXPORT_TAGS = ( 'all' => [ qw(
-	
-) ] );
+sub new {
+  my $class = shift;
 
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
+  my $self = bless { @_ }, $class;
+  $self->machine( Pstax::Machine->new(app => $self) );
 
-our @EXPORT = qw(
-	
-);
+  return $self;
+}
 
-our $VERSION = '0.01';
+sub gtk_app {
+  my($class) = @_;
+
+  my $self = $class->new;
+
+  $self->view( Pstax::GtkView->new(app => $self) );
+  return $self;
+}
+
+sub run          { shift->view->run;                 }
+sub alert        { shift->view->alert(@_);           }
+sub drop_gear    { shift->view->drop_gear(@_);       }
+
+sub detach_gear  { shift->machine->detach_gear(@_);  }
+
+sub add_idle_handler { shift->view->add_idle_handler(@_); }
+sub add_io_reader    { shift->view->add_io_reader(@_);    }
+
+sub not_implemented  { shift->alert('Not implemented');   }
+
+sub file_new         { shift->alert('Not implemented');   }
+sub file_open        { shift->alert('Not implemented');   }
+sub file_save        { shift->alert('Not implemented');   }
+
+sub show_palette     { shift->alert('Not implemented');   }
+
+sub run_machine {
+  my $self = shift;
+
+  my $machine = $self->machine;
+  $machine->build_gear_train || return;
+
+  $self->machine_running(1);
+
+  $machine->enable_idle_handler;
+}
 
 
-# Preloaded methods go here.
+sub stop_machine {
+  my $self = shift;
+  $self->machine->stop;
+}
 
-1;
-__END__
-# Below is stub documentation for your module. You'd better edit it!
+
+sub machine_running {
+  my $self = shift;
+
+  $self->view->running(@_);
+  $self->machine->running(@_);
+}
+
+
+sub require_class {
+  my($self, $class) = @_;
+  
+  my $path = $class . '.pm';
+  $path =~ s{::}{/}g;
+
+  require $path;
+}
+
+
+sub delete_gear_by_id {
+  my($self, $id) = @_;
+
+  $self->machine->delete_gear_by_id($id);
+  $self->view->delete_gear_view_by_id($id);
+}
 
 =head1 NAME
 
-Sprog - Perl extension for blah blah blah
+Pstax - GUI with a Perl centre
 
 =head1 SYNOPSIS
 
-  use Sprog;
-  blah blah blah
+  #!/usr/bin/perl -w
+
+  use strict;
+  use Pstax;
+
+  Pstax->gtk_app->run;
 
 =head1 DESCRIPTION
 
-Stub documentation for Sprog, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
+Pstax is a GUI tool for building pipelines to process data.  It allows you to
+select a data source; hook up some filter components and an output component;
+then feed your data through.
 
-Blah blah blah.
+In Pstax jargon, the components are called 'gears' and the assembled result is
+called a 'machine'.  Pstax ships with a number of pre-written gears - most of
+which are configurable.  It's relatively straightforward to write your own
+gears using the supplied framework.  This allows you to make reusable
+components for the data transformations you use most often.
 
-=head2 EXPORT
+=head1 WARNING
 
-None by default.
+The Pstax code is in 'pre-alpha' state.  This means that bugs are not only
+possible, they're expected.
 
+The 'pre-alpha' state also means that the API is not yet stable - if you write
+a component today you might need to tweak it to make it work with the next
+version of Pstax.
 
+=head1 PREREQUISITES
+
+All the classes are built on top of L<Class::Accessor>.
+
+The GUI and event-driven scheduler is built on L<Gtk2>.
+
+The properties auto-dialog (PAD) framework uses L<Gtk2::GladeXML>.
+
+If you don't already have gtk2-perl installed then you may find that is a major
+hurdle.  Of course if you're running Debian GNU/Linux then you'll just need to
+run:
+
+  apt-get install libgtk2-perl libgtk2-gladexml-perl libclass-accessor-perl
 
 =head1 SEE ALSO
 
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
+L<Pstax::internals> contains notes for developers.
 
-If you have a mailing list set up for your module, mention it here.
+=head1 COPYRIGHT 
 
-If you have a web site set up for your module, mention it here.
+Copyright 2004 Grant McLean E<lt>grantm@cpan.orgE<gt>
 
-=head1 AUTHOR
-
-Grant McLean, E<lt>grant@E<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (C) 2004 by Grant McLean
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.4 or,
-at your option, any later version of Perl 5 you may have available.
-
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
 
 =cut
+
+1;

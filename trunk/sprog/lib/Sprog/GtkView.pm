@@ -1,0 +1,385 @@
+package Pstax::GtkView;
+
+use strict;
+
+use base qw(Class::Accessor::Fast);
+
+__PACKAGE__->mk_accessors(qw(
+  app_win
+  toolbar
+  canvas
+  statusbar
+  app
+));
+
+use Scalar::Util qw(weaken);
+
+use Gtk2 '-init';
+use Glib qw(TRUE FALSE);
+use Gnome2::Canvas;
+use Gtk2::SimpleMenu;
+
+use Pstax::GtkViewChrome;
+use Pstax::GtkViewToolbar;
+use Pstax::GtkAlertDialog;
+use Pstax::GtkGearView;
+
+
+sub new {
+  my $class = shift;
+
+  my $self = bless {
+    @_,
+    gears => {},
+  }, $class;
+  $self->{app} && weaken($self->{app});
+  return $self;
+}
+
+
+sub run {
+  my $self = shift;
+
+  $self->build_app_window;
+
+  Gtk2->main;
+}
+
+
+sub build_app_window {
+  my $self = shift;
+
+  my $app_win = $self->app_win(Gtk2::Window->new);
+  $app_win->signal_connect(destroy => sub { Gtk2->main_quit; });
+  $app_win->set_default_size (450, 420);
+
+  my $vbox = Gtk2::VBox->new(FALSE, 0);
+  $app_win->add($vbox);
+
+  $self->add_menubar($vbox);
+  $self->add_toolbar($vbox);
+  $self->add_workbench($vbox);
+  $self->add_statusbar($vbox);
+
+  $app_win->show_all;
+}
+
+
+sub add_menubar {
+  my($self, $vbox) = @_;
+
+  my $action = 0;
+  my $app = $self->app;
+  my $menu_tree = [
+    _File  => {
+      item_type  => '<Branch>',
+      children => [
+        _New => {
+          callback        => sub { $app->file_new },
+          callback_action => $action++,
+        },
+        _Open => {
+          callback        => sub { $app->file_open },
+          callback_action => $action++,
+          accelerator     => '<ctrl>O',
+        },
+        _Save => {
+          callback        => sub { $app->file_save },
+          callback_action => $action++,
+          accelerator     => '<ctrl>S',
+        },
+        _Quit => {
+          callback        => sub { Gtk2->main_quit; },
+          callback_action => $action++,
+          accelerator     => '<ctrl>Q',
+        },
+      ],
+    },
+    _Machine  => {
+      item_type  => '<Branch>',
+      children => [
+        _Run => {
+          callback        => sub { $app->run_machine; },
+          callback_action => $action++,
+          accelerator     => '<ctrl>R',
+        },
+        _Stop => {
+          callback        => sub { $app->stop_machine; },
+          callback_action => $action++,
+        },
+      ],
+    },
+    _Test  => {
+      item_type  => '<Branch>',
+      children => [
+        'Add a _Top gear'  => {
+          item_type  => '<Branch>',
+          children => [
+            'Read _File' => {
+              callback        => sub { $self->test_new('Pstax::Gear::ReadFile') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>F',
+            },
+            'Run a _Command' => {
+              callback        => sub { $self->test_new('Pstax::Gear::CommandIn') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>C',
+            },
+          ]
+        },
+        'Add a _Filter gear'  => {
+          item_type  => '<Branch>',
+          children => [
+            'Pattern Match' => {
+              callback        => sub { $self->test_new('Pstax::Gear::Grep') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>G',
+            },
+            'F_ind\/Replace' => {
+              callback        => sub { $self->test_new('Pstax::Gear::FindReplace') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>I',
+            },
+            '_Perl Code' => {
+              callback        => sub { $self->test_new('Pstax::Gear::PerlCode') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>P',
+            },
+            '_Lowercase' => {
+              callback        => sub { $self->test_new('Pstax::Gear::LowerCase') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>L',
+            },
+            '_Uppercase' => {
+              callback        => sub { $self->test_new('Pstax::Gear::UpperCase') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>U',
+            },
+          ]
+        },
+        'Add a _Bottom gear'  => {
+          item_type  => '<Branch>',
+          children => [
+            '_Text Window' => {
+              callback        => sub { $self->test_new('Pstax::Gear::TextWindow') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>T',
+            },
+          ]
+        },
+        'Futures (AKA vapourware)'  => {
+          item_type  => '<Branch>',
+          children => [
+            'CSV Split' => {
+              callback        => sub { $self->test_new('Pstax::Gear::CSVSplit') },
+              callback_action => $action++,
+            },
+            'Parse Apache Log' => {
+              callback        => sub { $self->test_new('Pstax::Gear::ApacheLogParse') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>A',
+            },
+            'Perl Code (hash to pipe)' => {
+              callback        => sub { $self->test_new('Pstax::Gear::PerlCodeHP') },
+              callback_action => $action++,
+              accelerator     => '<ctrl>H',
+            },
+            'Parse XML' => {
+              callback        => sub { $self->test_new('Pstax::Gear::XMLToSAX') },
+              callback_action => $action++,
+            },
+            'XSLT Transform' => {
+              callback        => sub { $self->test_new('Pstax::Gear::XSLT') },
+              callback_action => $action++,
+            },
+            'Write XML' => {
+              callback        => sub { $self->test_new('Pstax::Gear::XMLWriter') },
+              callback_action => $action++,
+            },
+          ]
+        },
+#        '_Dump machine state' => {
+#          callback        => sub { $self->dump },
+#          callback_action => $action++,
+#          accelerator     => '<ctrl>D',
+#        },
+      ],
+    },
+  ];
+
+  my $menu = Gtk2::SimpleMenu->new(
+    menu_tree        => $menu_tree,
+#    default_callback => \&default_callback,
+#    user_data        => 'user data',
+  );
+
+  #$menu->get_widget('/Tools/Radios/Radio 2')->set_active(1);
+
+  $vbox->pack_start($menu->{widget}, FALSE, TRUE, 0);
+  $self->app_win->add_accel_group($menu->{accel_group});
+}
+
+
+sub add_toolbar {
+  my($self, $vbox) = @_;
+
+  my $toolbar = Pstax::GtkViewToolbar->new(app => $self->app);
+  $self->toolbar($toolbar);
+  $vbox->pack_start($toolbar->widget, FALSE, TRUE, 0);
+}
+
+
+sub  enable_tool_button { $_[0]->toolbar->set_sensitive($_[1], TRUE);  }
+sub disable_tool_button { $_[0]->toolbar->set_sensitive($_[1], FALSE); }
+
+
+sub add_workbench {
+  my($self, $vbox) = @_;
+
+  my $scroller = Gtk2::ScrolledWindow->new;
+  my $canvas   = Gnome2::Canvas->new_aa;
+  $scroller->add ($canvas);
+  $self->canvas($canvas);
+
+  my $color = Gtk2::Gdk::Color->parse ("#007f00");
+  $canvas->modify_bg ('normal', $color);
+
+  $scroller->set_policy ('automatic', 'automatic');
+  $vbox->pack_start($scroller, TRUE, TRUE, 0);
+  $canvas->set_scroll_region (0, 0, 400, 300);
+
+}
+
+
+sub add_statusbar {
+  my($self, $vbox) = @_;
+
+  my $statusbar = $self->statusbar(Gtk2::Statusbar->new);
+  $vbox->pack_start($statusbar, FALSE, TRUE, 0);
+}
+
+
+sub running {
+  my $self = shift;
+
+  if(@_) {
+    if($_[0]) {
+      $self->enable_tool_button('stop');
+      $self->disable_tool_button('run');
+      Glib::Timeout->add(200, sub { $self->turn_cogs });
+    }
+    else {
+      $self->disable_tool_button('stop');
+      $self->enable_tool_button('run');
+    }
+    $self->{running} = shift;
+  }
+
+  return $self->{running};
+}
+
+
+sub turn_cogs {
+  my $self = shift;
+
+  return FALSE unless $self->{running};
+
+  foreach my $gear_view (values %{$self->{gears}}) {
+    my $gear = $gear_view->gear;
+    if($gear->work_done) {
+      $gear_view->turn_cog;
+      $gear->work_done(0);
+    }
+  }
+  return TRUE;
+}
+
+
+sub alert {
+  my($self, $message, $detail) = @_;
+
+  Pstax::GtkAlertDialog->invoke($self->app_win, $message, $detail);
+}
+
+
+sub test_new {
+  my($self, $gear_class) = @_;
+
+  my $machine = $self->app->machine;
+  my $gear = $machine->add_gear($gear_class) or return; # on error
+  $self->add_gear_view($gear);
+}
+
+
+sub add_gear_view {
+  my($self, $gear) = @_;
+
+  my $gear_view = Pstax::GtkGearView->add_gear($self->app, $self->canvas, $gear);
+  $self->gear_view_by_id($gear->id, $gear_view);
+}
+
+
+sub gear_view_by_id {
+  my $self = shift;
+  my $id   = shift;
+  $self->{gears}->{$id} = shift if(@_);
+  return $self->{gears}->{$id};
+}
+
+
+sub delete_gear_view_by_id {
+  my($self, $id) = @_;
+
+  my $gear_view = delete $self->{gears}->{$id} || return;
+  $gear_view->delete_view;
+}
+
+
+sub drop_gear {
+  my($self, $gearv, $x, $y) = @_;
+
+
+  my $gear = $gearv->gear;
+  my $input_type = $gear->input_type              || return;
+
+  my $target = $self->canvas->get_item_at($x, $y) || return;
+  $target = $target->parent                       || return;
+  my $tg_id = $target->get_property('user_data')  || return;
+  my $tgv = $self->gear_view_by_id($tg_id)        || return;
+  $tg_id = $tgv->gear->last->id;
+  $tgv = $self->gear_view_by_id($tg_id)           || return;
+  my $tg = $tgv->gear;
+  my $output_type = $tg->output_type              || return;
+  return unless $input_type eq $output_type;
+
+  $tg->next($gear);
+
+  $gearv->move(
+    $tg->x - $gear->x, 
+    $tg->y + $tgv->gear_height - $gear->y
+  );
+}
+
+
+sub add_idle_handler {
+  my($self, $sub) = @_;
+
+  return Glib::Idle->add($sub);
+}
+
+
+sub add_io_reader {
+  my($self, $fh, $sub) = @_;
+
+  return Glib::IO->add_watch (fileno($fh), ['in', 'err', 'hup'], $sub);
+}
+
+sub dump {
+  my($self) = @_;
+
+  foreach my $id (sort {$a <=> $b} keys %{$self->{gears}}) {
+    $self->{gears}->{$id}->dump;
+  }
+}
+
+1;

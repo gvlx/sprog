@@ -1,0 +1,7 @@
+\.bak$
+\bCVS/
+\.cvsignore$
+\.(SKIP|bak|old|swp)$
+^Makefile$
+blib
+\.tar\.gz$
