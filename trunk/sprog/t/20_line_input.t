@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 15;
 
 use File::Spec;
 
@@ -15,6 +15,7 @@ my $gear = LineGear->new;
 
 isa_ok($gear, 'LineGear');
 isa_ok($gear, 'Sprog::Gear::InputByLine');
+isa_ok($gear, 'Sprog::Gear::Bottom');
 isa_ok($gear, 'Sprog::Gear');
 
 $gear->prime;    # Create the incoming message queue
