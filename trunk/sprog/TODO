@@ -1,4 +1,7 @@
 * Save/restore machine
+ - warn before overwriting
+ - save to remembered filename
+ - save-as to default to current filename if known
 * Implement SIG_PIPE analog
 * TextWindow - bind escape key to hide function
 * File browse - remember last directory
