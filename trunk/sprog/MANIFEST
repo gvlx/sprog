@@ -59,5 +59,9 @@ t/lib/DummyView.pm
 t/lib/LineGear.pm
 t/lib/TestApp.pm
 t/lib/TestMachine.pm
+t/lib/TestView.pm
 t/lib/TextGear.pm
 t/rgb.txt
+t/v01_basic.t
+t/v05_menubar.t
+t/v10_about.t
