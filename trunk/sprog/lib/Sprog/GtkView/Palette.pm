@@ -119,9 +119,9 @@ sub new {
   my $class = shift;
 
   my $self = bless { @_ }, $class;
-  $self->{app} && weaken($self->{app});
+  weaken($self->{app});
 
-  $mini_icons ||= Sprog::GtkView::Chrome::mini_icons();
+  $mini_icons = Sprog::GtkView::Chrome::mini_icons() if !defined($mini_icons);
 
   $self->_build_widget;
 
