@@ -5,6 +5,7 @@ use warnings;
 
 use Glib qw(TRUE FALSE);
 use Gtk2::GladeXML;
+use Gtk2::Pango;
 
 use base qw(
   Pod::Simple::Methody
@@ -14,6 +15,8 @@ use base qw(
 __PACKAGE__->mk_accessors(qw(
   helpwin textview buffer
 ));
+
+my $tag;
 
 sub show_help {
   my($class, $topic) = @_;
@@ -47,10 +50,25 @@ $window->signal_connect(delete_event => sub { Gtk2->main_quit });
   $textview->set_editable(FALSE);
   $textview->set_cursor_visible(FALSE);
   $textview->set_wrap_mode('word');
-  $textview->set_border_width(4);
-  $self->buffer($self->textview->get_buffer);
+
+  my $buffer = $self->buffer($self->textview->get_buffer);
+
+  $self->_init_tags($buffer) unless $tag;
 
   return $self;
+}
+
+
+sub _init_tags {
+  my($self, $buffer) = @_;
+
+  $tag->{head1} = $buffer->create_tag('head1',
+    weight             => PANGO_WEIGHT_BOLD,
+    size               => 24 * PANGO_SCALE,
+    pixels_above_lines => 30,
+    pixels_below_lines => 2,
+  );
+
 }
 
 
@@ -144,7 +162,8 @@ sub _emit {
   my $buffer = $self->buffer;
 
   my $iter = $buffer->get_end_iter;
-  $buffer->insert_with_tags_by_name($iter, $text);
+  my @tags = ();# ( $tag->{head1} );
+  $buffer->insert_with_tags($iter, $text, @tags);
 }
 
 1;
