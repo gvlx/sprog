@@ -14,7 +14,16 @@ __PACKAGE__->mk_accessors(qw(
 
 use Scalar::Util qw(weaken);
 
+use constant COL_TYPE => 0;
+
 my $palette = undef;
+
+my @connector_types = (
+  'Any',
+  'None',
+  'Pipe',
+  'Record',
+);
 
 sub new {
   my $class = shift;
@@ -70,6 +79,30 @@ sub window {
   $self->gladexml($gladexml);
 
   $self->{window} = $gladexml->get_widget('palette');
+
+  $self->connect_signals($gladexml);
+
+  return $self->{window};
+}
+
+
+sub connect_signals {
+  my($self) = @_;
+
+  foreach my $menu_name (qw(input_menu output_menu)) {
+    my $menu = $self->gladexml->get_widget($menu_name)
+      or return $self->app->alert("Can't find input_menu combo");
+    my $model = $menu->get_model
+      or return $self->app->alert("input_menu combo has no storage");
+
+    $model->clear;
+    foreach my $type (@connector_types) {
+      my $iter = $model->append;
+      $model->set($iter, COL_TYPE, $type);
+    }
+    $menu->set_active(0);
+  }
+
 }
 
 
