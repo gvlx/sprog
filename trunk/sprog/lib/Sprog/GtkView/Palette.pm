@@ -195,12 +195,12 @@ sub _build_combos {
   my $table = Gtk2::Table->new(2, 2, FALSE);
 
   my $label_in = Gtk2::Label->new;
-  $label_in->set_markup('<small>Input Connector:</small>');
+  $label_in->set_markup('<small>Connector In:</small>');
   $label_in->set_justify('left');
   $table->attach($label_in, 0, 1, 0, 1, [ 'expand', 'fill'], [ 'fill'], 4, 2);
 
   my $label_out = Gtk2::Label->new;
-  $label_out->set_markup('<small>Output Connector:</small>');
+  $label_out->set_markup('<small>Connector Out:</small>');
   $label_out->set_justify('left');
   $table->attach($label_out, 1, 2, 0, 1, [ 'expand', 'fill'], [ 'fill'], 4, 2);
 
@@ -232,6 +232,7 @@ sub _build_searchbox {
   my $table = Gtk2::Table->new(1, 3, FALSE);
   
   my $entry = Gtk2::Entry->new;
+  $entry->set_width_chars(9);
   $self->search_entry($entry);
   $table->attach($entry, 0, 1, 0, 1, [ 'expand', 'fill'], [ 'fill'], 4, 2);
   
