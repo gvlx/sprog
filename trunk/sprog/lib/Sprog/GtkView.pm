@@ -6,6 +6,7 @@ use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw(
   app_win
+  menubar
   toolbar
   canvas
   statusbar
@@ -26,6 +27,7 @@ use Gnome2::Canvas;
 use Gtk2::SimpleMenu;
 
 use Sprog::GtkView::Chrome;
+use Sprog::GtkView::Menubar;
 use Sprog::GtkView::Toolbar;
 use Sprog::GtkView::AlertDialog;
 use Sprog::GtkView::AboutDialog;
@@ -81,67 +83,12 @@ sub build_app_window {
 sub _build_menubar {
   my($self) = @_;
 
-  my $action = 0;
-  my $app = $self->app;
-  my $menu_tree = [
-    _File  => {
-      item_type  => '<Branch>',
-      children => [
-        _New => {
-          callback        => sub { $app->file_new },
-          callback_action => $action++,
-        },
-        _Open => {
-          callback        => sub { $app->file_open },
-          callback_action => $action++,
-          accelerator     => '<ctrl>O',
-        },
-        _Save => {
-          callback        => sub { $app->file_save },
-          callback_action => $action++,
-          accelerator     => '<ctrl>S',
-        },
-        'Save _As' => {
-          callback        => sub { $app->file_save_as },
-          callback_action => $action++,
-        },
-        _Quit => {
-          callback        => sub { $app->quit; },
-          callback_action => $action++,
-          accelerator     => '<ctrl>Q',
-        },
-      ],
-    },
-    _Machine  => {
-      item_type  => '<Branch>',
-      children => [
-        _Run => {
-          callback        => sub { $app->run_machine; },
-          callback_action => $action++,
-          accelerator     => '<ctrl>R',
-        },
-        _Stop => {
-          callback        => sub { $app->stop_machine; },
-          callback_action => $action++,
-        },
-      ],
-    },
-    _Help  => {
-      item_type  => '<Branch>',
-      children => [
-        _About => {
-          callback        => sub { $app->help_about },
-          callback_action => $action++,
-        },
-      ],
-    },
-  ];
+  my $menubar = Sprog::GtkView::Menubar->new(app => $self->app);
+  $self->menubar($menubar);
 
-  my $menu = Gtk2::SimpleMenu->new(menu_tree => $menu_tree);
+  $self->app_win->add_accel_group($menubar->accel_group);
 
-  $self->app_win->add_accel_group($menu->{accel_group});
-
-  return $menu->{widget};
+  return $menubar->widget;
 }
 
 
@@ -407,6 +354,7 @@ sub toggle_palette {
 sub show_palette {
   my($self) = @_;
 
+  $self->menubar->set_palette_active(TRUE);
   $self->toolbar->set_palette_active(TRUE);
   $self->palette_win->show;
   $self->palette->search_entry->grab_focus;
@@ -418,6 +366,7 @@ sub show_palette {
 sub hide_palette {
   my($self) = @_;
 
+  $self->menubar->set_palette_active(FALSE);
   $self->toolbar->set_palette_active(FALSE);
   $self->palette_win->hide();
   $self->palette_visible(0);
