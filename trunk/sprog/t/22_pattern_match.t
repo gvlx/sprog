@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 22;
 
 use File::Spec;
 
@@ -43,26 +43,17 @@ is($ref->{NEXT}, $sink->id, 'successfully got next gear id for serialising');
 
 
 $reader->filename($data_file);
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-is($app->alerts, '', 'no alerts while running machine');
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], \@all, 'All lines passed through by default');
 
 
 $grep->pattern('');
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-is($app->alerts, '', 'no alerts while running machine');
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], \@all, 'All lines passed through by default 2');
 
 
 $grep->pattern('etc');
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-is($app->alerts, '', 'no alerts while running machine');
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/syslog.conf\n",
@@ -72,10 +63,7 @@ is_deeply([ $sink->lines ], [
 
 $grep->pattern('etc');
 $grep->ignore_case(0);
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-is($app->alerts, '', 'no alerts while running machine');
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/syslog.conf\n",
@@ -85,10 +73,7 @@ is_deeply([ $sink->lines ], [
 $grep->pattern('log');
 $grep->ignore_case(1);
 $grep->invert_match(1);
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-is($app->alerts, '', 'no alerts while running machine');
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/usr/bin/cat\n",
