@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>Introducing Sprog</title>
+  <link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+<body>
+
+<div id="logo"><img src="../images/sprog-logo.png" alt="Sprog Logo" /></div>
+<div id="headline"><img src="../images/sprog-heading.png" alt="Sprog!" /></div>
+<div id="hline"></div>
+
+<div id="indent-content">
+<div id="content">
+
+<h2>Installing Sprog</h2>
+
+<p>Instructions for locating and installing packaged 'binary' builds of Sprog
+will be added here as they become available.  The prerequisite libraries and
+generic installation instructions are listed towards the end of this page.</p>
+
+<ul>
+  <li><a href="#debian">Debian apt Repository</a></li>
+  <li><a href="#generic">Generic Installation Instructions</a></li>
+</ul>
+
+<h3><a name="debian"></a>Debian apt Repository</h3>
+
+<p>Debian '.deb' package files are available here for testing ('Sarge') and
+unstable distributions.  Add this line to your /etc/apt/sources.list:</p>
+
+<pre>  deb http://sprog.sourceforge.net/debian unstable contrib</pre>
+
+<p>Then after refreshing your package listings, install the package
+'libsprog-perl'.  This will resolve any dependecies and install prerequisite
+packages from your standard Debian sources.</p>
+
+<h3><a name="generic"></a>Generic Installation Instructions</h3>
+
+<p>Sprog is written in Perl and uses the GTK GUI toolkit.  Before you
+attempt to install Sprog itself, you will need to ensure you have the 
+following packages installed:</p>
+
+<ul>
+  <li>GTK+ libraries</li>
+  <li>libgnomecanvas<super>*</super></li>
+  <li>libglade</li>
+  <li><a href="http://search.cpan.org/dist/perl/">Perl</a> - preferably version
+  5.8, along with the following CPAN modules:
+  <ul>
+    <li><a href="http://search.cpan.org/dist/Gtk2/">Gtk2</a> Perl bindings</li>
+    <li><a href="http://search.cpan.org/dist/Gnome2-Canvas/">Gnome2::Canvas</a><super>*</super></li>
+    <li><a href="http://search.cpan.org/dist/Gtk2-GladeXML/">Gtk2::GladeXML</a></li>
+    <li><a href="http://search.cpan.org/dist/Class-Accessor/">Class::Accessor</a></li>
+    <li><a href="http://search.cpan.org/dist/YAML/">YAML</a></li>
+  </ul>
+  </li>
+</ul>
+
+<p>*<i> Note: although libgnomecanvas is part of the <a
+href="http://www.gnome.org/">GNOME</a> project, it compiles separately and is
+portable across operating systems.  You do not need to be running the GNOME
+desktop environment to run Sprog.</i></p>
+
+<p>Once you have the prerequisite packages installed,<a
+  href="http://sourceforge.net/project/showfiles.php?group_id=126289">download</a>
+  the latest source distribution and unpack it into a temporary directory.
+  Run the following commands from that directory:</p>
+<pre>  perl Makefile.PL
+  make
+  make test
+  make install</pre>
+
+<p>Start Sprog by running: sprog</p>
+
+<h3>Notes for Windows Users</h3>
+
+<p>Unfortunately, there is no easy single download to install Sprog, or 
+even it's prerequisites.  Your first step should be to install <a
+href="http://www.activestate.com/Products/ActivePerl/">ActiveState
+Perl</a> - it's free and it does come with an installer.</p>
+
+<p>The steps following that get progressively more 'hard core'.  Binary
+downloads of the GTK+ libraries are available for download from
+<a href="http://www.gimp.org/~tml/gimp/win32/downloads.html">gimp.org</a>.
+PPM distributions of the Gtk-Perl modules are available from the
+<a href="http://gtk2-perl.sourceforge.net/win32/">gtk2-perl project</a>. 
+Even after all that, you'll still be missing the GNOME canvas library and its
+Perl binding.  Reportedly these can be built on Windows, but you'll have
+to break out your compiler.</p>
+
+<p>If you do manage to crack that, the gtk2-perl project would be happy to host PPMs (hint, hint).</p>
+
+
+<p>&nbsp;</p>
+
+</div>
+</div>
+
+<div id="navlinks">
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../intro/index.html">What is Sprog?</a></li>
+    <li><a href="../screenshots/index.html">Screenshots</a></li>
+    <li><a href="http://sourceforge.net/project/showfiles.php?group_id=126289">Download</a></li>
+    <li>Installation</li>
+    <li><a href="http://sourceforge.net/cvs/?group_id=126289">CVS</a></li>
+    <li><a href="http://sourceforge.net/projects/sprog/">SourceForge Summary Page</a></li>
+  </ul>
+
+  <div id="logos">
+    <dl>
+      <dt>Powered by:</dt>
+      <dd><a href="http://gtk2-perl.sourceforge.net/"><img
+        src="../images/gtk-logo-rgb.gif" alt="gtk2-perl" /></a></dd>
+      <dd><a href="http://www.perl.com/"><img
+        src="../images/perl_id_bw_sm_bu.gif" alt="Perl" /></a></dd>
+
+      <dt>Hosted by:</dt>
+      <dd><a href="http://sourceforge.net"><img
+        src="http://sflogo.sourceforge.net/sflogo.php?group_id=126289&amp;type=2" 
+        width="125" height="37" alt="SourceForge.net" /></a></dd>
+    </dl>
+  </div>
+</div>
+
+</body>
+</html>
