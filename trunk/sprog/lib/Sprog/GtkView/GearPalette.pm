@@ -97,8 +97,8 @@ sub window {
 
   $window->signal_connect(delete_event => sub { $self->app->hide_palette; } );
 
-  $self->initialise_models($gladexml);
-  $self->connect_signals($gladexml);
+  $self->initialise_models($gladexml) &&
+  $self->connect_signals($gladexml, $window);
 
   return $self->{window};
 }
@@ -158,11 +158,12 @@ sub initialise_models {
     $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]);
   }
 
+  return 1;
 }
 
 
 sub connect_signals {
-  my($self, $gladexml) = @_;
+  my($self, $gladexml, $window) = @_;
 
   foreach my $menu_name (qw(input_menu output_menu)) {
     my $menu = $gladexml->get_widget($menu_name);
@@ -174,6 +175,21 @@ sub connect_signals {
 
   $button = $gladexml->get_widget('reset');
   $button->signal_connect(clicked => sub { $self->reset_filter(); });
+
+  my $gearlist = $gladexml->get_widget('gear_list');
+  $gearlist->drag_source_set(
+    ['button1_mask'], ['copy'], Sprog::GtkView::drag_targets()
+  );
+
+  my $colormap = $window->get_colormap;
+  my($drag_icon, $drag_mask) = Sprog::GtkView::Chrome::drag_icon($colormap);
+  $gearlist->drag_source_set_icon($colormap,  $drag_icon, $drag_mask);
+
+#  $gearlist->signal_connect(drag_begin    => \&src_drag_begin);
+  $gearlist->signal_connect(
+    drag_data_get => sub { $self->drag_data_get(@_); }
+  );
+
 }
 
 
@@ -188,6 +204,17 @@ sub reset_filter {
   my($self, $menu) = @_;
 
   $self->app->not_implemented;
+}
+
+
+sub drag_data_get {
+  my($self, $gearlist, $context, $data, $info, $time) = @_;
+
+  my $selection = $gearlist->get_selection  || return;
+  my($path) = $selection->get_selected_rows || return;
+  my $index = $path->to_string;
+  my $gear_class = $gear_classes[$index];
+  $data->set($data->target, 8, $gear_class);
 }
 
 

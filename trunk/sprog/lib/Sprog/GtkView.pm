@@ -27,6 +27,7 @@ use Sprog::GtkView::AboutDialog;
 use Sprog::GtkView::GearPalette;
 use Sprog::GtkGearView;
 
+use constant TARG_STRING  => 0;
 
 sub new {
   my $class = shift;
@@ -55,7 +56,7 @@ sub build_app_window {
 
   my $app_win = $self->app_win(Gtk2::Window->new);
   $app_win->signal_connect(destroy => sub { Gtk2->main_quit; });
-  $app_win->set_default_size (450, 420);
+  $app_win->set_default_size(450, 420);
 
   my $vbox = Gtk2::VBox->new(FALSE, 0);
   $app_win->add($vbox);
@@ -250,16 +251,22 @@ sub add_workbench {
 
   my $scroller = Gtk2::ScrolledWindow->new;
   my $canvas   = Gnome2::Canvas->new_aa;
-  $scroller->add ($canvas);
+  $scroller->add($canvas);
   $self->canvas($canvas);
 
-  my $color = Gtk2::Gdk::Color->parse ("#007f00");
-  $canvas->modify_bg ('normal', $color);
+  my $color = Gtk2::Gdk::Color->parse("#007f00");
+  $canvas->modify_bg('normal', $color);
 
-  $scroller->set_policy ('automatic', 'automatic');
+  $scroller->set_policy('automatic', 'automatic');
   $vbox->pack_start($scroller, TRUE, TRUE, 0);
-  $canvas->set_scroll_region (0, 0, 400, 300);
+  $canvas->set_scroll_region(0, 0, 400, 300);
 
+  # Set up as target for drag-n-drop
+
+  $canvas->drag_dest_set('all', ['copy'], $self->drag_targets);
+  $canvas->signal_connect(
+    drag_data_received => sub { $self->drag_data_received(@_); }
+  );
 }
 
 
@@ -282,6 +289,32 @@ sub set_window_title {
     $title = $name;
   }
   $self->app_win->set_title("$title - Sprog");
+}
+
+
+sub drag_targets {
+  return {'target' => "STRING", 'flags' => ['same-app'], 'info' => TARG_STRING};
+};
+
+
+sub drag_data_received {
+  my($self, $canvas, $context, $x, $y, $data, $info, $time) = @_;
+
+  if(($data->length < 1) || ($data->format != 8)) {
+    $context->finish (0, 0, $time);
+    return
+  }
+
+  my $gear_class = $data->data;
+  $context->finish (1, 0, $time);
+  printf("Received '%s' at $x, $y\n", $gear_class);
+
+  my($cx, $cy) = $canvas->w2c($x, $y);
+  printf("CanvasXY: $cx, $cy\n");
+  my $gear = $self->app->add_gear_at_x_y($gear_class, $cx, $cy) or return;
+  my $gearview = $self->gear_view_by_id($gear->id);
+  $self->app->drop_gear($gearview, $cx, $cy);
+  return;
 }
 
 
@@ -358,7 +391,7 @@ sub confirm {
   my($self, $message, $parent) = @_;
 
   $parent ||= $self->app_win;
-  my $dialog = Gtk2::MessageDialog->new (
+  my $dialog = Gtk2::MessageDialog->new(
     $parent, 
     'destroy-with-parent',
     'question', 
@@ -474,7 +507,6 @@ sub delete_gear_view_by_id {
 sub drop_gear {
   my($self, $gearv, $x, $y) = @_;
 
-
   my $gear = $gearv->gear;
   my $input_type = $gear->input_type              || return;
 
@@ -507,13 +539,13 @@ sub add_idle_handler {
 sub add_io_reader {
   my($self, $fh, $sub) = @_;
 
-  return Glib::IO->add_watch (fileno($fh), ['in', 'err', 'hup'], $sub);
+  return Glib::IO->add_watch(fileno($fh), ['in', 'err', 'hup'], $sub);
 }
 
 sub dump {
   my($self) = @_;
 
-  foreach my $id (sort {$a <=> $b} keys %{$self->{gears}}) {
+  foreach my $id(sort {$a <=> $b} keys %{$self->{gears}}) {
     $self->{gears}->{$id}->dump;
   }
 }
