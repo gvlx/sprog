@@ -1,6 +1,7 @@
 bin/sprog
 Changes
 lib/Sprog.pm
+lib/Sprog/ClassFactory.pm
 lib/Sprog/Gear.pm
 lib/Sprog/Gear/ApacheLogParse.pm
 lib/Sprog/Gear/Bottom.pm
@@ -35,4 +36,4 @@ Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
 README
-t/Sprog.t
+t/00_config.t
