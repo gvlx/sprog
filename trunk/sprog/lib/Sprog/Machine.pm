@@ -8,12 +8,13 @@ __PACKAGE__->mk_accessors(qw(
   app
   parts
   gear_train
-  running
+  start_time
   stalled
 ));
 
 use Scalar::Util qw(weaken);
 use YAML;
+use Time::HiRes qw(time);
 
 use constant FILE_APPLICATION_ID         => 'Sprog';
 use constant FILE_FORMAT_CURRENT_VERSION => 1;
@@ -170,6 +171,23 @@ sub detach_gear {
       return;
     }
   }
+}
+
+
+sub running {
+  my $self = shift;
+  
+  if(@_) {
+    $self->{running} = shift;
+    if($self->{running}) {
+      $self->start_time(time());
+    }
+    else {
+      my $run_time = sprintf("%4.2fs", time() - $self->start_time);
+      $self->app->status_message("Machine stopped (elapsed time: $run_time)");
+    }
+  }
+  return $self->{running};
 }
 
 
