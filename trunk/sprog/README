@@ -21,8 +21,8 @@ the data transformations you use most often.
 
 PREREQUISITES
 
-  GTK2 - I have version 2.4 so best to use that or later
-  GNOME2::Canvas
+  Gtk2 - I have version 2.4 so best to use that or later
+  Gnome2::Canvas
   Gtk2::GladeXML
   Class::Accessor
 
