@@ -26,12 +26,13 @@ PREREQUISITES
   Gtk2::GladeXML
   Class::Accessor
   YAML
+  Pod::Simple
 
 On my Debian 'Sarge' system, this is all that's required to install the
 prerequisites:
 
   apt-get install libgtk2-perl libgnome2-canvas-perl libgtk2-gladexml-perl \
-          libclass-accessor-perl libyaml-perl
+          libclass-accessor-perl libyaml-perl libpod-simple-perl
 
 
 INSTALLING
