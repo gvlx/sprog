@@ -81,6 +81,7 @@ sub file_save_as {
 sub load_from_file {
   my($self, $filename) = @_;
 
+  $self->machine->expunge;
   $self->machine->load_from_file($filename) || return;
   $self->filename($filename);
 }

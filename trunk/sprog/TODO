@@ -1,8 +1,6 @@
-* Save/restore machine
- - warn before overwriting
- - save to remembered filename
- - save-as to default to current filename if known
+* Warn about unsaved changes (before load, new or exit)
 * Implement SIG_PIPE analog
+* Perl gear - unbind escape key from cancel (for vi users)
 * TextWindow - bind escape key to hide function
 * File browse - remember last directory
 * Implement ApacheCustomLogParse

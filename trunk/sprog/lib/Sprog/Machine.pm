@@ -37,6 +37,14 @@ sub new {
 }
 
 
+sub expunge {
+  my($self) = @_;
+
+  my $app = $self->app;
+  $app->delete_gear_by_id($_) foreach( keys %{$self->parts} );
+}
+
+
 sub save_to_file {
   my($self, $filename) = @_;
 
