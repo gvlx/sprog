@@ -40,6 +40,7 @@ META.yml			Module meta-data (added by MakeMaker)
 README
 t/00_config.t
 t/01_factory.t
+t/08_gear.t
 t/10_read_file.t
 t/20_line_input.t
 t/22_pattern_match.t
