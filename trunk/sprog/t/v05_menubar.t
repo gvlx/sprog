@@ -8,9 +8,10 @@ BEGIN {
     unless(defined($ENV{DISPLAY})  &&  $ENV{DISPLAY} =~ /:\d/);
 }
 
-plan tests => 39;
+plan tests => 54;
 
 use File::Spec;
+use Glib qw(TRUE FALSE);
 
 BEGIN {
   unshift @INC, File::Spec->catfile('t', 'lib');
@@ -20,9 +21,11 @@ use_ok('TestApp');
 
 my $app = TestApp->make_gtk_app;
 is($app->alerts, '', 'no alerts when creating app');
+$app->quit_on_stop(0);
 
 my $file_quit_failed = 0;
 my $last_dialog;
+my $outputv;
 
 $app->run_sequence(
 
@@ -213,6 +216,86 @@ $app->run_sequence(
     like($app->alerts, qr/^You must add an input gear/,
       'correct alert for trying to run an empty machine');
     $app->alerts('');
+
+    my $path = '/Help/About';
+    $app->add_timeout(200, \&click_close_button );
+    ok(
+      $app->view->activate_menu_item($path),
+      "selected $path"
+    );
+  },
+
+  sub {
+    my $filename = File::Spec->catfile('t', 'counter.sprog');
+    $filename = File::Spec->rel2abs($filename);
+    $app->load_from_file($filename);
+
+    my $input = $app->machine->head_gear;
+    isa_ok($input, 'Sprog::Gear::CommandIn', 'input gear from file');
+
+    my $output = $input->last;
+    isa_ok($output, 'Sprog::Gear::TextWindow', 'output gear from file');
+
+    $outputv = $app->view->gear_view_by_id($output->id);
+    isa_ok($outputv, 'Sprog::GtkGearView::TextWindow', 'view object for output gear');
+    $app->alerts('');
+    $@ = '';
+    eval {
+      $outputv->clear;
+    };
+    is($app->alerts . "$@", '', 'clear output of non-existant window not fatal');
+
+    my $path = '/Machine/Run';
+    ok(
+      $app->view->activate_menu_item($path),
+      "selected $path"
+    );
+  },
+
+  100,
+
+  sub {
+    my $running = $app->machine_running;
+    is($running, 1, 'machine is running');
+
+    my $path = '/Machine/Stop';
+    ok(
+      $app->view->activate_menu_item($path),
+      "selected $path"
+    );
+  },
+
+  sub {
+    my $running = $app->machine_running;
+    is($running, 0, 'machine is stopped');
+
+    $app->alerts('');
+    $@ = '';
+    eval {
+      $outputv->clear;
+      $outputv->toggle_window_visibility;
+    };
+    is($app->alerts . "$@", '', 'no errors clearing & hiding text window');
+
+    # Trying to set sensitivity of no-existant menu item is non-fatal
+    $app->alerts('');
+    $@ = '';
+    eval {
+      $app->view->menubar->set_sensitive('/Foo/Bar', FALSE);
+    };
+    is($app->alerts . "$@", '', 'set sensitive on bad path quietly ignored');
+  },
+
+  sub {
+    # Silly messing around to improve coverage :-)
+    my $menu = $app->view->menubar->menu;
+    $menu->delete_entries({path => '/View/Palette'});
+    $app->alerts('');
+    $@ = '';
+    eval {
+      $app->toggle_palette;
+    };
+    is($app->alerts . "$@", '', 'toggling palette when menu item deleted');
   },
 
   sub {
@@ -229,6 +312,7 @@ $app->run_sequence(
 
 );
 
+is($app->timed_out, 0, 'app did not time out');
 ok(!$file_quit_failed, 'exited successfully using File Quit');
 
 exit;
@@ -246,3 +330,14 @@ sub dialog_response {
   return;
 }
 
+sub click_close_button {
+  my $dialog = $app->view->find_window('About Sprog');
+  ok(defined($dialog), 'located the alert window');
+
+  my $close = $app->view->find_button($dialog, 'Close');
+  isa_ok($close, 'Gtk2::Button', 'close button');
+
+  $close->clicked;
+
+  return FALSE;   # don't re-invoke this handler
+}
