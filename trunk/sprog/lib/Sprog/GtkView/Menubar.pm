@@ -71,7 +71,12 @@ sub _build_menubar {
           callback_action => $action++,
           accelerator     => 'F9',
         },
-        '_Toolbar Style' => {
+        _Toolbar => {
+          item_type       => '<CheckItem>',
+          callback        => sub { $self->_toggle_toolbar(@_); },
+          callback_action => $action++,
+        },
+        'Toolbar _Style' => {
             item_type  => '<Branch>',
             children => [
                 'I_cons and Text' => {
@@ -127,17 +132,37 @@ sub _build_menubar {
     },
   ];
 
-  $self->menu(Gtk2::SimpleMenu->new(menu_tree => $menu_tree));
+  my $menu = Gtk2::SimpleMenu->new(menu_tree => $menu_tree);
+  $self->menu($menu);
+
+  my $item = $menu->get_widget('/View/Toolbar') || return;
+  $item->set_active(TRUE);
+
+  return $menu;
 }
 
+
 sub accel_group { shift->menu->{accel_group} };
-sub widget      { shift->menu->{widget} };
+sub widget      { shift->menu->{widget}      };
+
 
 sub set_palette_active {
   my($self, $state) = @_;
 
   my $item = $self->menu->get_widget('/View/Palette') || return;
   $item->set_active($state);
+}
+
+
+sub _toggle_toolbar {
+  my($self, $data, $action, $item) = @_;
+
+  if($item->get_active) {
+    $self->app->show_toolbar;
+  }
+  else {
+    $self->app->hide_toolbar;
+  }
 }
 
 1;

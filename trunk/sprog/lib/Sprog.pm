@@ -41,6 +41,9 @@ sub run {
 
 sub quit             { shift->view->quit();               }
 
+sub show_toolbar { my $view = shift->view || return; $view->show_toolbar(); }
+sub hide_toolbar { my $view = shift->view || return; $view->hide_toolbar(); }
+
 sub set_toolbar_style { shift->view->set_toolbar_style(@_); }
 sub toggle_palette   { shift->view->toggle_palette();     }
 sub show_palette     { shift->view->show_palette();       }

@@ -101,6 +101,8 @@ sub _build_toolbar {
   return $toolbar->widget;
 }
 
+sub show_toolbar        { $_[0]->toolbar->widget->show                 }
+sub hide_toolbar        { $_[0]->toolbar->widget->hide                 }
 
 sub set_toolbar_style   { $_[0]->toolbar->set_style($_[1]);            }
 sub  enable_tool_button { $_[0]->toolbar->set_sensitive($_[1], TRUE);  }
