@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';# tests => 14;
+use Test::More tests => 17;
 
 use File::Spec;
 
@@ -68,6 +68,10 @@ $sub->();
 $reader->send_data;    # Go for the EOF event
 
 is(scalar(@$io_queue), 1, "one new io_reader message queued");
+
+$sub = shift @$io_queue;
+is(scalar(@$io_queue), 0, "de-queued the io_reader message");
+$sub->();
 
 1 while($sink->turn_once);
 
