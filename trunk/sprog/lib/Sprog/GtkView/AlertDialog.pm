@@ -1,4 +1,4 @@
-package Sprog::GtkAlertDialog;
+package Sprog::GtkView::AlertDialog;
 
 use strict;
 
