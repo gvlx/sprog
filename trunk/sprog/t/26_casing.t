@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';# tests => 26;
+use Test::More tests => 21;
 
 use File::Spec;
 
