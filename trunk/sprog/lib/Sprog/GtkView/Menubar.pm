@@ -20,7 +20,7 @@ sub new {
   my $class = shift;
 
   my $self = bless { @_, }, $class;
-  $self->{app} && weaken($self->{app});
+  weaken($self->{app});
 
   $self->_build_menubar;
 
