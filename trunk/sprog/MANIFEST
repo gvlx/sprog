@@ -10,6 +10,7 @@ lib/Sprog/Gear/CSVSplit.pm
 lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
 lib/Sprog/Gear/InputByLine.pm
+lib/Sprog/Gear/InputFromFH.pm
 lib/Sprog/Gear/LowerCase.pm
 lib/Sprog/Gear/PerlCode.pm
 lib/Sprog/Gear/PerlCodeHP.pm
@@ -39,6 +40,7 @@ META.yml			Module meta-data (added by MakeMaker)
 README
 t/00_config.t
 t/01_factory.t
+t/10_read_file.t
 t/20_line_input.t
 t/22_pattern_match.t
 t/lib/Dummy.pm
@@ -47,3 +49,5 @@ t/lib/DummyGear.pm
 t/lib/DummyMachine.pm
 t/lib/DummyView.pm
 t/lib/LineGear.pm
+t/lib/TextGear.pm
+t/rgb.txt
