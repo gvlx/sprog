@@ -2,7 +2,10 @@ package Sprog::Gear::ApacheLogParse;
 
 use strict;
 
-use base qw(Sprog::Gear);
+use base qw(
+  Sprog::Gear
+  Sprog::Gear::InputByLine
+);
 
 use Apache::LogRegex;
 
@@ -17,7 +20,7 @@ sub output_type   { 'H'; }
 sub prime {
   my $self = shift;
 
-  my $lr = eval {
+  my $parser = eval {
     Sprog::Gear::ApacheLogParse::Parser->new($self->format_string) 
   };
   if ($@) {
@@ -25,7 +28,7 @@ sub prime {
     return;
   }
 
-  $self->{lr} = $lr;
+  $self->{parser} = $parser;
 
   return $self->SUPER::prime;
 }
@@ -47,12 +50,12 @@ sub format_string {
 sub line {
   my($self, $line) = @_;
 
-  return unless $self->{lr};
+  return unless $self->{parser};
 
-  my %data = eval { $self->{lr}->parse($line); };
+  my %fields = eval { $self->{parser}->parse($line); };
 
-  if(%data) {
-    $self->msg_out(data => \%data);
+  if(%fields) {
+    $self->msg_out(record => \%fields);
   }
   else {
     warn "Could not parse: $line\n";
