@@ -1,8 +1,6 @@
 package Sprog;
 
 use strict;
-use Sprog::Machine;
-use Sprog::GtkView;
 
 our $VERSION = '0.07';
 
@@ -169,6 +167,11 @@ sub help_about {
   });
 }
 
+1;
+
+__END__
+
+
 =head1 NAME
 
 Sprog - GUI with a Perl centre
@@ -211,6 +214,8 @@ The GUI and event-driven scheduler is built on L<Gtk2>.
 
 The properties auto-dialog (PAD) framework uses L<Gtk2::GladeXML>.
 
+File save and restore uses L<YAML>.
+
 If you don't already have gtk2-perl installed then you may find that is a major
 hurdle.  Of course if you're running Debian GNU/Linux then you'll just need to
 run:
@@ -226,11 +231,10 @@ The Sprog web site is hosted by SourceForge at: L<http://sprog.sourceforge.net/>
 
 =head1 COPYRIGHT 
 
-Copyright 2004 Grant McLean E<lt>grantm@cpan.orgE<gt>
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
 =cut
 
-1;
