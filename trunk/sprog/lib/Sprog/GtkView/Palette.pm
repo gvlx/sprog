@@ -94,12 +94,12 @@ my @gear_classes = (   # Hardcoded for now - better idea coming soon
     type_in  => 'P',
     type_out => '_',
   },
-  {
-    class => 'Sprog::Gear::CSVSplit',
-    title    => 'CSV Split',
-    type_in  => 'P',
-    type_out => 'A',
-  },
+#  {
+#    class => 'Sprog::Gear::CSVSplit',
+#    title    => 'CSV Split',
+#    type_in  => 'P',
+#    type_out => 'A',
+#  },
   {
     class => 'Sprog::Gear::ApacheLogParse',
     title    => 'Parse Apache Log',
