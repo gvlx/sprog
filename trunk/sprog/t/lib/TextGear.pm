@@ -1,7 +1,7 @@
 package TextGear;
 
 use base qw(
-  Sprog::Gear
+  Sprog::Gear::Bottom
 );
 
 __PACKAGE__->mk_accessors(qw(

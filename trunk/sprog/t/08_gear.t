@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 20;
+use Test::More tests => 27;
 
 use File::Spec;
 
@@ -50,6 +50,8 @@ is_deeply($ref, {
 use_ok('Sprog::Gear::Top');
 my $top = Sprog::Gear::Top->new;
 isa_ok($top, 'Sprog::Gear::Top');
+isa_ok($top, 'Sprog::Gear');
+ok(!defined($top->input_type), 'top gear input type undefined');
 ok(!$top->has_input, 'top gear has no input');
 
 $@ = '';
@@ -58,4 +60,13 @@ eval {
 };
 like("$@", qr/Sprog::Gear::Top has no input queue/, 
   'dies on attempt to access non-existant message queue');
+
+
+use_ok('Sprog::Gear::Bottom');
+my $bottom = Sprog::Gear::Bottom->new;
+isa_ok($bottom, 'Sprog::Gear::Bottom');
+isa_ok($bottom, 'Sprog::Gear');
+ok(!defined($bottom->output_type), 'bottom gear output type undefined');
+ok(!$bottom->has_output, 'bottom gear has no output');
+
 

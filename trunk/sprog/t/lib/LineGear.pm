@@ -1,7 +1,7 @@
 package LineGear;
 
 use base qw(
-  Sprog::Gear
+  Sprog::Gear::Bottom
   Sprog::Gear::InputByLine
 );
 
