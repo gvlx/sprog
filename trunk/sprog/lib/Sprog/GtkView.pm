@@ -307,10 +307,10 @@ sub drag_data_received {
 
   my $gear_class = $data->data;
   $context->finish (1, 0, $time);
-  printf("Received '%s' at $x, $y\n", $gear_class);
+#  printf("Received '%s' at $x, $y\n", $gear_class);
 
   my($cx, $cy) = $canvas->w2c($x, $y);
-  printf("CanvasXY: $cx, $cy\n");
+#  printf("CanvasXY: $cx, $cy\n");
   my $gear = $self->app->add_gear_at_x_y($gear_class, $cx, $cy) or return;
   my $gearview = $self->gear_view_by_id($gear->id);
   $self->app->drop_gear($gearview, $cx, $cy);
