@@ -22,6 +22,12 @@ sub new {
   return $self;
 }
 
+# NOP Methods:
 
+sub add_gear_view          { return; }
+sub running                { return; }
+sub status_message         { return; }
+sub set_window_title       { return; }
+sub delete_gear_view_by_id { return; }
 1;
 
