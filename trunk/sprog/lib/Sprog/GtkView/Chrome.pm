@@ -1,4 +1,4 @@
-package Sprog::GtkViewChrome;
+package Sprog::GtkView::Chrome;
 
 
 sub cogs {
