@@ -37,7 +37,7 @@ sub line {
   my($self, $line) = @_;
 
   if(my $regex = $self->{regex}) {
-    return unless($line =~ $regex ^ $self->{invert_match});
+    return unless($line =~ $regex ^ ($self->{invert_match} ? 1 : 0));
   }
 
   $self->msg_out(line  => $line);
