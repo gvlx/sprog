@@ -10,11 +10,15 @@ use base qw(Class::Accessor::Fast);
 __PACKAGE__->mk_accessors(qw(
   app
   gladexml
+  gearlist_model
 ));
 
 use Scalar::Util qw(weaken);
 
 use constant COL_TYPE => 0;
+
+use constant COL_GEAR_INDEX => 0;
+use constant COL_GEAR_CLASS => 1;
 
 my $palette = undef;
 
@@ -23,6 +27,17 @@ my @connector_types = (
   'None',
   'Pipe',
   'Record',
+);
+
+my @gear_classes = (
+  'Sprog::Gear::ReadFile',
+  'Sprog::Gear::CommandIn',
+  'Sprog::Gear::Grep',
+  'Sprog::Gear::FindReplace',
+  'Sprog::Gear::PerlCode',
+  'Sprog::Gear::LowerCase',
+  'Sprog::Gear::UpperCase',
+  'Sprog::Gear::TextWindow',
 );
 
 sub new {
@@ -107,11 +122,72 @@ sub initialise_models {
     $menu->set_active(0);
   }
 
+  # Set up model and columns for main listbox
+  my $model = Gtk2::ListStore->new(
+    'Glib::String',      # COL_GEAR_INDEX
+    'Glib::String',      # COL_GEAR_CLASS
+  );
+  $self->gearlist_model($model);
+
+  my $gearlist = $gladexml->get_widget('gear_list')
+    or return $self->app->alert("Can't find gear_list listbox");
+
+  $gearlist->set_model($model);
+
+  my($renderer, $column);
+  $renderer = Gtk2::CellRendererText->new;
+  $column   = Gtk2::TreeViewColumn->new_with_attributes (
+    "Index",
+    $renderer,
+    text => COL_GEAR_INDEX,
+  );
+  $gearlist->append_column($column);
+
+  $renderer = Gtk2::CellRendererText->new;
+  $column   = Gtk2::TreeViewColumn->new_with_attributes (
+    "Class",
+    $renderer,
+    text => COL_GEAR_CLASS,
+  );
+  $gearlist->append_column($column);
+
+  $model->clear;
+  foreach my $i (0..$#gear_classes) {
+    my $iter = $model->append;
+    $model->set($iter, COL_GEAR_INDEX, $i);
+    $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]);
+  }
+
 }
 
 
 sub connect_signals {
   my($self, $gladexml) = @_;
+
+  foreach my $menu_name (qw(input_menu output_menu)) {
+    my $menu = $gladexml->get_widget($menu_name);
+    $menu->signal_connect(changed => sub { $self->apply_filter(); });
+  }
+
+  my $button = $gladexml->get_widget('search');
+  $button->signal_connect(clicked => sub { $self->apply_filter(); });
+
+  $button = $gladexml->get_widget('reset');
+  $button->signal_connect(clicked => sub { $self->reset_filter(); });
+}
+
+
+sub apply_filter {
+  my($self, $menu) = @_;
+
+  $self->app->not_implemented;
+}
+
+
+sub reset_filter {
+  my($self, $menu) = @_;
+
+  $self->app->not_implemented;
 }
 
 
