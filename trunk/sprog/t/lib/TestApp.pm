@@ -6,7 +6,7 @@ use warnings;
 use base qw(Sprog);
 
 __PACKAGE__->mk_accessors(qw(
-  auto_quit
+  quit_on_stop
   alerts
   intercept_alerts
   timed_out
@@ -16,6 +16,7 @@ __PACKAGE__->mk_accessors(qw(
 use Glib qw(TRUE FALSE);
 use Sprog::ClassFactory;
 
+
 sub make_test_app {
   my $class = shift;
 
@@ -24,7 +25,6 @@ sub make_test_app {
     '/app/machine' => 'TestMachine',
     '/app/view'    => 'DummyView',
   );
-
 }
 
 sub make_gtk_app {
@@ -78,15 +78,15 @@ sub alert {
 }
 
 
-sub run_machine {
+sub test_run_machine {
   my $self = shift;
 
-  $self->auto_quit(1);
+  $self->quit_on_stop(1);
   $self->alerts('');
   $self->timed_out(0);
 
   $self->SUPER::run_machine(@_);
-  return $self->_test_return_value unless $self->machine->running;
+  return $self->alerts unless $self->machine->running;
 
   $self->add_timeout(2000, sub { $self->timed_out(1); $self->quit } );
   $self->run;
@@ -106,14 +106,17 @@ sub _test_return_value {
 sub machine_running {
   my $self = shift;
 
-  $self->quit if(!$self->SUPER::machine_running(@_)  and  $self->auto_quit);
+  my $running = $self->SUPER::machine_running(@_);
+  $self->quit if(!$running  and  $self->quit_on_stop);
+
+  return $running;
 }
 
 
 sub run_sequence {
   my $self = shift;
 
-  $self->auto_quit(0);
+  $self->quit_on_stop(0);
   $self->alerts('');
   $self->timed_out(0);
 
@@ -132,12 +135,17 @@ sub _sequence_step {
 
   my $queue = $self->sequence_queue;
 
-  return FALSE unless(@$queue);    # No milk today thanks
+  return FALSE unless(@$queue);
 
   my $step = shift @$queue;
-  $step->();
-
-  return TRUE;                     # Thank you, please call again
+  if(ref($step)) {
+    $step->();
+    $self->add_idle_handler( sub { $self->_sequence_step } );
+  }
+  else {
+    $self->add_timeout($step, sub { $self->_sequence_step } );
+  }
+  return FALSE;
 }
 
 1;
