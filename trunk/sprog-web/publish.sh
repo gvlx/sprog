@@ -3,7 +3,7 @@
 cd html
 
 echo "Building archive"
-tar cfj /tmp/sprog-web.tbz --exclude=CVS .
+tar cfj /tmp/sprog-web.tbz --exclude=CVS --exclude=.cvsignore --exclude=.*.swp .
 
 echo "Uploading to SourceForge"
 ssh grantm@shell.sourceforge.net sh -c \
