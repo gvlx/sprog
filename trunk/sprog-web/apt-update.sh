@@ -55,8 +55,8 @@ do
   cat >dists/unstable/contrib/binary-$ARCH/Release <<EOF
 Archive: unstable
 Component: contrib
-Origin: Debian
-Label: Debian
+Origin: sprog.sourceforge.net
+Label: Sprog Project Repository
 Architecture: $ARCH
 EOF
 done
