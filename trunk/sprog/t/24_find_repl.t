@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More tests => 30;
 
 use File::Spec;
 
@@ -9,39 +9,26 @@ BEGIN {
   unshift @INC, File::Spec->catfile('t', 'lib');
 }
 
-my $data = <<'EOF';
-/etc/hosts
-/etc/syslog.conf
-/usr/bin/cat
-/usr/bin/grep
-/usr/bin/login
-/usr/bin/ls
-/var/log/syslog
-/var/lib/EtchingsLogo
-EOF
+my $data_file = File::Spec->catfile('t', 'files.txt');
+open my $fh, '<', $data_file or die "open($data_file): $!";
+my @all = <$fh>;
+close $fh;
 
-my @all = $data =~ /(.*?\n)/g;
+use_ok('TestApp');
 
+my $app = TestApp->make_test_app;
 
-use_ok('LineGear');
-use_ok('Sprog::Gear::FindReplace');
-use_ok('Sprog::ClassFactory');
-
-my $app = make_app(               # Imported from ClassFactory.pm
-  '/app'         => 'DummyApp',
-  '/app/machine' => 'DummyMachine',
-);
+my($reader, $subst, $sink) = $app->make_test_machine(qw(
+  Sprog::Gear::ReadFile
+  Sprog::Gear::FindReplace
+  LineGear
+));
+is($app->alerts, '', 'no alerts while creating machine');
 
 
-my $sink = LineGear->new(id => 2);
-isa_ok($sink, 'LineGear');
-$sink->prime;
-
-
-my $subst = Sprog::Gear::FindReplace->new(id => 1, app => $app);
-isa_ok($subst, 'Sprog::Gear::FindReplace');
-isa_ok($subst, 'Sprog::Gear::InputByLine');
-isa_ok($subst, 'Sprog::Gear');
+isa_ok($subst, 'Sprog::Gear::FindReplace', 'find/replace gear');
+isa_ok($subst, 'Sprog::Gear::InputByLine', 'find/replace gear');
+isa_ok($subst, 'Sprog::Gear',              'find/replace gear');
 
 ok($subst->has_input, 'has input');
 ok($subst->has_output, 'has output');
@@ -54,42 +41,21 @@ is($subst->pattern, '', 'default pattern is blank');
 is($subst->replacement, '', 'default replacement is blank');
 
 
-isa_ok($app->machine, 'DummyMachine');
+isa_ok($subst->last, 'LineGear', 'output gear');
 
-
-$subst->next($sink);
-isa_ok($subst->last, 'LineGear');
-
-$subst->machine($app->machine);
-$subst->prime;
-
-$subst->msg_in(data => $data);
-$subst->turn_once;
-1 while($sink->turn_once);
-
-is_deeply([ $sink->lines ], \@all, 'All lines passed through by default');
+$reader->filename($data_file);
+is($app->run_machine, '', 'run completed without timeout or alerts');
+is_deeply([ $sink->lines ], \@all, 'all lines passed through by default');
 
 
 $subst->pattern(undef);
-$subst->prime;
-$sink->reset;
-
-$subst->msg_in(data => $data);
-$subst->turn_once;
-1 while($sink->turn_once);
-
-is_deeply([ $sink->lines ], \@all, 'All lines passed through by default 2');
+is($app->run_machine, '', 'run completed without timeout or alerts');
+is_deeply([ $sink->lines ], \@all, 'all lines passed through by default 2');
 
 
 $subst->pattern('etc');
 $subst->replacement('ETC');
-$subst->prime;
-$sink->reset;
-
-$subst->msg_in(data => $data);
-$subst->turn_once;
-1 while($sink->turn_once);
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/ETC/hosts\n",
   "/ETC/syslog.conf\n",
@@ -103,13 +69,7 @@ is_deeply([ $sink->lines ], [
 
 
 $subst->ignore_case(0);
-$subst->prime;
-$sink->reset;
-
-$subst->msg_in(data => $data);
-$subst->turn_once;
-1 while($sink->turn_once);
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/ETC/hosts\n",
   "/ETC/syslog.conf\n",
@@ -125,13 +85,7 @@ is_deeply([ $sink->lines ], [
 $subst->ignore_case(1);
 $subst->pattern('log');
 $subst->replacement('TRUNK');
-$subst->prime;
-$sink->reset;
-
-$subst->msg_in(data => $data);
-$subst->turn_once;
-1 while($sink->turn_once);
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/sysTRUNK.conf\n",
@@ -147,13 +101,7 @@ is_deeply([ $sink->lines ], [
 $subst->global_replace(0);
 $subst->pattern('log');
 $subst->replacement('TRUNK');
-$subst->prime;
-$sink->reset;
-
-$subst->msg_in(data => $data);
-$subst->turn_once;
-1 while($sink->turn_once);
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/sysTRUNK.conf\n",
@@ -168,32 +116,20 @@ is_deeply([ $sink->lines ], [
 
 $subst->pattern('log(');
 $subst->replacement('TRUNK');
-$subst->prime;
-
-like($app->alerts, qr{Error setting up find/replace\s*Unmatched}s,
+like($app->run_machine, qr{^Error setting up find/replace\s*Unmatched}s,
   "correct alert generated when error in pattern");
-$app->alerts('');
 
 
 $subst->pattern('log');
 $subst->replacement('$bogus');
-$subst->prime;
-
-like($app->alerts, qr{Error setting up find/replace.*bogus}s,
+like($app->run_machine, qr{^Error setting up find/replace.*bogus}s,
   "correct alert generated when error in pattern");
-$app->alerts('');
 
 
 $subst->global_replace(1);
 $subst->pattern('/bin/(.*)');
 $subst->replacement('/\U$1\E');
-$subst->prime;
-$sink->reset;
-
-$subst->msg_in(data => $data);
-$subst->turn_once;
-1 while($sink->turn_once);
-
+is($app->run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/syslog.conf\n",
