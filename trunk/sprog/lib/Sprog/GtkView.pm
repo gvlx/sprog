@@ -33,14 +33,15 @@ sub new {
     gears => {},
   }, $class;
   $self->{app} && weaken($self->{app});
+
+  $self->build_app_window;
+
   return $self;
 }
 
 
 sub run {
   my $self = shift;
-
-  $self->build_app_window;
 
   Gtk2->main;
 }
@@ -279,6 +280,34 @@ sub running {
 }
 
 
+sub file_save_as_filename {
+  my $self = shift;
+
+  my $file_chooser = Gtk2::FileChooserDialog->new(
+    'Save as',
+    undef,
+    'save',
+    'gtk-cancel' => 'cancel',
+    'gtk-ok'     => 'ok'
+  );
+
+  my $filter = Gtk2::FileFilter->new;
+  $filter->add_mime_type('application/x-sprog');
+  $filter->add_pattern("*.sprog");
+  $filter->set_name("Sprog machine files (*.sprog)");
+  $file_chooser->add_filter($filter);
+
+  my $filename = undef;
+  if($file_chooser->run eq 'ok') {
+    $filename = $file_chooser->get_filename;
+    $filename .= '.sprog' if $filename !~ /\.sprog$/;
+  }
+  $file_chooser->destroy;
+
+  return $filename;
+}
+
+
 sub turn_cogs {
   my $self = shift;
 
@@ -299,6 +328,8 @@ sub alert {
   my($self, $message, $detail) = @_;
 
   Sprog::GtkAlertDialog->invoke($self->app_win, $message, $detail);
+
+  return;
 }
 
 
