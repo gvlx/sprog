@@ -66,13 +66,12 @@ sub add_gear {
   $self->init_cog_frames($group);
 
   $group->signal_connect(event => sub { $self->event(@_) });
-  my $x = $gear->x;
-  my $y = $gear->y;
-  $x = 100 unless defined $x;  # TODO: Remove these arbitrary defaults
-  $y =  80 unless defined $y;
+  my $x = $gear->x || 0;
+  my $y = $gear->y || 0;
   $gear->x(0);
   $gear->y(0);
-  $self->move($x, $y);
+  my($world_x, $world_y) = $canvas->window_to_world($x, $y);
+  $self->move($world_x, $world_y);
 
   return $self;
 }
@@ -165,10 +164,13 @@ sub move {
 
   my $group = $self->group;
   $group->move($dx, $dy);
+
+  my($new_x, $new_y) = $group->get_bounds;
+  my($win_x, $win_y) = $group->canvas->world_to_window($new_x, $new_y);
   
   my $gear = $self->gear;
-  $gear->x($gear->x + $dx);
-  $gear->y($gear->y + $dy);
+  $gear->x($win_x);
+  $gear->y($win_y);
 
   my $next = $gear->next || return;
   my $next_view = $self->app->view->gear_view_by_id($next->id);
