@@ -68,7 +68,7 @@ sub add_idle_handler  { shift->event_loop->add_idle_handler(@_); }
 sub add_io_reader     { shift->event_loop->add_io_reader(@_);    }
 
 sub show_help         { shift->view->show_help(@_);              }
-sub help_contents     { shift->show_help('Sprog');               }
+sub help_contents     { shift->show_help('Sprog::help::index');  }
 
 
 sub file_open {

@@ -1,0 +1,25 @@
+=head2 Welcome to Sprog
+
+I<Sprog> is a tool for working with data.  It allows you to do all the things
+those clever Unix geeks can do with their cryptic command lines but you can now
+do it all with point-n-click and drag-n-drop.
+
+A Sprog I<machine> has many similarities to a shell script.  It is built from
+small reusable parts (called I<gears>) that are connected together to filter
+and massage your data.  Once you have built a machine, you can save it and run
+it again and again to automatically perform repetitive tasks.
+
+=head2 Building a Machine
+
+The first step in building a machine to to display the I<palette>.  You can show
+or hide the palette using the B<F9> key, or using the palette button on the
+toolbar.
+
+Next, drag gears from the palette to the workbench.  To connect gears together
+simply drop one gear on top of another - if the input and output connectors
+match then the gear you dropped should snap into place below the other.
+
+Each gear has its own properties dialog with options to change the gear's
+behaviour.  To configure a gear, right-click and select I<Properties> from the
+pop-up menu.
+
