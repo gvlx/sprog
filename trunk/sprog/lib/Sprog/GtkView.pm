@@ -307,10 +307,8 @@ sub drag_data_received {
 
   my $gear_class = $data->data;
   $context->finish (1, 0, $time);
-#  printf("Received '%s' at $x, $y\n", $gear_class);
 
-  my($cx, $cy) = $canvas->w2c($x, $y);
-#  printf("CanvasXY: $cx, $cy\n");
+  my($cx, $cy) = $canvas->window_to_world($x, $y);
   my $gear = $self->app->add_gear_at_x_y($gear_class, $cx, $cy) or return;
   my $gearview = $self->gear_view_by_id($gear->id);
   $self->app->drop_gear($gearview, $cx, $cy);
@@ -541,6 +539,16 @@ sub add_io_reader {
 
   return Glib::IO->add_watch(fileno($fh), ['in', 'err', 'hup'], $sub);
 }
+
+
+sub status_message {
+  my($self, $message) = @_;
+
+  my $statusbar = $self->statusbar;
+  $statusbar->pop(0);
+  $statusbar->push(0, $message);
+}
+
 
 sub dump {
   my($self) = @_;
