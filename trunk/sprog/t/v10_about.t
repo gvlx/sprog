@@ -42,17 +42,13 @@ ok($about_dialog_returned, 'About dialog returned successfully');
 exit;
 
 sub click_close_button {
-  my $about;
-  foreach my $window (Gtk2::Window->list_toplevels) {
-    my $title = $window->get_title or next;
-    $about = $window if($title =~ /About Sprog/);
-  }
-  isa_ok($about, 'Gtk2::Dialog', 'located the about window');
+  my $dialog = $app->view->find_window('About Sprog');
+  ok(defined($dialog), 'located the alert window');
 
-  my $button = $about->get_focus;
-  isa_ok($button, 'Gtk2::Button', 'close button');
+  my $close = $app->view->find_button($dialog, 'Close');
+  isa_ok($close, 'Gtk2::Button', 'close button');
 
-  $button->activate;
+  $close->clicked;
 
   return FALSE;   # don't re-invoke this handler
 }
