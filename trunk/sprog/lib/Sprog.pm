@@ -65,7 +65,8 @@ sub file_save {
   my $self = shift;
 
   my $filename = $self->view->file_save_as_filename || return;
-  $self->machine->save_to_file($filename);
+  $self->machine->save_to_file($filename) || return;
+  $self->filename($filename);
 }
 
 
