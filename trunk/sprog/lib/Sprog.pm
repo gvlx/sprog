@@ -57,7 +57,7 @@ sub file_open {
   my $self = shift;
 
   my $filename = $self->view->file_open_filename || return;
-  $self->machine->load_from_file($filename);
+  $self->load_from_file($filename);
 }
 
 
@@ -72,7 +72,20 @@ sub file_save {
 sub load_from_file {
   my($self, $filename) = @_;
 
-  $self->machine->load_from_file($filename);
+  $self->machine->load_from_file($filename) || return;
+  $self->filename($filename);
+}
+
+
+sub filename {
+  my $self = shift;
+
+  if(@_) {
+    $self->{filename} = shift;
+    $self->view->set_window_title;
+  }
+
+  return $self->{filename};
 }
 
 

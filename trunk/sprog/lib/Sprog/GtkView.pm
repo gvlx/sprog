@@ -13,6 +13,7 @@ __PACKAGE__->mk_accessors(qw(
 ));
 
 use Scalar::Util qw(weaken);
+use File::Basename ();
 
 use Gtk2 '-init';
 use Glib qw(TRUE FALSE);
@@ -61,6 +62,7 @@ sub build_app_window {
   $self->add_toolbar($vbox);
   $self->add_workbench($vbox);
   $self->add_statusbar($vbox);
+  $self->set_window_title;
 
   $app_win->show_all;
 }
@@ -208,13 +210,7 @@ sub add_menubar {
     },
   ];
 
-  my $menu = Gtk2::SimpleMenu->new(
-    menu_tree        => $menu_tree,
-#    default_callback => \&default_callback,
-#    user_data        => 'user data',
-  );
-
-  #$menu->get_widget('/Tools/Radios/Radio 2')->set_active(1);
+  my $menu = Gtk2::SimpleMenu->new(menu_tree => $menu_tree);
 
   $vbox->pack_start($menu->{widget}, FALSE, TRUE, 0);
   $self->app_win->add_accel_group($menu->{accel_group});
@@ -257,6 +253,20 @@ sub add_statusbar {
 
   my $statusbar = $self->statusbar(Gtk2::Statusbar->new);
   $vbox->pack_start($statusbar, FALSE, TRUE, 0);
+}
+
+
+sub set_window_title {
+  my $self = shift;
+
+  my $title = 'Untitled';
+
+  my $filename = $self->app->filename;
+  if(defined($filename)) {
+    my($name, $path) = File::Basename::basename($filename);
+    $title = $name;
+  }
+  $self->app_win->set_title("$title - Sprog");
 }
 
 
