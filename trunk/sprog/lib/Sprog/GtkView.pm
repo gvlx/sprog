@@ -9,6 +9,11 @@ __PACKAGE__->mk_accessors(qw(
   toolbar
   canvas
   statusbar
+  palette_pane
+  palette_win
+  palette
+  palette_visible
+  floating_palette
   app
 ));
 
@@ -24,7 +29,7 @@ use Sprog::GtkView::Chrome;
 use Sprog::GtkView::Toolbar;
 use Sprog::GtkView::AlertDialog;
 use Sprog::GtkView::AboutDialog;
-use Sprog::GtkView::GearPalette;
+use Sprog::GtkView::Palette;
 use Sprog::GtkGearView;
 
 use constant TARG_STRING  => 0;
@@ -37,6 +42,8 @@ sub new {
     gears => {},
   }, $class;
   $self->{app} && weaken($self->{app});
+
+  $self->{floating_palette} = 0;
 
   $self->build_app_window;
 
@@ -56,23 +63,26 @@ sub build_app_window {
 
   my $app_win = $self->app_win(Gtk2::Window->new);
   $app_win->signal_connect(destroy => sub { Gtk2->main_quit; });
-  $app_win->set_default_size(450, 420);
+  $app_win->set_default_size(750, 560);
 
   my $vbox = Gtk2::VBox->new(FALSE, 0);
   $app_win->add($vbox);
 
-  $self->add_menubar($vbox);
-  $self->add_toolbar($vbox);
-  $self->add_workbench($vbox);
-  $self->add_statusbar($vbox);
+  $vbox->pack_start($self->_build_menubar,   FALSE, TRUE, 0);
+  $vbox->pack_start($self->_build_toolbar,   FALSE, TRUE, 0);
+  $vbox->pack_start($self->_build_workbench, TRUE,  TRUE, 0);
+  $vbox->pack_start($self->_build_statusbar, FALSE, TRUE, 0);
+
   $self->set_window_title;
 
   $app_win->show_all;
+
+  $self->_add_palette;
 }
 
 
-sub add_menubar {
-  my($self, $vbox) = @_;
+sub _build_menubar {
+  my($self) = @_;
 
   my $action = 0;
   my $app = $self->app;
@@ -228,17 +238,19 @@ sub add_menubar {
 
   my $menu = Gtk2::SimpleMenu->new(menu_tree => $menu_tree);
 
-  $vbox->pack_start($menu->{widget}, FALSE, TRUE, 0);
   $self->app_win->add_accel_group($menu->{accel_group});
+
+  return $menu->{widget};
 }
 
 
-sub add_toolbar {
-  my($self, $vbox) = @_;
+sub _build_toolbar {
+  my($self) = @_;
 
   my $toolbar = Sprog::GtkView::Toolbar->new(app => $self->app);
   $self->toolbar($toolbar);
-  $vbox->pack_start($toolbar->widget, FALSE, TRUE, 0);
+
+  return $toolbar->widget;
 }
 
 
@@ -246,19 +258,20 @@ sub  enable_tool_button { $_[0]->toolbar->set_sensitive($_[1], TRUE);  }
 sub disable_tool_button { $_[0]->toolbar->set_sensitive($_[1], FALSE); }
 
 
-sub add_workbench {
-  my($self, $vbox) = @_;
+sub _build_workbench {
+  my($self) = @_;
 
-  my $scroller = Gtk2::ScrolledWindow->new;
-  my $canvas   = Gnome2::Canvas->new_aa;
-  $scroller->add($canvas);
+  my $sw = Gtk2::ScrolledWindow->new;
+  $sw->set_policy('automatic', 'automatic');
+
+  my $canvas = Gnome2::Canvas->new_aa;
   $self->canvas($canvas);
+
+  $sw->add($canvas);
 
   my $color = Gtk2::Gdk::Color->parse("#007f00");
   $canvas->modify_bg('normal', $color);
 
-  $scroller->set_policy('automatic', 'automatic');
-  $vbox->pack_start($scroller, TRUE, TRUE, 0);
   $canvas->set_scroll_region(0, 0, 400, 300);
 
   # Set up as target for drag-n-drop
@@ -267,14 +280,22 @@ sub add_workbench {
   $canvas->signal_connect(
     drag_data_received => sub { $self->drag_data_received(@_); }
   );
+
+  #return $sw;
+
+  my $hpaned = Gtk2::HPaned->new;
+  $hpaned->pack2($sw, TRUE, FALSE);
+
+  $self->palette_pane($hpaned);
+
+  return $hpaned;
 }
 
 
-sub add_statusbar {
-  my($self, $vbox) = @_;
+sub _build_statusbar {
+  my($self) = @_;
 
-  my $statusbar = $self->statusbar(Gtk2::Statusbar->new);
-  $vbox->pack_start($statusbar, FALSE, TRUE, 0);
+  return $self->statusbar(Gtk2::Statusbar->new);
 }
 
 
@@ -439,10 +460,44 @@ sub alert {
 }
 
 
+sub _add_palette {
+  my($self) = @_;
+
+  my $palette = $self->palette(Sprog::GtkView::Palette->new(app => $self->app));
+
+  return $self->_add_floating_palette($palette) if($self->floating_palette);
+
+  my $widget = $palette->widget;
+  $self->palette_pane->pack1($widget, FALSE, FALSE);
+  $self->palette_win($widget);
+  $widget->hide;
+}
+
+
+sub _add_floating_palette {
+  my($self, $palette) = @_;
+
+  my $win = Gtk2::Window->new;
+  $self->palette_win($win);
+
+  $win->set_title ("Sprog Gear Palette");
+  $win->set_default_size (300, 420);
+
+  $win->signal_connect(delete_event => sub { $self->app->hide_palette; } );
+
+  $win->add($palette->widget);
+}
+
+
 sub toggle_palette {
   my($self) = @_;
 
-  Sprog::GtkView::GearPalette->toggle($self->app);
+  if($self->palette_visible) {
+    $self->hide_palette;
+  }
+  else {
+    $self->show_palette;
+  }
 }
 
 
@@ -450,7 +505,8 @@ sub show_palette {
   my($self) = @_;
 
   $self->toolbar->set_palette_active(TRUE);
-  Sprog::GtkView::GearPalette->show($self->app);
+  $self->palette_win->show;
+  $self->palette_visible(1);
 }
 
 
@@ -458,7 +514,8 @@ sub hide_palette {
   my($self) = @_;
 
   $self->toolbar->set_palette_active(FALSE);
-  Sprog::GtkView::GearPalette->hide();
+  $self->palette_win->hide();
+  $self->palette_visible(0);
 }
 
 
