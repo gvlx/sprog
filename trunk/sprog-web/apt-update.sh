@@ -42,14 +42,21 @@ dh-make-perl --build Sprog-0.05
 
 cd ..
 rm -rf $APT_DIR
-CONTRIB_DIR=$APT_DIR/dists/unstable/contrib
+mkdir -p $APT_DIR
+cd $APT_DIR
+CONTRIB_DIR=dists/unstable/contrib
 for ARCH in i386 amd64 all
 do
   ARCH_DIR=$CONTRIB_DIR/binary-$ARCH
   mkdir -p $ARCH_DIR
-  cp $TMP_DIR/libsprog-perl_$VERSION-1_all.deb $ARCH_DIR
-  pushd $APT_DIR/dists/unstable
-  dpkg-scanpackages contrib/binary-$ARCH ../../../dpkg-scanpackages-overrides \
-    | gzip > contrib/binary-$ARCH/Packages.gz
-  popd
+  cp ../$TMP_DIR/libsprog-perl_$VERSION-1_all.deb $ARCH_DIR
+  dpkg-scanpackages dists/unstable/contrib/binary-$ARCH ../dpkg-scanpackages-overrides \
+    | gzip >dists/unstable/contrib/binary-$ARCH/Packages.gz
+  cat >dists/unstable/contrib/binary-$ARCH/Release <<EOF
+Archive: unstable
+Component: contrib
+Origin: Debian
+Label: Debian
+Architecture: $ARCH
+EOF
 done
