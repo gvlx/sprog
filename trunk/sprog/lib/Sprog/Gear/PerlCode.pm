@@ -2,7 +2,10 @@ package Sprog::Gear::PerlCode;
 
 use strict;
 
-use base qw(Sprog::Gear);
+use base qw(
+  Sprog::Gear
+  Sprog::Gear::InputByLine
+);
 
 __PACKAGE__->declare_properties(
   perl_code => '',
@@ -18,9 +21,8 @@ sub prime {
 
   delete $self->{perl_sub};
   if(defined($perl_code) and $perl_code ne '') {
-    my $preamble  = $self->sub_preamble;
-    my $postamble = $self->sub_postamble;
-    $self->{perl_sub} = eval join('', $preamble, $perl_code, ';', $postamble);
+    my $code = $self->_sub_preamble . $perl_code . ';' . $self->_sub_postamble;
+    $self->{perl_sub} = eval $code;
     if($@) {
       $self->app->alert('Error in Perl code', $@);
       delete $self->{perl_sub};
@@ -31,7 +33,7 @@ sub prime {
 }
 
 
-sub sub_preamble {
+sub _sub_preamble {
   return <<END_PERL;
     sub { 
       my \$self = shift;
@@ -42,9 +44,9 @@ END_PERL
 }
 
 
-sub sub_postamble {
+sub _sub_postamble {
   return <<END_PERL;
-        \$self->msg_out(line => \$_);
+        \$self->msg_out(data => \$_);
       }
     }
 END_PERL
@@ -52,9 +54,14 @@ END_PERL
 
 sub line {
   my $self  = shift;
-  local($_) = shift;
 
-  $self->{perl_sub}->($self) if(ref $self->{perl_sub});
+  if(ref $self->{perl_sub}) {
+    local($_) = shift;
+    $self->{perl_sub}->($self) 
+  }
+  else {
+    $self->msg_out(data => @_);
+  }
 }
 
 
