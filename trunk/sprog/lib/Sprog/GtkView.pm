@@ -314,7 +314,7 @@ sub file_open_filename {
 
 sub file_save_as_filename {
   my $self = shift;
-
+  
   my $file_chooser = Gtk2::FileChooserDialog->new(
     'Save as',
     undef,
@@ -325,13 +325,34 @@ sub file_save_as_filename {
   $self->_add_sprog_file_filter($file_chooser);
 
   my $filename = undef;
-  if($file_chooser->run eq 'ok') {
+  while($file_chooser->run ne 'cancel') {
     $filename = $file_chooser->get_filename;
     $filename .= '.sprog' if $filename !~ /\.sprog$/;
-  }
+    last if ! -f $filename || $self->confirm("File exists.  Overwrite?");
+    $filename = undef;
+  };
   $file_chooser->destroy;
 
   return $filename;
+}
+
+
+sub confirm {
+  my($self, $message, $parent) = @_;
+
+  $parent ||= $self->app_win;
+  my $dialog = Gtk2::MessageDialog->new (
+    $parent, 
+    'destroy-with-parent',
+    'question', 
+    'yes-no',
+    $message,
+  );
+
+  my $result = $dialog->run;
+  $dialog->destroy;
+
+  return $result eq 'yes' ? TRUE : FALSE;
 }
 
 
