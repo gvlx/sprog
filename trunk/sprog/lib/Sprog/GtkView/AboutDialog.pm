@@ -12,11 +12,11 @@ sub new {
 
 
 sub invoke {
-  my($class, $parent, $data) = @_;
+  my($class, $parent, $data, $chrome) = @_;
 
   my $self = $class->new;
 
-  my $dialog = $self->build_dialog($parent, $data);
+  my $dialog = $self->build_dialog($parent, $data, $chrome);
 
   my $return;
   while(!$return or $return eq 'none') {
@@ -28,7 +28,7 @@ sub invoke {
 
 
 sub build_dialog {
-  my($self, $parent, $data) = @_;
+  my($self, $parent, $data, $chrome) = @_;
 
   my $dialog = Gtk2::Dialog->new_with_buttons(
     "About",
@@ -38,7 +38,7 @@ sub build_dialog {
   );
   $dialog->set_default_size (350, 220);
 
-  my $logo = Gtk2::Image->new_from_pixbuf(Sprog::GtkView::Chrome::about_logo);
+  my $logo = Gtk2::Image->new_from_pixbuf($chrome->about_logo);
   $dialog->vbox->pack_start($logo, FALSE, FALSE, 4);
 
   my $detail = Gtk2::Label->new;

@@ -6,6 +6,9 @@ use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw(
   app_win
+  chrome_class
+  alert_class
+  about_class
   menubar
   toolbar
   canvas
@@ -26,14 +29,6 @@ use Glib qw(TRUE FALSE);
 use Gnome2::Canvas;
 use Gtk2::SimpleMenu;
 
-use Sprog::GtkView::Chrome;
-use Sprog::GtkView::Menubar;
-use Sprog::GtkView::Toolbar;
-use Sprog::GtkView::AlertDialog;
-use Sprog::GtkView::AboutDialog;
-use Sprog::GtkView::Palette;
-use Sprog::GtkGearView;
-
 use constant TARG_STRING  => 0;
 
 sub new {
@@ -46,6 +41,21 @@ sub new {
   $self->{app} && weaken($self->{app});
 
   $self->{floating_palette} = 0;
+
+  my $app = $self->app;
+  $app->inject(
+    '/app/view/chrome'       => 'Sprog::GtkView::Chrome',
+    '/app/view/menubar'      => 'Sprog::GtkView::Menubar',
+    '/app/view/toolbar'      => 'Sprog::GtkView::Toolbar',
+    '/app/view/alert_dialog' => 'Sprog::GtkView::AlertDialog',
+    '/app/view/about_dialog' => 'Sprog::GtkView::AboutDialog',
+    '/app/view/palette'      => 'Sprog::GtkView::Palette',
+    '/app/view/gearview'     => 'Sprog::GtkGearView',
+  );
+
+  $self->chrome_class($app->load_class('/app/view/chrome'));
+  $self->alert_class($app->load_class('/app/view/alert_dialog'));
+  $self->about_class($app->load_class('/app/view/about_dialog'));
 
   $self->build_app_window;
 
@@ -83,7 +93,7 @@ sub build_app_window {
 sub _build_menubar {
   my($self) = @_;
 
-  my $menubar = Sprog::GtkView::Menubar->new(app => $self->app);
+  my $menubar = $self->app->make_class('/app/view/menubar', app => $self->app);
   $self->menubar($menubar);
 
   $self->app_win->add_accel_group($menubar->accel_group);
@@ -95,7 +105,7 @@ sub _build_menubar {
 sub _build_toolbar {
   my($self) = @_;
 
-  my $toolbar = Sprog::GtkView::Toolbar->new(app => $self->app);
+  my $toolbar = $self->app->make_class('/app/view/toolbar', app => $self->app);
   $self->toolbar($toolbar);
 
   return $toolbar->widget;
@@ -330,7 +340,7 @@ sub turn_cogs {
 sub alert {
   my($self, $message, $detail) = @_;
 
-  Sprog::GtkView::AlertDialog->invoke($self->app_win, $message, $detail);
+  $self->alert_class->invoke($self->app_win, $message, $detail);
 
   return;
 }
@@ -339,7 +349,8 @@ sub alert {
 sub _add_palette {
   my($self) = @_;
 
-  my $palette = $self->palette(Sprog::GtkView::Palette->new(app => $self->app));
+  my $palette = $self->app->make_class('/app/view/palette', app => $self->app);
+  $self->palette($palette);
 
   return $self->_add_floating_palette($palette) if($self->floating_palette);
 
@@ -402,7 +413,7 @@ sub hide_palette {
 sub help_about {
   my($self, $data) = @_;
 
-  Sprog::GtkView::AboutDialog->invoke($self->app_win, $data);
+  $self->about_class->invoke($self->app_win, $data, $self->chrome_class);
 }
 
 
