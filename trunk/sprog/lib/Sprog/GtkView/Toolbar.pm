@@ -20,7 +20,7 @@ sub new {
   my $class = shift;
 
   my $self = bless { @_, }, $class;
-  $self->{app} && weaken($self->{app});
+  weaken($self->{app});
 
   $self->build_toolbar;
 
@@ -116,7 +116,7 @@ sub set_style {
 sub set_palette_active {
   my($self, $state) = @_;
 
-  my $button = $self->{palette} || return;
+  my $button = $self->{palette} or return;
   $button->set_active($state);
 }
 
@@ -124,7 +124,7 @@ sub set_palette_active {
 sub set_sensitive {
   my($self, $name, $state) = @_;
 
-  my $button = $self->{$name} || return;
+  my $button = $self->{$name} or return;
   $button->set(sensitive => $state);
 }
 
