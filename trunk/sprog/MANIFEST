@@ -64,4 +64,5 @@ t/lib/TextGear.pm
 t/rgb.txt
 t/v01_basic.t
 t/v05_menubar.t
+t/v08_toolbar.t
 t/v10_about.t
