@@ -12,10 +12,13 @@ sub new {
   my $class = shift;
 
   my $self = $class->SUPER::new(@_);
-  $self->{lines} = [];
+  $self->reset;
 
   return $self;
 }
+
+
+sub reset { shift->{lines} = [] };
 
 
 sub line {
