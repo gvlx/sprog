@@ -16,6 +16,7 @@ __PACKAGE__->mk_accessors(qw(
 ));
 
 
+our @ISA;
 use Scalar::Util qw(weaken);
 
 sub input_type    { 'P'; }
@@ -48,7 +49,7 @@ sub declare_properties {
   my $class = shift;
 
   no strict 'refs';
-  @{"${class}::Defaults"} = @_;
+  @{"${class}::GearDefaultProps"} = @_;
 
   while(@_) {
     $class->mk_accessors(shift);
@@ -60,8 +61,26 @@ sub declare_properties {
 sub defaults {
   my $class = ref($_[0]) || $_[0];
 
+  my @defaults;
   no strict 'refs';
-  return @{"${class}::Defaults"};
+
+  foreach my $c (reverse $class->class_lineage) {
+    push @defaults, @{$c .'::GearDefaultProps'};
+  }
+
+  return @defaults;
+}
+
+
+sub class_lineage {
+  my $class = shift;
+
+  no strict 'refs';
+  my @lineage = $class;
+  foreach my $c (@{$class . '::ISA'}) {
+    push @lineage, $c->class_lineage if($c->can('class_lineage'));
+  }
+  return @lineage
 }
 
 
