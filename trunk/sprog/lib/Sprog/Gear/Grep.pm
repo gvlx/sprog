@@ -2,7 +2,10 @@ package Sprog::Gear::Grep;
 
 use strict;
 
-use base qw(Sprog::Gear);
+use base qw(
+  Sprog::Gear
+  Sprog::Gear::InputByLine
+);
 
 __PACKAGE__->declare_properties(
   pattern       => undef,
@@ -40,7 +43,7 @@ sub line {
     return unless($line =~ $regex ^ ($self->{invert_match} ? 1 : 0));
   }
 
-  $self->msg_out(line  => $line);
+  $self->msg_out(data => $line);
 }
 
 
