@@ -1,0 +1,14 @@
+Revision history for Perl extension Sprog.
+
+0.03  Feb 08 2005
+        - implemented File Save and File Open
+
+0.03  Jan 03 2005
+        - renamed modules from Pstax* to Sprog*
+        - added missing libgnome2-canvas-perl to Debian dependencies
+        - set up directory layout for CPAN, using h2xs 1.23 with options
+              -AX -b 5.6.0 -n Sprog
+
+Prehistory (~August 2004)
+        - implemented initial application framework under the name 'Pstax' 
+          using Gtk for GUI and event loop
