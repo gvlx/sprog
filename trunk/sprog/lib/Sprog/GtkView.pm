@@ -91,6 +91,10 @@ sub add_menubar {
           callback_action => $action++,
           accelerator     => '<ctrl>S',
         },
+        'Save _As' => {
+          callback        => sub { $app->file_save_as },
+          callback_action => $action++,
+        },
         _Quit => {
           callback        => sub { Gtk2->main_quit; },
           callback_action => $action++,
@@ -323,6 +327,8 @@ sub file_save_as_filename {
     'gtk-ok'     => 'ok'
   );
   $self->_add_sprog_file_filter($file_chooser);
+  my $default = $self->app->filename;
+  $file_chooser->set_filename($default) if $default;
 
   my $filename = undef;
   while($file_chooser->run ne 'cancel') {

@@ -64,6 +64,14 @@ sub file_open {
 sub file_save {
   my $self = shift;
 
+  my $filename = $self->filename || return $self->file_save_as;
+  $self->machine->save_to_file($filename);
+}
+
+
+sub file_save_as {
+  my $self = shift;
+
   my $filename = $self->view->file_save_as_filename || return;
   $self->machine->save_to_file($filename) || return;
   $self->filename($filename);
