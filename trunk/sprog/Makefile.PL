@@ -13,8 +13,6 @@ WriteMakefile(
                            YAML               => undef,
                          },
     EXE_FILES         => [ qw(bin/sprog) ],
-    ($] >= 5.005 ? (
-      AUTHOR          => 'Grant McLean <grant@cpan.org>',
-      ABSTRACT_FROM   => 'lib/Sprog.pm',
-    ) : () ),
+    AUTHOR            => 'Grant McLean <grant@cpan.org>',
+    ABSTRACT_FROM     => 'lib/Sprog.pm',
 );
