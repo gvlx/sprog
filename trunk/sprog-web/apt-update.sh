@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# This script re-creates the apt-root APT repository.
+# This script re-creates the APT repository under html/debian
 #
 # It assumes that the latest Sprog tarball is in the current directory.
 #
@@ -60,3 +60,8 @@ Label: Sprog Project Repository
 Architecture: $ARCH
 EOF
 done
+cd ..
+
+rm -rf html/debian
+mv $APT_DIR html/debian
+
