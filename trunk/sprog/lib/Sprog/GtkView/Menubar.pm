@@ -135,8 +135,8 @@ sub _build_menubar {
   my $menu = Gtk2::SimpleMenu->new(menu_tree => $menu_tree);
   $self->menu($menu);
 
-  my $item = $menu->get_widget('/View/Toolbar') || return;
-  $item->set_active(TRUE);
+  $menu->get_widget('/View/Toolbar')->set_active(TRUE);
+  $menu->get_widget('/Machine/Stop')->set_sensitive(FALSE);
 
   return $menu;
 }
@@ -149,8 +149,16 @@ sub widget      { shift->menu->{widget}      };
 sub set_palette_active {
   my($self, $state) = @_;
 
-  my $item = $self->menu->get_widget('/View/Palette') || return;
+  my $item = $self->menu->get_widget('/View/Palette') or return;
   $item->set_active($state);
+}
+
+
+sub set_sensitive {
+  my($self, $path, $state) = @_;
+
+  my $item = $self->menu->get_widget($path) or return;
+  $item->set_sensitive($state);
 }
 
 
