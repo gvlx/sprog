@@ -53,6 +53,8 @@ sub save_to_file {
     {},          # Machine-level properties
     \@gears      # Gears and their properties
   ]);
+
+  return 1;
 }
 
 
