@@ -13,14 +13,14 @@ __PACKAGE__->mk_accessors(qw(
 use Glib qw(TRUE FALSE);
 
 
-sub add_line {
-  my($self, $line) = @_;
+sub add_data {
+  my($self, $data) = @_;
   
   $self->create_window unless $self->gear_win;
 
   my $text_buffer = $self->text_buffer;
   my $end = $text_buffer->get_end_iter;
-  $text_buffer->insert ($end, $line);
+  $text_buffer->insert ($end, $data);
   $self->text_view->scroll_to_iter($end, 0, 0, 0, 0) if($self->gear->auto_scroll);
 
   $self->gear_win->show;

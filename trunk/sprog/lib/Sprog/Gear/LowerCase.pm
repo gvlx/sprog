@@ -9,10 +9,10 @@ sub no_properties { 1;}
 
 sub title { 'Lowercase' };
 
-sub line {
-  my($self, $line) = @_;
+sub data {
+  my($self, $data) = @_;
 
-  $self->msg_out(line  => lc($line));
+  $self->msg_out(data => lc($data));
 }
 
 1;

@@ -31,10 +31,10 @@ sub prime {
 }
 
 
-sub line {
-  my($self, $line) = @_;
+sub data {
+  my($self, $data) = @_;
 
-  $self->gear_view->add_line($line);
+  $self->gear_view->add_data($data);
 }
 
 
@@ -43,7 +43,7 @@ sub file_start {
 
   return unless $self->show_start_events;
   $filename = '' unless defined $filename;
-  $self->gear_view->add_line("----- File start: $filename -----\n");
+  $self->gear_view->add_data("----- File start: $filename -----\n");
 }
 
 
@@ -52,7 +52,7 @@ sub file_end {
 
   return unless $self->show_end_events;
   $filename = '' unless defined $filename;
-  $self->gear_view->add_line("----- File end:   $filename -----\n");
+  $self->gear_view->add_data("----- File end:   $filename -----\n");
 }
 
 

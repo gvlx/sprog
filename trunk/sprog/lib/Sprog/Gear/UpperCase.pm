@@ -9,10 +9,10 @@ sub title { 'Uppercase'; };
 
 sub no_properties { 1;}
 
-sub line {
-  my($self, $line) = @_;
+sub data {
+  my($self, $data) = @_;
 
-  $self->msg_out(line  => uc($line));
+  $self->msg_out(data => uc($data));
 }
 
 1;
