@@ -57,6 +57,8 @@ sub new {
   $self->alert_class($app->load_class('/app/view/alert_dialog'));
   $self->about_class($app->load_class('/app/view/about_dialog'));
 
+  $app->load_class('/app/view/gearview');
+
   $self->build_app_window;
 
   return $self;
