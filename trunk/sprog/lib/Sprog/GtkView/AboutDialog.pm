@@ -31,7 +31,7 @@ sub build_dialog {
   my($self, $parent, $data, $chrome) = @_;
 
   my $dialog = Gtk2::Dialog->new_with_buttons(
-    "About",
+    "About Sprog",
     $parent,
     [qw/modal destroy-with-parent no-separator/],
     'Close' => 'close',
