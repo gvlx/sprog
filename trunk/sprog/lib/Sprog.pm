@@ -18,7 +18,7 @@ sub new {
 
   my $self = bless { @_ }, $class;
 
-  my $factory = $self->{factory} || die "No class factory";
+  my $factory = $self->{factory} or die "No class factory";
 
   $factory->inject(   # set default classes if not already defined
     '/app/machine'   => 'Sprog::Machine',
@@ -44,8 +44,8 @@ sub inject            { shift->factory->inject(@_);              }
 sub make_class        { shift->factory->make_class(@_);          }
 sub load_class        { shift->factory->load_class(@_);          }
 
-sub show_toolbar { my $view = shift->view || return; $view->show_toolbar(); }
-sub hide_toolbar { my $view = shift->view || return; $view->hide_toolbar(); }
+sub show_toolbar { my $view = shift->view or return; $view->show_toolbar(); }
+sub hide_toolbar { my $view = shift->view or return; $view->hide_toolbar(); }
 
 sub set_toolbar_style { shift->view->set_toolbar_style(@_);      }
 sub toggle_palette    { shift->view->toggle_palette();           }
@@ -71,7 +71,7 @@ sub add_io_reader     { shift->event_loop->add_io_reader(@_);    }
 sub file_open {
   my $self = shift;
 
-  my $filename = $self->view->file_open_filename || return;
+  my $filename = $self->view->file_open_filename or return;
   $self->load_from_file($filename);
 }
 
@@ -79,7 +79,7 @@ sub file_open {
 sub file_save {
   my $self = shift;
 
-  my $filename = $self->filename || return $self->file_save_as;
+  my $filename = $self->filename or return $self->file_save_as;
   $self->machine->save_to_file($filename);
 }
 
@@ -87,8 +87,8 @@ sub file_save {
 sub file_save_as {
   my $self = shift;
 
-  my $filename = $self->view->file_save_as_filename || return;
-  $self->machine->save_to_file($filename) || return;
+  my $filename = $self->view->file_save_as_filename or return;
+  $self->machine->save_to_file($filename) or return;
   $self->filename($filename);
 }
 
@@ -97,7 +97,7 @@ sub load_from_file {
   my($self, $filename) = @_;
 
   $self->machine->expunge;
-  $self->machine->load_from_file($filename) || return;
+  $self->machine->load_from_file($filename) or return;
   $self->filename($filename);
 }
 
@@ -117,7 +117,7 @@ sub filename {
 sub add_gear_at_x_y {
   my($self, $gear_class, $x, $y) = @_;
 
-  my $gear = $self->machine->add_gear($gear_class, x => $x, y => $y);
+  my $gear = $self->machine->add_gear($gear_class, x => $x, y => $y) or return;
   $self->view->add_gear_view($gear);
 
   return $gear;
@@ -127,7 +127,7 @@ sub run_machine {
   my $self = shift;
 
   my $machine = $self->machine;
-  $machine->build_gear_train || return;
+  $machine->build_gear_train or return;
 
   $self->machine_running(1);
 
