@@ -44,6 +44,7 @@ t/01_factory.t
 t/05_eventloop.t
 t/08_gear.t
 t/10_read_file.t
+t/12_run_command.t
 t/20_line_input.t
 t/22_pattern_match.t
 t/lib/Dummy.pm
