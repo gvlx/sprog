@@ -42,7 +42,7 @@ is($obj->{five}, 'six', 'Arguments were passed via factory');
 
 $@ = '';
 eval { $factory->make_class('bogus'); };
-like("$@", qr/No class registered for 'bogus'.*01_factory.t/s,
+like("$@", qr/No class registered for 'bogus'.*02_factory.t/s,
      "Creating bogus class failed with correct message");
 
 
