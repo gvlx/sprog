@@ -35,6 +35,8 @@ sub new {
 sub alert {
   my($self, $alert, $detail) = @_;
 
+  $alert  = '<undef>' unless defined($alert);
+  $detail = '<undef>' unless defined($detail);
   $self->{alerts} .= "$alert\n$detail\n";
 }
 
