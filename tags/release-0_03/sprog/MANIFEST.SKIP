@@ -1,0 +1,8 @@
+\.bak$
+\bCVS/
+\.cvsignore$
+\.(SKIP|bak|old|swp)$
+^Makefile$
+blib
+^Sprog-
+^TODO
