@@ -1,9 +1,11 @@
 Revision history for Perl extension Sprog.
 
-0.07  Feb ?? 2005
+0.07  Feb 24 2005
         - fixed drop position when dragging from palette
-        - added 'View' menu to toggle palette and select toolbar style
-        - enable text labels on toolbar by default
+        - added 'View' menu
+        - show/hide palette via menu, toolbar and hot key
+        - show/hide toolbar via menu
+        - enable text labels on toolbar but configurable via View menu
 
 0.06  Feb 19 2005
         - initial implementation of gear palette with drag-n-drop
