@@ -4,8 +4,11 @@ use strict;
 
 use base qw(Sprog::Gear::Top);
 
+__PACKAGE__->declare_properties(
+  filename   =>  undef,
+);
+
 __PACKAGE__->mk_accessors(qw(
-  filename
   fh
   buffer
   at_eof
