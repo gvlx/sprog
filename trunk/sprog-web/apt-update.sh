@@ -1,4 +1,9 @@
 #!/bin/sh
+#
+# This script re-creates the apt-root APT repository.
+#
+# It assumes that the latest Sprog tarball is in the current directory.
+#
 
 TMP_DIR=deb-tmp
 APT_DIR=apt-root
