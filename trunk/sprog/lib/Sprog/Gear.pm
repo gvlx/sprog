@@ -32,11 +32,14 @@ sub new {
   my $self = bless { 
     $class->defaults,
     @_,
-    x => 0,
-    y => 0,
   }, $class;
+
+  $self->{x} = 0 unless defined($self->{x});
+  $self->{y} = 0 unless defined($self->{y});
+  
   $self->{app} && weaken($self->{app});
   $self->{machine} && weaken($self->{machine});
+  
   return $self;
 }
 
@@ -60,6 +63,30 @@ sub defaults {
   no strict 'refs';
   return @{"${class}::Defaults"};
 }
+
+
+sub serialise {
+  my($self) = @_;
+
+  my $next = $self->next;
+  $next &&= $next->id;
+
+  my %data = (
+    CLASS => ref($self),
+    ID    => $self->id,
+    NEXT  => $next,
+    X     => $self->x,
+    Y     => $self->y,
+    prop  => { $self->defaults },
+  );
+
+  foreach my $property ( keys %{$data{prop}} ) {
+    $data{prop}->{$property} = $self->$property;
+  }
+
+  return \%data;
+}
+
 
 sub prime {
   my($self) = @_;
