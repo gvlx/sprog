@@ -280,6 +280,28 @@ sub running {
 }
 
 
+sub file_open_filename {
+  my $self = shift;
+
+  my $file_chooser = Gtk2::FileChooserDialog->new(
+    'Open',
+    undef,
+    'open',
+    'gtk-cancel' => 'cancel',
+    'gtk-ok'     => 'ok'
+  );
+  $self->_add_sprog_file_filter($file_chooser);
+
+  my $filename = undef;
+  if($file_chooser->run eq 'ok') {
+    $filename = $file_chooser->get_filename;
+  }
+  $file_chooser->destroy;
+
+  return $filename;
+}
+
+
 sub file_save_as_filename {
   my $self = shift;
 
@@ -290,12 +312,7 @@ sub file_save_as_filename {
     'gtk-cancel' => 'cancel',
     'gtk-ok'     => 'ok'
   );
-
-  my $filter = Gtk2::FileFilter->new;
-  $filter->add_mime_type('application/x-sprog');
-  $filter->add_pattern("*.sprog");
-  $filter->set_name("Sprog machine files (*.sprog)");
-  $file_chooser->add_filter($filter);
+  $self->_add_sprog_file_filter($file_chooser);
 
   my $filename = undef;
   if($file_chooser->run eq 'ok') {
@@ -307,6 +324,16 @@ sub file_save_as_filename {
   return $filename;
 }
 
+
+sub _add_sprog_file_filter {
+  my($self, $file_chooser) = @_;
+
+  my $filter = Gtk2::FileFilter->new;
+  $filter->add_mime_type('application/x-sprog');
+  $filter->add_pattern("*.sprog");
+  $filter->set_name("Sprog machine files (*.sprog)");
+  $file_chooser->add_filter($filter);
+}
 
 sub turn_cogs {
   my $self = shift;

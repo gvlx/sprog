@@ -51,7 +51,14 @@ sub add_io_reader    { shift->view->add_io_reader(@_);    }
 sub not_implemented  { shift->alert('Not implemented');   }
 
 sub file_new         { shift->alert('Not implemented');   }
-sub file_open        { shift->alert('Not implemented');   }
+
+
+sub file_open {
+  my $self = shift;
+
+  my $filename = $self->view->file_open_filename || return;
+  $self->machine->load_from_file($filename);
+}
 
 
 sub file_save {
