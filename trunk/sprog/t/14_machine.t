@@ -1,0 +1,128 @@
+use strict;
+use warnings;
+
+use Test::More tests => 29;
+
+use File::Spec;
+
+BEGIN {
+  unshift @INC, File::Spec->catfile('t', 'lib');
+}
+
+my $test_file = File::Spec->catfile('t', 'ffff.sprog'); # Does not exist yet
+
+
+use_ok('Sprog::ClassFactory');
+
+my $app = make_app(               # Imported from ClassFactory.pm
+  '/app'         => 'TestApp',
+  '/app/machine' => 'TestMachine',
+  '/app/view'    => 'DummyView',
+);
+
+isa_ok($app, 'TestApp');
+isa_ok($app, 'Sprog');
+
+my $machine = $app->machine;
+isa_ok($machine, 'TestMachine');
+isa_ok($machine, 'Sprog::Machine');
+
+my $reader = $app->make_test_machine(qw(
+  Sprog::Gear::ReadFile
+  Sprog::Gear::Grep
+  Sprog::Gear::UpperCase
+  TextGear
+));
+
+is($app->alerts, '', 'no alerts while creating machine');
+
+my $parts = $app->machine->parts;
+isa_ok($parts, 'HASH');
+
+is(scalar(values %$parts), 4, 'The machine has 4 gears');
+
+isa_ok($reader, 'Sprog::Gear::ReadFile');
+
+my $grep = $reader->next;
+isa_ok($grep, 'Sprog::Gear::Grep');
+
+my $case = $grep->next;
+isa_ok($case, 'Sprog::Gear::UpperCase');
+
+my $text = $case->next;
+isa_ok($text, 'TextGear');
+
+$app->run_machine;
+is($app->timed_out, 0, 'machine stopped gracefully');
+like($app->alerts, qr/You must select an input file\s+<undef>/s,
+  'correct alerts generated from unconfigured ReadFile gear');
+
+$reader->filename(File::Spec->catfile('t', 'rgb.txt'));
+$app->run_machine;
+is($app->alerts, '', 'no alerts while running machine');
+
+like($text->text, qr/
+  #FF0000 \s RED     \s+
+  #00FF00 \s GREEN   \s+
+  #0000FF \s BLUE    \s+
+  #FFFF00 \s YELLOW  \s+
+  #00FFFF \s CYAN    \s+
+  #FF00FF \s PURPLE  \s+
+/xs, 'got the expected output');
+
+
+$grep->pattern('FFFF');
+$app->run_machine;
+is($app->alerts, '', 'no alerts while re-running machine');
+like($text->text, qr/
+  #FFFF00 \s YELLOW  \s+
+  #00FFFF \s CYAN    \s+
+/xs, 'filtered output looks ok');
+
+
+unlink($test_file);  # Remove evidence from previous bad runs
+
+$app->file_save;
+is($app->alerts, '', 'no alerts while saving');
+ok(-f $test_file, "successfully wrote $test_file");
+
+$machine->expunge;
+is(scalar(values %{$machine->parts}), 0, 'the machine was successfully expunged');
+($reader, $grep, $case, $text) = ();
+
+$app->filename(undef);
+$app->load_from_file($test_file);
+
+is(scalar(values %{$machine->parts}), 4, 'loaded machine from file');
+is($app->filename, $test_file, 'filename was remembered');
+unlink($test_file);
+
+ok(!-f $test_file, "removed file");
+$app->file_save;
+ok(-f $test_file, "file was re-written successfully");
+
+($grep) = grep $_->isa('Sprog::Gear::Grep'), values %{$machine->parts};
+ok(defined($grep), 'machine contains the grep gear');
+
+($text) = grep $_->isa('TextGear'), values %{$machine->parts};
+ok(defined($text), 'machine contains the text gear');
+
+$grep->pattern('00FF');
+$app->run_machine;
+is($app->alerts, '', 'no alerts while re-running machine');
+like($text->text, qr/
+  #00FF00 \s GREEN   \s+
+  #0000FF \s BLUE    \s+
+  #00FFFF \s CYAN    \s+
+  #FF00FF \s PURPLE  \s+
+/xs, 'filtered output looks ok');
+
+unlink($test_file);
+
+exit 1;
+
+sub DummyView::file_save_as_filename {
+  die "No 'save' filename defined\n" unless $test_file;
+
+  return $test_file;
+}

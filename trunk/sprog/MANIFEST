@@ -45,6 +45,8 @@ t/05_eventloop.t
 t/08_gear.t
 t/10_read_file.t
 t/12_run_command.t
+t/14_machine.t
+t/15_bad_data.t
 t/20_line_input.t
 t/22_pattern_match.t
 t/24_find_repl.t
@@ -56,5 +58,7 @@ t/lib/DummyGear.pm
 t/lib/DummyMachine.pm
 t/lib/DummyView.pm
 t/lib/LineGear.pm
+t/lib/TestApp.pm
+t/lib/TestMachine.pm
 t/lib/TextGear.pm
 t/rgb.txt
