@@ -2,7 +2,10 @@ package Sprog::Gear::CommandIn;
 
 use strict;
 
-use base qw(Sprog::Gear::ReadFile);
+use base qw(
+  Sprog::Gear::Top
+  Sprog::Gear::InputFromFH
+);
 
 __PACKAGE__->declare_properties(
   command => '',
@@ -10,12 +13,23 @@ __PACKAGE__->declare_properties(
 
 sub title { 'Run a Command' };
 
-sub open_file {
+sub prime {
+  my($self) = @_;
+
+  $self->_run_command() || return;
+  $self->register();
+  return $self->SUPER::prime;
+}
+
+
+sub _run_command {
   my($self) = @_;
 
   my $command = $self->command;
-  return $self->app->alert('You must enter an input command')
-    if(!defined($command) or $command !~ /\S/);
+  if(!defined($command) or $command !~ /\S/) {
+    $self->app->alert('You must enter an input command');
+    return;
+  }
 
   my($fh);
   if(!open $fh, '-|', $command) {
@@ -24,6 +38,8 @@ sub open_file {
   }
   $self->fh($fh);
   $self->msg_out(file_start => undef);
+
+  return 1;
 }
 
 
