@@ -34,11 +34,11 @@ rm -rf $TMP_DIR
 mkdir $TMP_DIR
 cd $TMP_DIR
 
-tar xvfz ../Sprog-0.05.tar.gz
+tar xvfz ../Sprog-$VERSION.tar.gz || exit
 
 export DEBFULLNAME="Grant McLean"
 export DEBEMAIL="grantm@cpan.org"
-dh-make-perl --build Sprog-0.05
+dh-make-perl --build Sprog-$VERSION
 
 cd ..
 rm -rf $APT_DIR
