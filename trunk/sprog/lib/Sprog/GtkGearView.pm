@@ -67,6 +67,8 @@ sub add_gear {
   $group->signal_connect(event => sub { $self->event(@_) });
   my $x = $gear->x || 100;   # TODO: Remove these arbitrary defaults
   my $y = $gear->y || 80;
+  $gear->x(0);
+  $gear->y(0);
   $self->move($x, $y);
 
   return $self;
