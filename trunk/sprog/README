@@ -1,40 +1,55 @@
-Sprog version 0.01
-==================
+WARNING
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+This is a 'pre-alpha' release, of 'Sprog', which means:
 
-A README file is required for CPAN modules since CPAN extracts the
-README file from a module distribution so that people browsing the
-archive can use it get an idea of the modules uses. It is usually a
-good idea to provide version information here so that people can
-decide whether fixes for the module are worth downloading.
+    * the code has bugs
+    * API's are subject to change without notice
 
-INSTALLATION
 
-To install this module type the following:
+DESCRIPTION
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+Sprog is a GUI tool for building pipelines to process data. It allows you to
+select a data source; hook up some filter components and an output component;
+then feed your data through - all by pointing and clicking.
 
-DEPENDENCIES
+In Sprog jargon, the components are called 'gears' and the assembled result is
+called a 'machine'. Sprog ships with a number of pre-written gears - most of
+which are configurable. It's relatively straightforward to write your own gears
+using the supplied framework. This allows you to make reusable components for
+the data transformations you use most often.
 
-This module requires these other modules and libraries:
 
-  blah blah blah
+PREREQUISITES
 
-COPYRIGHT AND LICENCE
+  GTK2 - I have version 2.4 so best to use that or later
+  Gtk2::GladeXML
+  Class::Accessor
 
-Put the correct copyright and licence information here.
+On my Debian 'Sarge' system, this is all that's required to install the
+prerequisites:
 
-Copyright (C) 2004 by Grant McLean
+  apt-get install libgtk2-perl libgnome2-canvas-perl libgtk2-gladexml-perl \
+          libclass-accessor-perl
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.8.4 or,
-at your option, any later version of Perl 5 you may have available.
 
+INSTALLING
+
+This distribution uses the standard Perl build/install commands:
+
+  perl Makefile.PL
+  make
+  make test
+  make install
+
+
+DEVELOPER NOTES
+
+You'll find some notes for developers in:
+
+  lib/Sprog/internals.pod
+
+
+FEEDBACK
+
+Hit me with your feedback at: grantm@cpan.org
 
