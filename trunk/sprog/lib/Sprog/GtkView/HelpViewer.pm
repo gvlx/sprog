@@ -6,6 +6,7 @@ use warnings;
 use Glib qw(TRUE FALSE);
 use Gtk2::GladeXML;
 use Gtk2::Pango;
+use File::Spec;
 
 use base qw(
   Pod::Simple::Methody
@@ -98,7 +99,6 @@ sub _init_tags {
   );
 
   $buffer->create_tag('para',
-#    pixels_above_lines => 2,
     pixels_below_lines => 8,
   );
 
@@ -151,8 +151,9 @@ sub set_topic {
 
   $self->clear;
 
+  my $file = $self->_find_file($topic) or return;
   $self->{tag_stack} = [];
-  $self->parse_file(__FILE__);
+  $self->parse_file($file);
 }
 
 sub clear {
@@ -161,6 +162,21 @@ sub clear {
   $self->buffer->set_text('');
 }
 
+
+sub _find_file {
+  my($self, $topic) = @_;
+
+  my @parts = split /::/, $topic;
+
+  foreach my $dir (@INC) {
+    my $path = File::Spec->catfile($dir, @parts);
+    return "$path.pod" if -r "$path.pod";
+    return "$path.pm"  if -r "$path.pm";
+  }
+warn "'$topic' not found\n";
+
+  return;
+}
 
 ########################### GUI Event Handlers ###############################
 
@@ -216,10 +232,10 @@ sub end_head2 { $_[0]->_end_block; }
 sub end_head3 { $_[0]->_end_block; }
 sub end_head4 { $_[0]->_end_block; }
 sub end_Para  { $_[0]->_end_block; }
-sub end_Verbatim    { $_[0]->_end_block; }
-sub end_item_bullet { $_[0]->_end_block; }
-sub end_item_number { $_[0]->_end_block; }
-sub end_item_text   { $_[0]->_end_block; }
+sub end_Verbatim    { $_[0]->_end_block; $_[0]->_emit("\n"); }
+sub end_item_bullet { $_[0]->_end_block; $_[0]->_emit("\n"); }
+sub end_item_number { $_[0]->_end_block; $_[0]->_emit("\n"); }
+sub end_item_text   { $_[0]->_end_block; $_[0]->_emit("\n"); }
 
 sub start_B          { push @{$_[0]->{tag_stack}->[-1]}, 'bold'; }
 sub start_I          { push @{$_[0]->{tag_stack}->[-1]}, 'italic'; }
