@@ -2,17 +2,14 @@ package Sprog::Gear::ReadFile;
 
 use strict;
 
-use base qw(Sprog::Gear::Top);
+use base qw(
+  Sprog::Gear::Top
+  Sprog::Gear::InputFromFH
+);
 
 __PACKAGE__->declare_properties(
   filename   =>  undef,
 );
-
-__PACKAGE__->mk_accessors(qw(
-  fh
-  buffer
-  at_eof
-));
 
 
 sub title { 'Read File' };
@@ -20,10 +17,8 @@ sub title { 'Read File' };
 sub prime {
   my($self) = @_;
 
-  $self->buffer('');
-  $self->at_eof(0);
   $self->open_file() || return;
-  $self->machine->register_data_provider($self);
+  $self->register();
   return $self->SUPER::prime;
 }
 
@@ -45,51 +40,6 @@ sub open_file {
   $self->fh($fh);
   $self->msg_out(file_start => $filename);
 }
-
-
-sub send_data {
-  my($self) = @_;
-
-  $self->work_done(1);
-  my $buf = $self->buffer;
-  my $i = index($buf, "\n");
-  if($i >= 0) {
-    my $line = substr($buf, 0, $i+1, '');
-    $self->msg_out(line => $line);
-    $self->buffer($buf);
-    return;
-  }
-  if($self->at_eof) {
-    if(length($buf)) {
-      $self->msg_out(line => $buf);
-      $self->buffer('');
-    }
-    if($self->fh) {
-      $self->msg_out(file_end => $self->filename);
-      $self->machine->unregister_data_provider($self);
-      $self->fh(undef);
-    }
-    return;
-  }
-  my $fh = $self->fh || return;
-  $self->app->add_io_reader($fh, sub { $self->data_ready });
-}
-
-
-sub data_ready {
-  my($self) = @_;
-
-  my $buf = $self->buffer;
-  if(sysread($self->fh, $buf, 65536, length($buf))) {
-    $self->buffer($buf);
-  }
-  else {
-    $self->at_eof(1);
-  }
-  $self->send_data;
-  return 0;
-}
-
 
 sub dialog_xml {
 #  return 'file:/home/grant/projects/sprog/glade/readfile.glade';
