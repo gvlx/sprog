@@ -78,19 +78,23 @@ sub window {
   my $gladexml = Gtk2::GladeXML->new_from_buffer($xml) || return;
   $self->gladexml($gladexml);
 
-  $self->{window} = $gladexml->get_widget('palette');
+  my $window = $self->{window} = $gladexml->get_widget('palette');
 
+  $window->signal_connect(delete_event => sub { $self->app->hide_palette; } );
+
+  $self->initialise_models($gladexml);
   $self->connect_signals($gladexml);
 
   return $self->{window};
 }
 
 
-sub connect_signals {
-  my($self) = @_;
+sub initialise_models {
+  my($self, $gladexml) = @_;
 
+  # Initialise combo boxes
   foreach my $menu_name (qw(input_menu output_menu)) {
-    my $menu = $self->gladexml->get_widget($menu_name)
+    my $menu = $gladexml->get_widget($menu_name)
       or return $self->app->alert("Can't find input_menu combo");
     my $model = $menu->get_model
       or return $self->app->alert("input_menu combo has no storage");
@@ -103,6 +107,11 @@ sub connect_signals {
     $menu->set_active(0);
   }
 
+}
+
+
+sub connect_signals {
+  my($self, $gladexml) = @_;
 }
 
 
