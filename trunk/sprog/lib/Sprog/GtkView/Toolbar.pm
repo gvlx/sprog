@@ -1,4 +1,4 @@
-package Sprog::GtkViewToolbar;
+package Sprog::GtkView::Toolbar;
 
 use strict;
 
