@@ -8,7 +8,7 @@ BEGIN {
     unless(defined($ENV{DISPLAY})  &&  $ENV{DISPLAY} =~ /:\d/);
 }
 
-plan 'no_plan';# tests => 5;
+plan tests => 12;
 
 use File::Spec;
 use Glib qw(TRUE FALSE);
@@ -81,7 +81,10 @@ sub check_dialog_2 {
   isa_ok($details, 'Gtk2::Button', 'show details button');
 
   $details->clicked;
-  like($details->get_label, qr//, 'button now reads hide details');
+  like($details->get_label, qr/Hide De_tails/, 'button now reads hide details');
+
+  $details->clicked;
+  like($details->get_label, qr/Show De_tails/, 'button reads show details again');
 
   my $dismiss = $app->view->find_button($dialog, 'Dismiss');
   isa_ok($dismiss, 'Gtk2::Button', 'close button');
