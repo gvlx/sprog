@@ -9,13 +9,15 @@ __PACKAGE__->mk_accessors(qw(
   factory
   machine
   view
+  alerts
+  io_readers
 ));
 
 
 sub new {
   my $class = shift;
 
-  my $self = bless { @_ }, $class;
+  my $self = bless { @_, alerts => '', io_readers => [] }, $class;
 
   my $factory = $self->{factory} || die "No class factory";
 
@@ -29,6 +31,19 @@ sub new {
   return $self;
 }
 
+
+sub alert {
+  my($self, $alert, $detail) = @_;
+
+  $self->{alerts} .= "$alert\n$detail\n";
+}
+
+
+sub add_io_reader {
+  my($self, $fh, $sub) = @_;
+
+  push @{$self->io_readers}, $sub;
+}
 
 1;
 
