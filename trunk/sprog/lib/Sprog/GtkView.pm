@@ -481,9 +481,9 @@ sub _add_floating_palette {
   $self->palette_win($win);
 
   $win->set_title ("Sprog Gear Palette");
-  $win->set_default_size (300, 420);
+  $win->set_default_size (200, 420);
 
-  $win->signal_connect(delete_event => sub { $self->app->hide_palette; } );
+  $win->signal_connect(delete_event => sub { $self->app->hide_palette; TRUE } );
 
   $win->add($palette->widget);
 }
