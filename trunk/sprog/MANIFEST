@@ -6,7 +6,6 @@ lib/Sprog/Gear.pm
 lib/Sprog/Gear/ApacheLogParse.pm
 lib/Sprog/Gear/Bottom.pm
 lib/Sprog/Gear/CommandIn.pm
-lib/Sprog/Gear/CSVSplit.pm
 lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
 lib/Sprog/Gear/InputByLine.pm
