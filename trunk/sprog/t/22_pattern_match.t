@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 21;
 
 use File::Spec;
 
@@ -23,25 +23,24 @@ EOF
 my @all = $data =~ /(.*?\n)/g;
 
 use_ok('LineGear');
-my $sink = LineGear->new;
+my $sink = LineGear->new(id => 2);
 isa_ok($sink, 'LineGear');
+is($sink->id, 2, 'id carried through from constructor');
 $sink->prime;
 
 
 use_ok('Sprog::Gear::Grep');
-my $grep = Sprog::Gear::Grep->new;
+my $grep = Sprog::Gear::Grep->new(id => 1);
 isa_ok($grep, 'Sprog::Gear::Grep');
 
-ok($grep->has_input);
-ok($grep->has_output);
-ok(!$grep->no_properties);
-is($grep->input_type, 'P');
-is($grep->output_type, 'P');
-is($grep->title, 'Pattern Match');
-is($grep->view_subclass, '');
-like($grep->dialog_xml, qr{<glade-interface>.*</glade-interface>}s);
-ok($grep->ignore_case);
-ok(!$grep->invert_match);
+is($grep->id, 1, 'id carried through from constructor');
+ok($grep->has_input, 'has input');
+ok($grep->has_output, 'has output');
+is($grep->title, 'Pattern Match', 'title looks ok');
+like($grep->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
+  'Glade XML looks plausible');
+ok($grep->ignore_case, 'case-insensitive matching defaults on');
+ok(!$grep->invert_match, 'inverted matching defaults off');
 
 
 use_ok('DummyMachine');
@@ -51,6 +50,9 @@ isa_ok($machine, 'DummyMachine');
 
 $grep->next($sink);
 isa_ok($grep->last, 'LineGear');
+
+my $ref = $grep->serialise;
+is($ref->{NEXT}, 2, 'successfully got next gear id for serialising');
 
 $grep->machine($machine);
 $grep->prime;

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';# tests => 17;
+use Test::More tests => 23;
 
 use File::Spec;
 
@@ -25,7 +25,6 @@ isa_ok($machine, 'DummyMachine');
 
 my $sink = TextGear->new(machine => $machine);
 isa_ok($sink, 'TextGear');
-is($sink->title, '', 'default title is empty string');
 $sink->text('');
 
 my $reader = Sprog::Gear::ReadFile->new(app => $app, machine => $machine);
@@ -33,8 +32,31 @@ my $reader = Sprog::Gear::ReadFile->new(app => $app, machine => $machine);
 isa_ok($reader, 'Sprog::Gear::ReadFile');
 isa_ok($reader, 'Sprog::Gear::InputFromFH');
 isa_ok($reader, 'Sprog::Gear');
+is($reader->title, 'Read File', 'title looks good');
+like($reader->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
+  'Glade XML looks plausible');
 
 $reader->next($sink);
+
+
+$reader->filename(undef);
+
+$reader->prime;
+
+like($app->alerts, qr/You must select an input file/,
+  "correct alert generated when filename undefined");
+$app->alerts('');
+
+
+$reader->filename('');
+
+$reader->prime;
+
+like($app->alerts, qr/You must select an input file/,
+  "correct alert generated when filename blank");
+$app->alerts('');
+
+
 $reader->filename(File::Spec->catfile('t', 'bogus.txt'));
 
 $reader->prime;
