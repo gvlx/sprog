@@ -66,8 +66,10 @@ sub add_gear {
   $self->init_cog_frames($group);
 
   $group->signal_connect(event => sub { $self->event(@_) });
-  my $x = $gear->x || 100;   # TODO: Remove these arbitrary defaults
-  my $y = $gear->y || 80;
+  my $x = $gear->x;
+  my $y = $gear->y;
+  $x = 100 unless defined $x;  # TODO: Remove these arbitrary defaults
+  $y =  80 unless defined $y;
   $gear->x(0);
   $gear->y(0);
   $self->move($x, $y);
