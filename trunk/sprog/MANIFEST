@@ -28,6 +28,7 @@ lib/Sprog/GtkView.pm
 lib/Sprog/GtkView/AboutDialog.pm
 lib/Sprog/GtkView/AlertDialog.pm
 lib/Sprog/GtkView/Chrome.pm
+lib/Sprog/GtkView/HelpViewer.pm
 lib/Sprog/GtkView/Menubar.pm
 lib/Sprog/GtkView/Palette.pm
 lib/Sprog/GtkView/Toolbar.pm
