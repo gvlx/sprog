@@ -4,9 +4,9 @@ use strict;
 
 use base qw(Sprog::Gear);
 
-__PACKAGE__->mk_accessors(qw(
-  perl_code
-));
+__PACKAGE__->declare_properties(
+  perl_code => '',
+);
 
 
 sub title { 'Perl Code' };

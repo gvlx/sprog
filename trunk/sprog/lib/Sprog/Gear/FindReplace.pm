@@ -4,12 +4,12 @@ use strict;
 
 use base qw(Sprog::Gear);
 
-__PACKAGE__->mk_accessors(qw(
-  pattern
-  replacement
-  ignore_case
-  global_replace
-));
+__PACKAGE__->declare_properties(
+  pattern         => undef,
+  replacement     => undef,
+  ignore_case     => 1,
+  global_replace  => 0,
+);
 
 
 sub title { 'Find and Replace' };

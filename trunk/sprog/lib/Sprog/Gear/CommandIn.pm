@@ -4,9 +4,9 @@ use strict;
 
 use base qw(Sprog::Gear::ReadFile);
 
-__PACKAGE__->mk_accessors(qw(
-  command
-));
+__PACKAGE__->declare_properties(
+  command => '',
+);
 
 sub title { 'Run a Command' };
 
