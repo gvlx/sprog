@@ -51,7 +51,7 @@ sub line {
 
   &{$self->{subst}} if($self->{subst});
 
-  $self->msg_out(line  => $_);
+  $self->msg_out(data => $_);
 }
 
 
