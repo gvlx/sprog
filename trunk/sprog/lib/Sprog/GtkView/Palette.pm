@@ -47,6 +47,12 @@ my @gear_classes = (   # Hardcoded for now - better idea coming soon
     type_out => 'P',
   },
   {
+    class    => 'Sprog::Gear::TextInput',
+    title    => 'Text Input',
+    type_in  => '_',
+    type_out => 'P',
+  },
+  {
     class => 'Sprog::Gear::CommandIn',
     title    => 'Run Command',
     type_in  => '_',
