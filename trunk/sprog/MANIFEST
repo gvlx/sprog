@@ -38,6 +38,7 @@ MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
 README
 t/00_config.t
+t/01_require_all.t
 t/02_factory.t
 t/05_eventloop.t
 t/08_gear.t
