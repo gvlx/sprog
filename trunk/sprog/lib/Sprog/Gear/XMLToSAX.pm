@@ -1,8 +1,8 @@
-package Pstax::Gear::XMLToSAX;
+package Sprog::Gear::XMLToSAX;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 sub title { 'Parse XML' };
 

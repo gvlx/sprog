@@ -1,8 +1,8 @@
-package Pstax::Gear::Top;
+package Sprog::Gear::Top;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 sub input_type { undef; }
 

@@ -1,4 +1,4 @@
-package Pstax::GtkGearView;
+package Sprog::GtkGearView;
 
 use strict;
 
@@ -17,13 +17,13 @@ use Scalar::Util qw(weaken);
 
 use Glib qw(TRUE FALSE);
 
-use Pstax::GtkGearView::Paths;
-use Pstax::GtkAutoDialog;
+use Sprog::GtkGearView::Paths;
+use Sprog::GtkAutoDialog;
 
-*gear_width  = \&Pstax::GtkGearView::Paths::gBW;
-*gear_height = \&Pstax::GtkGearView::Paths::gBH;
-*gCW = \&Pstax::GtkGearView::Paths::gCW;
-*gCH = \&Pstax::GtkGearView::Paths::gCH;
+*gear_width  = \&Sprog::GtkGearView::Paths::gBW;
+*gear_height = \&Sprog::GtkGearView::Paths::gBH;
+*gCW = \&Sprog::GtkGearView::Paths::gCW;
+*gCH = \&Sprog::GtkGearView::Paths::gCH;
 
 sub new {
   my $class = shift;
@@ -49,7 +49,7 @@ sub add_gear {
   
   my $self = $class->new_gear_view($app, $gear, $group) || return;
 
-  my $shape = Pstax::GtkGearView::Paths->gear_path($gear);
+  my $shape = Sprog::GtkGearView::Paths->gear_path($gear);
 
   my $block = Gnome2::Canvas::Item->new(
     $group,
@@ -133,7 +133,7 @@ sub init_cog_frames {
       height => $_->get_height,
       anchor => 'center',
     );
-  } Pstax::GtkViewChrome->cogs;
+  } Sprog::GtkViewChrome->cogs;
 
   $self->{cog_frames} = \@frames;
   $self->{cog_index}  = 0;
@@ -276,7 +276,7 @@ sub properties {
 sub auto_properties {
   my $self = shift;
 
-  return Pstax::GtkAutoDialog->invoke(gearview => $self);
+  return Sprog::GtkAutoDialog->invoke(gearview => $self);
 }
 
 

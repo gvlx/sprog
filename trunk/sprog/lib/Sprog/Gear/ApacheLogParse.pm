@@ -1,8 +1,8 @@
-package Pstax::Gear::ApacheLogParse;
+package Sprog::Gear::ApacheLogParse;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 use Apache::LogRegex;
 
@@ -18,7 +18,7 @@ sub prime {
   my $self = shift;
 
   my $lr = eval {
-    Pstax::Gear::ApacheLogParse::Parser->new($self->format_string) 
+    Sprog::Gear::ApacheLogParse::Parser->new($self->format_string) 
   };
   if ($@) {
     $self->app->alert("Unable to parse log format string", $@);
@@ -61,7 +61,7 @@ sub line {
 
 
 sub dialog_xml {
-  return 'file:/home/grant/projects/pstax/glade/apache_log.glade';
+  return 'file:/home/grant/projects/sprog/glade/apache_log.glade';
 
   return <<'END_XML';
 
@@ -69,7 +69,7 @@ END_XML
 }
 
 
-package Pstax::Gear::ApacheLogParse::Parser;
+package Sprog::Gear::ApacheLogParse::Parser;
 
 use base 'Apache::LogRegex';
 

@@ -1,4 +1,4 @@
-package Pstax::GtkViewToolbar;
+package Sprog::GtkViewToolbar;
 
 use strict;
 

@@ -1,4 +1,4 @@
-package Pstax::GtkAlertDialog;
+package Sprog::GtkAlertDialog;
 
 use strict;
 

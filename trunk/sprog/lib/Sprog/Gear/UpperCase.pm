@@ -1,8 +1,8 @@
-package Pstax::Gear::UpperCase;
+package Sprog::Gear::UpperCase;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 
 sub title { 'Uppercase'; };

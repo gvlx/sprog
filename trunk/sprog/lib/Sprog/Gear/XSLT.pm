@@ -1,8 +1,8 @@
-package Pstax::Gear::XSLT;
+package Sprog::Gear::XSLT;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 sub title { 'XSLT Transform' };
 

@@ -1,4 +1,4 @@
-package Pstax::GtkView;
+package Sprog::GtkView;
 
 use strict;
 
@@ -19,10 +19,10 @@ use Glib qw(TRUE FALSE);
 use Gnome2::Canvas;
 use Gtk2::SimpleMenu;
 
-use Pstax::GtkViewChrome;
-use Pstax::GtkViewToolbar;
-use Pstax::GtkAlertDialog;
-use Pstax::GtkGearView;
+use Sprog::GtkViewChrome;
+use Sprog::GtkViewToolbar;
+use Sprog::GtkAlertDialog;
+use Sprog::GtkGearView;
 
 
 sub new {
@@ -116,12 +116,12 @@ sub add_menubar {
           item_type  => '<Branch>',
           children => [
             'Read _File' => {
-              callback        => sub { $self->test_new('Pstax::Gear::ReadFile') },
+              callback        => sub { $self->test_new('Sprog::Gear::ReadFile') },
               callback_action => $action++,
               accelerator     => '<ctrl>F',
             },
             'Run a _Command' => {
-              callback        => sub { $self->test_new('Pstax::Gear::CommandIn') },
+              callback        => sub { $self->test_new('Sprog::Gear::CommandIn') },
               callback_action => $action++,
               accelerator     => '<ctrl>C',
             },
@@ -131,27 +131,27 @@ sub add_menubar {
           item_type  => '<Branch>',
           children => [
             'Pattern Match' => {
-              callback        => sub { $self->test_new('Pstax::Gear::Grep') },
+              callback        => sub { $self->test_new('Sprog::Gear::Grep') },
               callback_action => $action++,
               accelerator     => '<ctrl>G',
             },
             'F_ind\/Replace' => {
-              callback        => sub { $self->test_new('Pstax::Gear::FindReplace') },
+              callback        => sub { $self->test_new('Sprog::Gear::FindReplace') },
               callback_action => $action++,
               accelerator     => '<ctrl>I',
             },
             '_Perl Code' => {
-              callback        => sub { $self->test_new('Pstax::Gear::PerlCode') },
+              callback        => sub { $self->test_new('Sprog::Gear::PerlCode') },
               callback_action => $action++,
               accelerator     => '<ctrl>P',
             },
             '_Lowercase' => {
-              callback        => sub { $self->test_new('Pstax::Gear::LowerCase') },
+              callback        => sub { $self->test_new('Sprog::Gear::LowerCase') },
               callback_action => $action++,
               accelerator     => '<ctrl>L',
             },
             '_Uppercase' => {
-              callback        => sub { $self->test_new('Pstax::Gear::UpperCase') },
+              callback        => sub { $self->test_new('Sprog::Gear::UpperCase') },
               callback_action => $action++,
               accelerator     => '<ctrl>U',
             },
@@ -161,7 +161,7 @@ sub add_menubar {
           item_type  => '<Branch>',
           children => [
             '_Text Window' => {
-              callback        => sub { $self->test_new('Pstax::Gear::TextWindow') },
+              callback        => sub { $self->test_new('Sprog::Gear::TextWindow') },
               callback_action => $action++,
               accelerator     => '<ctrl>T',
             },
@@ -171,29 +171,29 @@ sub add_menubar {
           item_type  => '<Branch>',
           children => [
             'CSV Split' => {
-              callback        => sub { $self->test_new('Pstax::Gear::CSVSplit') },
+              callback        => sub { $self->test_new('Sprog::Gear::CSVSplit') },
               callback_action => $action++,
             },
             'Parse Apache Log' => {
-              callback        => sub { $self->test_new('Pstax::Gear::ApacheLogParse') },
+              callback        => sub { $self->test_new('Sprog::Gear::ApacheLogParse') },
               callback_action => $action++,
               accelerator     => '<ctrl>A',
             },
             'Perl Code (hash to pipe)' => {
-              callback        => sub { $self->test_new('Pstax::Gear::PerlCodeHP') },
+              callback        => sub { $self->test_new('Sprog::Gear::PerlCodeHP') },
               callback_action => $action++,
               accelerator     => '<ctrl>H',
             },
             'Parse XML' => {
-              callback        => sub { $self->test_new('Pstax::Gear::XMLToSAX') },
+              callback        => sub { $self->test_new('Sprog::Gear::XMLToSAX') },
               callback_action => $action++,
             },
             'XSLT Transform' => {
-              callback        => sub { $self->test_new('Pstax::Gear::XSLT') },
+              callback        => sub { $self->test_new('Sprog::Gear::XSLT') },
               callback_action => $action++,
             },
             'Write XML' => {
-              callback        => sub { $self->test_new('Pstax::Gear::XMLWriter') },
+              callback        => sub { $self->test_new('Sprog::Gear::XMLWriter') },
               callback_action => $action++,
             },
           ]
@@ -223,7 +223,7 @@ sub add_menubar {
 sub add_toolbar {
   my($self, $vbox) = @_;
 
-  my $toolbar = Pstax::GtkViewToolbar->new(app => $self->app);
+  my $toolbar = Sprog::GtkViewToolbar->new(app => $self->app);
   $self->toolbar($toolbar);
   $vbox->pack_start($toolbar->widget, FALSE, TRUE, 0);
 }
@@ -298,7 +298,7 @@ sub turn_cogs {
 sub alert {
   my($self, $message, $detail) = @_;
 
-  Pstax::GtkAlertDialog->invoke($self->app_win, $message, $detail);
+  Sprog::GtkAlertDialog->invoke($self->app_win, $message, $detail);
 }
 
 
@@ -314,7 +314,7 @@ sub test_new {
 sub add_gear_view {
   my($self, $gear) = @_;
 
-  my $gear_view = Pstax::GtkGearView->add_gear($self->app, $self->canvas, $gear);
+  my $gear_view = Sprog::GtkGearView->add_gear($self->app, $self->canvas, $gear);
   $self->gear_view_by_id($gear->id, $gear_view);
 }
 

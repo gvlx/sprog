@@ -1,8 +1,8 @@
-package Pstax::Gear::FindReplace;
+package Sprog::Gear::FindReplace;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 __PACKAGE__->mk_accessors(qw(
   pattern
@@ -61,7 +61,7 @@ sub line {
 
 
 sub dialog_xml {
-  #return 'file:/home/grant/projects/pstax/glade/findreplace.glade';
+  #return 'file:/home/grant/projects/sprog/glade/findreplace.glade';
 
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->

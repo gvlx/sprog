@@ -1,8 +1,8 @@
-package Pstax::Gear::CommandIn;
+package Sprog::Gear::CommandIn;
 
 use strict;
 
-use base qw(Pstax::Gear::ReadFile);
+use base qw(Sprog::Gear::ReadFile);
 
 __PACKAGE__->mk_accessors(qw(
   command
@@ -28,7 +28,7 @@ sub open_file {
 
 
 sub dialog_xml {
-#  return 'file:/home/grant/projects/pstax/glade/commandin.glade';
+#  return 'file:/home/grant/projects/sprog/glade/commandin.glade';
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
 <!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">

@@ -1,4 +1,4 @@
-package Pstax::Gear;
+package Sprog::Gear;
 
 use strict;
 

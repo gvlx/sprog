@@ -1,10 +1,10 @@
-package Pstax::GtkGearView::Paths;
+package Sprog::GtkGearView::Paths;
 
 use strict;
 
 use Glib qw(TRUE FALSE);
 
-use Pstax::GtkAutoDialog;
+use Sprog::GtkAutoDialog;
 
 use constant gBW  => 300;   # Gear Block Width
 use constant gBH  =>  40;   # Gear Block Height

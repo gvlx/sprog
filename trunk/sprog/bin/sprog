@@ -2,10 +2,7 @@
 
 use strict;
 
-use FindBin;
-use lib "$FindBin::Bin/lib";
+use Sprog ();
 
-use Pstax ();
-
-Pstax->gtk_app->run;
+Sprog->gtk_app->run;
 

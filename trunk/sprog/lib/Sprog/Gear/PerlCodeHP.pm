@@ -1,8 +1,8 @@
-package Pstax::Gear::PerlCodeHP;
+package Sprog::Gear::PerlCodeHP;
 
 use strict;
 
-use base qw(Pstax::Gear::PerlCode);
+use base qw(Sprog::Gear::PerlCode);
 
 sub input_type   { 'H'; }
 

@@ -1,8 +1,8 @@
-package Pstax::Gear::XMLWriter;
+package Sprog::Gear::XMLWriter;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 sub title { 'Write XML' };
 

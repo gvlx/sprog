@@ -1,8 +1,8 @@
-package Pstax::Gear::CSVSplit;
+package Sprog::Gear::CSVSplit;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 sub title { 'CSV Split' };
 

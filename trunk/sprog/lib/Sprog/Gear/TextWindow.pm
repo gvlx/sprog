@@ -1,8 +1,8 @@
-package Pstax::Gear::TextWindow;
+package Sprog::Gear::TextWindow;
 
 use strict;
 
-use base qw(Pstax::Gear::Bottom);
+use base qw(Sprog::Gear::Bottom);
 
 __PACKAGE__->declare_properties(
   clear_on_run      => 1, 
@@ -57,7 +57,7 @@ sub file_end {
 
 
 sub dialog_xml {
-#  return 'file:/home/grant/projects/pstax/glade/textwindow.glade';
+#  return 'file:/home/grant/projects/sprog/glade/textwindow.glade';
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
 <!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">

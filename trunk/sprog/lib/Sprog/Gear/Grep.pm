@@ -1,8 +1,8 @@
-package Pstax::Gear::Grep;
+package Sprog::Gear::Grep;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 __PACKAGE__->declare_properties(
   pattern       => undef,
@@ -45,7 +45,7 @@ sub line {
 
 
 sub dialog_xml {
-#  return 'file:/home/grant/projects/pstax/glade/grep.glade';
+#  return 'file:/home/grant/projects/sprog/glade/grep.glade';
 
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->

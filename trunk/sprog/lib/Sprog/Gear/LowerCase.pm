@@ -1,8 +1,8 @@
-package Pstax::Gear::LowerCase;
+package Sprog::Gear::LowerCase;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 
 sub no_properties { 1;}

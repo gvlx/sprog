@@ -1,4 +1,4 @@
-package Pstax::Machine;
+package Sprog::Machine;
 
 use strict;
 

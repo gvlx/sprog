@@ -1,8 +1,8 @@
-package Pstax::Gear::PerlCode;
+package Sprog::Gear::PerlCode;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 __PACKAGE__->mk_accessors(qw(
   perl_code
@@ -59,7 +59,7 @@ sub line {
 
 
 sub dialog_xml {
-  #return 'file:/home/grant/projects/pstax/glade/perlcode.glade';
+  #return 'file:/home/grant/projects/sprog/glade/perlcode.glade';
 
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->

@@ -1,21 +1,21 @@
 =head1 NAME
 
-Pstax internals - notes for developers
+Sprog internals - notes for developers
 
 =head1 INTRODUCTION
 
-If you're intending to hack on Pstax, these notes may help ...
+If you're intending to hack on Sprog, these notes may help ...
 
 The application uses an MVC(ish) architecture in which the Model is implemented
-in L<Pstax::Machine>, the View is L<Pstax::GtkView> and the two are tied
-together by the L<Pstax> class itself.
+in L<Sprog::Machine>, the View is L<Sprog::GtkView> and the two are tied
+together by the L<Sprog> class itself.
 
-A Pstax 'machine' is comprised of 'gears'.
+A Sprog 'machine' is comprised of 'gears'.
 
-The L<Pstax::Machine> class implements the logic for connecting the gears as
+The L<Sprog::Machine> class implements the logic for connecting the gears as
 well as a simple event-driven scheduler.
 
-Gears inherit from L<Pstax::Gear.>  A gear passes data downstream to the next
+Gears inherit from L<Sprog::Gear.>  A gear passes data downstream to the next
 gear by sending a message:
 
   $self->msg_out(line => $string);
@@ -28,28 +28,28 @@ gear's input queue.
 
 =head1 EXAMPLE GEARS
 
-A simple gear to look at for a start is L<Pstax::Gear::UpperCase> which simply
+A simple gear to look at for a start is L<Sprog::Gear::UpperCase> which simply
 takes every line of input and converts it to upper case before passing it to
 the next gear.
 
-A more elaborate example is L<Pstax::Gear::Grep> which passes through any lines
+A more elaborate example is L<Sprog::Gear::Grep> which passes through any lines
 which match a specified pattern.  This gear has two configurable options: the
 pattern to match and a boolean flag controlling case-sensitivity.  The
 properties dialog (accessed via the right click menu) is handled automatically
-by the L<Pstax::Gear> base class.
+by the L<Sprog::Gear> base class.
 
 =head1 PROPERTIES DIALOGS
 
 A gear class would not normally handle GUI interactions itself.  If you really
 need to, you can implement a gear-view class which inherits from
-L<Pstax::GtkGearView> and implements your gear's user interface.  Your gear
+L<Sprog::GtkGearView> and implements your gear's user interface.  Your gear
 class would override the C<view_subclass()> method and have it return the name
-of your view class.  (See L<Pstax::Gear::TextWindow> and
-L<Pstax::GtkGearView::TextWindow> for example).
+of your view class.  (See L<Sprog::Gear::TextWindow> and
+L<Sprog::GtkGearView::TextWindow> for example).
 
 If you only need a GUI for simple properties setting, then you can use the
 properties auto-dialog (PAD) framework your class will inherit from
-L<Pstax::Gear>.
+L<Sprog::Gear>.
 
 First, build your dialog box using the Glade GUI builder and save it to an XML
 .glade file.  Then paste the XML into your gear class file as the string
@@ -71,12 +71,12 @@ filename is written to the named text entry (which in turn is associated with a
 property).  Support for more widget types and more reusable behaviours will be
 added as the need arises.
 
-The PAD framework is implemented in the L<Pstax::GtkGearView> and
-L<Pstax::GtkAutoDialog> classes.
+The PAD framework is implemented in the L<Sprog::GtkGearView> and
+L<Sprog::GtkAutoDialog> classes.
 
 =head1 SCHEDULER
 
-The L<Pstax::Machine> class implements a simple scheduler based around the Gtk
+The L<Sprog::Machine> class implements a simple scheduler based around the Gtk
 event loop.
 
 Before a machine starts 'running', the C<prime()> method is called on each

@@ -1,8 +1,8 @@
-package Pstax;
+package Sprog;
 
 use strict;
-use Pstax::Machine;
-use Pstax::GtkView;
+use Sprog::Machine;
+use Sprog::GtkView;
 
 our $VERSION = '0.02';
 
@@ -17,7 +17,7 @@ sub new {
   my $class = shift;
 
   my $self = bless { @_ }, $class;
-  $self->machine( Pstax::Machine->new(app => $self) );
+  $self->machine( Sprog::Machine->new(app => $self) );
 
   return $self;
 }
@@ -27,7 +27,7 @@ sub gtk_app {
 
   my $self = $class->new;
 
-  $self->view( Pstax::GtkView->new(app => $self) );
+  $self->view( Sprog::GtkView->new(app => $self) );
   return $self;
 }
 
@@ -93,37 +93,37 @@ sub delete_gear_by_id {
 
 =head1 NAME
 
-Pstax - GUI with a Perl centre
+Sprog - GUI with a Perl centre
 
 =head1 SYNOPSIS
 
   #!/usr/bin/perl -w
 
   use strict;
-  use Pstax;
+  use Sprog;
 
-  Pstax->gtk_app->run;
+  Sprog->gtk_app->run;
 
 =head1 DESCRIPTION
 
-Pstax is a GUI tool for building pipelines to process data.  It allows you to
+Sprog is a GUI tool for building pipelines to process data.  It allows you to
 select a data source; hook up some filter components and an output component;
 then feed your data through.
 
-In Pstax jargon, the components are called 'gears' and the assembled result is
-called a 'machine'.  Pstax ships with a number of pre-written gears - most of
+In Sprog jargon, the components are called 'gears' and the assembled result is
+called a 'machine'.  Sprog ships with a number of pre-written gears - most of
 which are configurable.  It's relatively straightforward to write your own
 gears using the supplied framework.  This allows you to make reusable
 components for the data transformations you use most often.
 
 =head1 WARNING
 
-The Pstax code is in 'pre-alpha' state.  This means that bugs are not only
+The Sprog code is in 'pre-alpha' state.  This means that bugs are not only
 possible, they're expected.
 
 The 'pre-alpha' state also means that the API is not yet stable - if you write
 a component today you might need to tweak it to make it work with the next
-version of Pstax.
+version of Sprog.
 
 =head1 PREREQUISITES
 
@@ -141,7 +141,7 @@ run:
 
 =head1 SEE ALSO
 
-L<Pstax::internals> contains notes for developers.
+L<Sprog::internals> contains notes for developers.
 
 =head1 COPYRIGHT 
 

@@ -1,8 +1,8 @@
-package Pstax::Gear::ReadFile;
+package Sprog::Gear::ReadFile;
 
 use strict;
 
-use base qw(Pstax::Gear::Top);
+use base qw(Sprog::Gear::Top);
 
 __PACKAGE__->mk_accessors(qw(
   filename
@@ -89,7 +89,7 @@ sub data_ready {
 
 
 sub dialog_xml {
-#  return 'file:/home/grant/projects/pstax/glade/readfile.glade';
+#  return 'file:/home/grant/projects/sprog/glade/readfile.glade';
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
 <!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">

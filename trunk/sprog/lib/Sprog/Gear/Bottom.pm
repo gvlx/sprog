@@ -1,8 +1,8 @@
-package Pstax::Gear::Bottom;
+package Sprog::Gear::Bottom;
 
 use strict;
 
-use base qw(Pstax::Gear);
+use base qw(Sprog::Gear);
 
 sub output_type { undef; }
 

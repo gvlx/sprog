@@ -1,4 +1,4 @@
-package Pstax::GtkAutoDialog;
+package Sprog::GtkAutoDialog;
 
 use strict;
 
@@ -12,10 +12,10 @@ use Glib qw(TRUE FALSE);
 use Gtk2::GladeXML;
 
 my %widget_class_map = (
-  'Gtk2::Entry'       => 'Pstax::GtkAutoDialog::Entry',
-  'Gtk2::CheckButton' => 'Pstax::GtkAutoDialog::CheckButton',
-  'Gtk2::RadioButton' => 'Pstax::GtkAutoDialog::RadioButton',
-  'Gtk2::TextView'    => 'Pstax::GtkAutoDialog::TextView',
+  'Gtk2::Entry'       => 'Sprog::GtkAutoDialog::Entry',
+  'Gtk2::CheckButton' => 'Sprog::GtkAutoDialog::CheckButton',
+  'Gtk2::RadioButton' => 'Sprog::GtkAutoDialog::RadioButton',
+  'Gtk2::TextView'    => 'Sprog::GtkAutoDialog::TextView',
 );
 
 
@@ -151,7 +151,7 @@ sub connect_behaviour {
 }
 
 
-package Pstax::GtkAutoDialog::Entry;
+package Sprog::GtkAutoDialog::Entry;
 
 
 sub new {
@@ -174,7 +174,7 @@ sub save {
 };
 
 
-package Pstax::GtkAutoDialog::CheckButton;
+package Sprog::GtkAutoDialog::CheckButton;
 
 use Glib qw(TRUE FALSE);
 
@@ -195,7 +195,7 @@ sub save {
 };
 
 
-package Pstax::GtkAutoDialog::RadioButton;
+package Sprog::GtkAutoDialog::RadioButton;
 
 sub new {
   my $class = shift;
@@ -204,7 +204,7 @@ sub new {
   my $name = $self->{name};
   my $current = $self->{gear}->$name || '';
   $self->{widget}->set_active($current eq $self->{value});
-  return Pstax::GtkAutoDialog::RadioButtonGroup->new($self);
+  return Sprog::GtkAutoDialog::RadioButtonGroup->new($self);
 }
 
 
@@ -217,7 +217,7 @@ sub save {
 };
 
 
-package Pstax::GtkAutoDialog::RadioButtonGroup;
+package Sprog::GtkAutoDialog::RadioButtonGroup;
 
 
 sub new {
@@ -238,7 +238,7 @@ sub save {
 }
 
 
-package Pstax::GtkAutoDialog::TextView;
+package Sprog::GtkAutoDialog::TextView;
 
 
 sub new {

@@ -1,4 +1,4 @@
-package Pstax::GtkViewChrome;
+package Sprog::GtkViewChrome;
 
 
 sub cogs {

@@ -1,8 +1,8 @@
-package Pstax::GtkGearView::TextWindow;
+package Sprog::GtkGearView::TextWindow;
 
 use strict;
 
-use base qw(Pstax::GtkGearView);
+use base qw(Sprog::GtkGearView);
 
 __PACKAGE__->mk_accessors(qw(
   gear_win
@@ -33,7 +33,7 @@ sub create_window {
   my $app_win = $self->app->view->app_win;
 
   my $dialog = Gtk2::Dialog->new(
-    "pstax Text Output",
+    "sprog Text Output",
     $app_win,
     [qw/destroy-with-parent no-separator/],
   );
