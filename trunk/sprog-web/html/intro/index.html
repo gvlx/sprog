@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <title>Introducing Sprog</title>
+  <link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+<body>
+
+<div id="logo"><img src="../images/sprog-logo.png" alt="Sprog Logo" /></div>
+<div id="headline"><img src="../images/sprog-heading.png" alt="Sprog!" /></div>
+<div id="hline"></div>
+
+<div id="indent-content">
+<div id="content">
+
+<h2>What is Sprog?</h2>
+
+<p>Sprog is a graphical tool which anyone can use to build programs by plugging
+parts together.  In Sprog jargon, the parts are known as 'gears' and they are
+assembled to make a 'machine'.</p>
+
+<p>The types of programs that you can build with Sprog will fit this general
+model:</p>
+
+<ol>
+  <li>Get some input data</li>
+  <li>Process the data</li>
+  <li>Output the result</li>
+</ol>
+
+<p>and will be made up of these parts:</p>
+
+<h3>Input Gears</h3>
+
+<p>An input gear is used to acquire data and feed it into the machine.  A
+simple example is the <span class="gear-name">Read File</span> gear which looks
+like this:</p>
+
+<div class="gear-pic"><img src="images/gear-read_file.png"
+ alt="Read File gear"/ ></div>
+
+<p>The <span class="gear-name">Read File</span> gear reads a file on your
+computer or, using a network share, from a network file server.  Other types of
+input gear might acquire data by requesting a URL from a web server; running a
+query against a database; capturing musical notes from a MIDI keyboard; or any
+number of other possibilities.</p>
+
+<h3>Filter Gears</h3>
+
+<p>Filter gears are used to process the data in some way.  For example, the
+<span class="gear-name">Pattern Match</span> gear can identify interesting
+lines from a text file based on whether or not they match a pattern you
+specify:</p>
+
+<div class="gear-pic"><img src="images/gear-pattern_match.png"
+ alt="Pattern Match gear" /></div>
+
+<p>You can plug multiple filter gears together - each one filtering the output
+of the preceding gear.  Filter gears can also transform your data in a variety
+of ways. Simple examples include converting to upper or lower case.  More
+complex examples might include translating to HTML, perhaps by plugging values
+into a template.</p>
+
+<h3>Output Gears</h3>
+
+<p>An output gear deals with the results of the filtering process.  A simple
+example is the <span class="gear-name">Text Window</span> gear which displays
+the filtered data on-screen in a text window:</p>
+
+<div class="gear-pic"><img src="images/gear-text_window.png"
+ alt="Text Window gear"/></div>
+
+<p>Other output gears might save output to a file; insert records into a
+database; pass the filtered data to a spreadsheet application; upload to an FTP
+server, etc.</p>
+
+<h2>Building a Machine</h2>
+
+<p>You drag and drop gears to connect them together and assemble a machine:</p>
+
+<div class="gear-pic"><img src="images/machine.png" 
+ alt="An assembled machine" /></div>
+
+<p>Once the machine is assembled, some of the gears may need to be configured.
+For example, the <span class="gear-name">Read File</span> gear needs to know
+which file to read and the <span class="gear-name">Pattern Match</span> gear
+needs to know which pattern to match.  You configure a gear by opening its
+properties dialog from the right-click menu:</p>
+
+<div class="gear-pic"><img src="images/properties.png"
+  alt="Example properties dialogs"/></div>
+
+<h3>Running the Machine</h3>
+
+<p>Just push the 'Run' button :-)</p>
+
+<p>&nbsp;</p>
+
+</div>
+</div>
+
+<div id="navlinks">
+  <ul>
+    <li><a href="../index.html">Home</a></li>
+    <li>What is Sprog?</li>
+    <li><a href="../screenshots/index.html">Screenshots</a></li>
+    <li><a href="http://sourceforge.net/project/showfiles.php?group_id=126289">Download</a></li>
+    <li><a href="http://sourceforge.net/cvs/?group_id=126289">CVS</a></li>
+  </ul>
+
+  <div id="logos">
+    <dl>
+      <dt>Powered by:</dt>
+      <dd><a href="http://gtk2-perl.sourceforge.net/"><img
+        src="../images/gtk-logo-rgb.gif" alt="gtk2-perl" /></a></dd>
+      <dd><a href="http://www.perl.com/"><img
+        src="../images/perl_id_bw_sm_bu.gif" alt="Perl" /></a></dd>
+
+      <dt>Hosted by:</dt>
+      <dd><a href="http://sourceforge.net"><img
+        src="http://sourceforge.net/sflogo.php?group_id=126289&amp;type=2" 
+        width="125" height="37" alt="SourceForge.net" /></a></dd>
+    </dl>
+  </div>
+</div>
+
+</body>
+</html>
