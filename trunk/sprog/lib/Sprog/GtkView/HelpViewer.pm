@@ -16,7 +16,6 @@ __PACKAGE__->mk_accessors(qw(
   helpwin textview buffer
 ));
 
-my $tag;
 
 sub show_help {
   my($class, $topic) = @_;
@@ -49,24 +48,59 @@ $window->signal_connect(delete_event => sub { Gtk2->main_quit });
   my $textview = $self->textview($gladexml->get_widget('textview'));
   $textview->set_editable(FALSE);
   $textview->set_cursor_visible(FALSE);
+  my $font_desc = Gtk2::Pango::FontDescription->from_string ("Serif 10");
+  $textview->modify_font ($font_desc);
   $textview->set_wrap_mode('word');
+  $textview->set_left_margin(6);
+  $textview->set_right_margin(4);
 
   my $buffer = $self->buffer($self->textview->get_buffer);
 
-  $self->_init_tags($buffer) unless $tag;
+  $self->_init_tags($buffer, $font_desc->get_size);
 
   return $self;
 }
 
 
 sub _init_tags {
-  my($self, $buffer) = @_;
+  my($self, $buffer, $size) = @_;
 
-  $tag->{head1} = $buffer->create_tag('head1',
+  $buffer->create_tag('head1',
+    family             => 'Sans',
     weight             => PANGO_WEIGHT_BOLD,
-    size               => 24 * PANGO_SCALE,
-    pixels_above_lines => 30,
+    size               => $size * 1.6,
+    pixels_above_lines => 12,
     pixels_below_lines => 2,
+  );
+
+  $buffer->create_tag('head2',
+    family             => 'Sans',
+    weight             => PANGO_WEIGHT_BOLD,
+    size               => $size * 1.4,
+    pixels_above_lines => 6,
+    pixels_below_lines => 2,
+  );
+
+  $buffer->create_tag('head3',
+    family             => 'Sans',
+    weight             => PANGO_WEIGHT_BOLD,
+    size               => $size * 1.2,
+    pixels_above_lines => 6,
+    pixels_below_lines => 2,
+  );
+
+  $buffer->create_tag('head4',
+    family             => 'Sans',
+    weight             => PANGO_WEIGHT_BOLD,
+    size               => $size,
+    pixels_above_lines => 6,
+    pixels_below_lines => 2,
+  );
+
+  $buffer->create_tag('verbatim',
+    wrap_mode          => 'none',
+    family             => 'monospace',
+    size               => 11 * PANGO_SCALE,
   );
 
 }
@@ -89,6 +123,7 @@ sub set_topic {
 
   $self->clear;
 
+  $self->{tag_stack} = [];
   $self->parse_file(__FILE__);
 }
 
@@ -132,12 +167,12 @@ sub on_home_activated {
 
 sub handle_text { $_[0]->_emit($_[1]); }
 
-sub start_head1 { $_[0]->_start_block; }
-sub start_head2 { $_[0]->_start_block; }
-sub start_head3 { $_[0]->_start_block; }
-sub start_head4 { $_[0]->_start_block; }
+sub start_head1 { $_[0]->_start_block(qw(head1)); }
+sub start_head2 { $_[0]->_start_block(qw(head2)); }
+sub start_head3 { $_[0]->_start_block(qw(head3)); }
+sub start_head4 { $_[0]->_start_block(qw(head4)); }
 sub start_Para  { $_[0]->_start_block; }
-sub start_Verbatim    { $_[0]->_start_block; }
+sub start_Verbatim    { $_[0]->_start_block(qw(verbatim)); }
 sub start_item_bullet { $_[0]->_start_block; }
 sub start_item_number { $_[0]->_start_block; }
 sub start_item_text   { $_[0]->_start_block; }
@@ -152,9 +187,18 @@ sub end_item_bullet { $_[0]->_end_block; }
 sub end_item_number { $_[0]->_end_block; }
 sub end_item_text   { $_[0]->_end_block; }
 
-sub _start_block {  }
+sub _start_block {
+  my $self = shift;
 
-sub _end_block { $_[0]->_emit("\n"); }
+  push @{$self->{tag_stack}}, [ @_ ];
+}
+
+sub _end_block {
+  my $self = shift;
+
+  pop @{$self->{tag_stack}};
+  $self->_emit("\n");
+}
 
 sub _emit {
   my($self, $text) = @_;
@@ -162,8 +206,8 @@ sub _emit {
   my $buffer = $self->buffer;
 
   my $iter = $buffer->get_end_iter;
-  my @tags = ();# ( $tag->{head1} );
-  $buffer->insert_with_tags($iter, $text, @tags);
+  my $tags = $self->{tag_stack}->[-1];
+  $buffer->insert_with_tags_by_name($iter, $text, @$tags);
 }
 
 1;
