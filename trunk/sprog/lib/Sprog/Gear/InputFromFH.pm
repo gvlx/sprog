@@ -14,7 +14,7 @@ sub send_data {
   my($self) = @_;
 
   return if $self->{io_tag};  # We're already waiting
-  my $fh = $self->fh || return;
+  my $fh = $self->fh or return;
   $self->{io_tag} = $self->app->add_io_reader($fh, sub { $self->_data_ready });
 }
 
@@ -81,6 +81,11 @@ to this method to make it available to the other methods in this class.
 
 Call this method to have the class register itself with the machine, as a data
 provider.
+
+=head2 unregister ( )
+
+This method will be called automatically when the end of file is reached.  It
+tells the machine that this gear has no more data to provide.
 
 =head2 send_data ( )
 
