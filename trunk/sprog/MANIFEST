@@ -11,6 +11,7 @@ lib/Sprog/Gear/Grep.pm
 lib/Sprog/Gear/InputByLine.pm
 lib/Sprog/Gear/InputFromFH.pm
 lib/Sprog/Gear/LowerCase.pm
+lib/Sprog/Gear/PerlBase.pm
 lib/Sprog/Gear/PerlCode.pm
 lib/Sprog/Gear/PerlCodeHP.pm
 lib/Sprog/Gear/ReadFile.pm
@@ -40,6 +41,7 @@ t/00_config.t
 t/01_require_all.t
 t/02_factory.t
 t/05_eventloop.t
+t/06_app.t
 t/08_gear.t
 t/10_read_file.t
 t/12_run_command.t
@@ -50,6 +52,7 @@ t/22_pattern_match.t
 t/24_find_repl.t
 t/26_casing.t
 t/30_perl_code.t
+t/32_perl_code_hp.t
 t/files.txt
 t/lib/Dummy.pm
 t/lib/DummyApp.pm
@@ -66,3 +69,5 @@ t/v01_basic.t
 t/v05_menubar.t
 t/v08_toolbar.t
 t/v10_about.t
+t/v15_alerts.t
+t/v20_place_gears.t
