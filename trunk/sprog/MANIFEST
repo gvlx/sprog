@@ -19,9 +19,6 @@ lib/Sprog/Gear/TextInput.pm
 lib/Sprog/Gear/TextWindow.pm
 lib/Sprog/Gear/Top.pm
 lib/Sprog/Gear/UpperCase.pm
-lib/Sprog/Gear/XMLToSAX.pm
-lib/Sprog/Gear/XMLWriter.pm
-lib/Sprog/Gear/XSLT.pm
 lib/Sprog/GtkAutoDialog.pm
 lib/Sprog/GtkEventLoop.pm
 lib/Sprog/GtkGearView.pm
@@ -41,7 +38,7 @@ MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
 README
 t/00_config.t
-t/01_factory.t
+t/02_factory.t
 t/05_eventloop.t
 t/08_gear.t
 t/10_read_file.t
