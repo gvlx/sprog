@@ -44,6 +44,7 @@ sub show_palette     { shift->view->show_palette();       }
 sub hide_palette     { shift->view->hide_palette();       }
 
 sub alert            { shift->view->alert(@_);            }
+sub status_message   { shift->view->status_message(@_);   }
 sub not_implemented  { shift->alert('Not implemented');   }
 
 sub drop_gear        { shift->view->drop_gear(@_);        }
