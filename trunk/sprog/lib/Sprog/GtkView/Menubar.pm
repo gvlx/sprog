@@ -14,7 +14,7 @@ use Scalar::Util qw(weaken);
 use Gtk2 '-init';
 use Glib qw(TRUE FALSE);
 
-use constant APPEND => -1;
+use constant TOOLBAR_STYLE => 1;
 
 sub new {
   my $class = shift;
@@ -70,6 +70,35 @@ sub _build_menubar {
           callback        => sub { $app->toggle_palette; },
           callback_action => $action++,
           accelerator     => 'F9',
+        },
+        '_Toolbar Style' => {
+            item_type  => '<Branch>',
+            children => [
+                'I_cons and Text' => {
+                  item_type       => '<RadioItem>',
+                  callback        => sub { $app->set_toolbar_style('both'); },
+                  callback_action => $action++,
+                  groupid         => TOOLBAR_STYLE,
+                },
+                '_Icons Only' => {
+                  item_type       => '<RadioItem>',
+                  callback        => sub { $app->set_toolbar_style('icons'); },
+                  callback_action => $action++,
+                  groupid         => TOOLBAR_STYLE,
+                },
+                '_Text Only' => {
+                  item_type       => '<RadioItem>',
+                  callback        => sub { $app->set_toolbar_style('text'); },
+                  callback_action => $action++,
+                  groupid         => TOOLBAR_STYLE,
+                },
+                'Text Be_side Icons' => {
+                  item_type       => '<RadioItem>',
+                  callback        => sub { $app->set_toolbar_style('both-horiz'); },
+                  callback_action => $action++,
+                  groupid         => TOOLBAR_STYLE,
+                },
+            ]
         },
       ],
     },

@@ -1,4 +1,4 @@
-* Fix the drop coordinates (again!)
+* Save view (and other) preferences - in 'Correct' way for each OS
 * Make floating palette an option
 * Clean up show/hide palette code to reduce coupling
 * Fix inheritance chain for CommandIn (don't inherit filename)
@@ -23,3 +23,5 @@
 * Shrink the alert dialog after hiding details
 * Determine if calling ->destroy on a Gnome2::Canvas::Group is kocher
 * Cache the GearView paths
+
+* Register with www.gnomefiles.org GTK+ Software Repository

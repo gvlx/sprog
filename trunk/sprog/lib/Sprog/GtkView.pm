@@ -102,6 +102,7 @@ sub _build_toolbar {
 }
 
 
+sub set_toolbar_style   { $_[0]->toolbar->set_style($_[1]);            }
 sub  enable_tool_button { $_[0]->toolbar->set_sensitive($_[1], TRUE);  }
 sub disable_tool_button { $_[0]->toolbar->set_sensitive($_[1], FALSE); }
 

@@ -71,7 +71,7 @@ sub build_toolbar {
   $self->{'palette'} = $toolbar->append_element(
     'togglebutton',
     undef,  # No widget
-    undef,  # No text
+    'Palette',
     'Add parts to the machine',
     undef,  # No private text
     $pbutton,
@@ -80,13 +80,16 @@ sub build_toolbar {
 
   $toolbar->append_space;
 
-  $self->{'run'} = $toolbar->insert_stock(
-    'gtk-execute',
+
+  my $rbutton = Gtk2::Image->new_from_stock('gtk-execute', 'large-toolbar');
+  $self->{'run'} = $toolbar->append_element(
+    'button',
+    undef,  # No widget
+    'Run',
     'Run the machine',
-    undef,
-    sub { $app->run_machine },
-    undef,
-    APPEND
+    undef,  # No private text
+    $rbutton,
+    sub { $app->run_machine; },
   );
 
   $self->{'stop'} = $toolbar->insert_stock(
@@ -99,6 +102,14 @@ sub build_toolbar {
   );
   $self->set_sensitive('stop' => FALSE);
 
+  $self->set_style('both');
+}
+
+
+sub set_style {
+  my($self, $style) = @_;
+
+  $self->widget->set('toolbar-style' => $style);
 }
 
 
