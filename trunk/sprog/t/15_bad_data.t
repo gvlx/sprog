@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 29;
+use Test::More tests => 25;
 
 use File::Spec;
 use YAML;
@@ -129,9 +129,7 @@ my $head = $app->machine->head_gear;
 is($head, undef, 'correct value returned from head_gear');
 
 
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-like($app->alerts, qr/You must add an input gear\s+<undef>/s,
+like($app->run_machine, qr/^You must add an input gear\s+<undef>/s,
   'correct alert when running an empty machine');
 $app->alerts('');
 
@@ -144,9 +142,7 @@ my $reader = $app->machine->head_gear;
 isa_ok($reader, 'Sprog::Gear::ReadFile', 'return value from head_gear');
 
 
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-like($app->alerts, qr/You must complete your machine with an output gear\s+<undef>/s,
+like($app->run_machine, qr/^You must complete your machine with an output gear\s+<undef>/s,
   'correct alert when running an incomplete machine');
 $app->alerts('');
 
@@ -160,9 +156,7 @@ $reader->next($last);
 isa_ok($reader->last, 'AcceptNothingGear', 'the last gear');
 
 
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-like($app->alerts, qr/I will not accept input!/,
+like($app->run_machine, qr/^I will not accept input!/,
   'building of gear chain was successfully aborted');
 $app->alerts('');
 
@@ -179,9 +173,7 @@ $app->alerts('');
 $reader->next($last);
 $reader->filename(File::Spec->catfile('t', 'rgb.txt'));
 
-$app->run_machine;
-is($app->timed_out, 0, 'machine stopped gracefully');
-like($app->alerts, qr/Stopped/, 'stop method seems to work');
+like($app->run_machine, qr/^Stopped/, 'stop method seems to work');
 $app->alerts('');
 
 unlink($test_file);
