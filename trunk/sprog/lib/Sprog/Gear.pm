@@ -128,7 +128,16 @@ sub msg_in {
   my $self = shift;
 
   my $queue = $self->msg_queue;
+  push @$queue, @{delete $self->{redo_msg_queue}} if $self->{redo_msg_queue};
   push @$queue, [ @_ ];
+}
+
+
+sub requeue_message_delayed {
+  my $self = shift;
+
+  $self->{redo_msg_queue} ||= [];
+  push @{$self->{redo_msg_queue}}, [ @_ ];
 }
 
 
@@ -157,16 +166,6 @@ sub turn_once {
     $self->msg_out($method => @$args);
   }
   return $self->work_done(1);
-}
-
-
-sub line {
-  my($self, $line) = @_;
-
-  my $id = $self->id;
-  warn "$id: '$line'\n";
-
-  $self->msg_out(line  => $line);
 }
 
 
