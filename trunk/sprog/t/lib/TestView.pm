@@ -33,12 +33,12 @@ sub find_button {
   my($self, $widget, $name) = @_;
 
   return $widget
-    if($widget->isa('Gtk2::Button') 
+    if(UNIVERSAL::isa($widget, 'Gtk2::Button') 
        and  $widget->get_label
        and  $widget->get_label =~ /$name/i
       );
 
-  if($widget->can('get_children')) {
+  if(UNIVERSAL::can($widget, 'get_children')) {
     foreach ($widget->get_children) {
       my $button = $self->find_button($_, $name);
       return $button if($button);
