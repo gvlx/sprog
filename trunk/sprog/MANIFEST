@@ -1,14 +1,11 @@
-Changes
-MANIFEST
-Makefile.PL
-README
 bin/sprog
+Changes
 lib/Sprog.pm
 lib/Sprog/Gear.pm
 lib/Sprog/Gear/ApacheLogParse.pm
 lib/Sprog/Gear/Bottom.pm
-lib/Sprog/Gear/CSVSplit.pm
 lib/Sprog/Gear/CommandIn.pm
+lib/Sprog/Gear/CSVSplit.pm
 lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
 lib/Sprog/Gear/LowerCase.pm
@@ -29,6 +26,10 @@ lib/Sprog/GtkGearView/TextWindow.pm
 lib/Sprog/GtkView.pm
 lib/Sprog/GtkViewChrome.pm
 lib/Sprog/GtkViewToolbar.pm
-lib/Sprog/Machine.pm
 lib/Sprog/internals.pod
+lib/Sprog/Machine.pm
+Makefile.PL
+MANIFEST
+META.yml			Module meta-data (added by MakeMaker)
+README
 t/Sprog.t
