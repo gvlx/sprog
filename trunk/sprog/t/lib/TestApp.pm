@@ -36,7 +36,8 @@ sub make_test_machine {
   
   my @gears;
   foreach my $i (0..$#_) {
-    push @gears, $self->add_gear_at_x_y($_[$i], 10, $i * 10);
+    my $new = $self->add_gear_at_x_y($_[$i], 10, $i * 10) or return;
+    push @gears, $new;
   }
 
   for(my $i = $#gears; $i > 0; $i--) {
