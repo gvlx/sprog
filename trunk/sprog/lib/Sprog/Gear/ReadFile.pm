@@ -8,7 +8,7 @@ use base qw(
 );
 
 __PACKAGE__->declare_properties(
-  filename   =>  undef,
+  filename   =>  '',
 );
 
 
@@ -17,13 +17,13 @@ sub title { 'Read File' };
 sub prime {
   my($self) = @_;
 
-  $self->open_file() || return;
+  $self->_open_file() || return;
   $self->register();
   return $self->SUPER::prime;
 }
 
 
-sub open_file {
+sub _open_file {
   my($self) = @_;
 
   my $filename = $self->filename;
@@ -39,6 +39,8 @@ sub open_file {
   }
   $self->fh($fh);
   $self->msg_out(file_start => $filename);
+
+  return 1;
 }
 
 sub dialog_xml {
