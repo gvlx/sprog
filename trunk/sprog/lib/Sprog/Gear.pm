@@ -59,7 +59,7 @@ sub declare_properties {
 
 
 sub defaults {
-  my $class = ref($_[0]) || $_[0];
+  my $class = (ref($_[0]) ? ref($_[0]) : $_[0]);
 
   my @defaults;
   no strict 'refs';
@@ -88,12 +88,10 @@ sub serialise {
   my($self) = @_;
 
   my $next = $self->next;
-  $next &&= $next->id;
-
   my %data = (
     CLASS => ref($self),
     ID    => $self->id,
-    NEXT  => $next,
+    NEXT  => ($next ? $next->id : undef),
     X     => $self->x,
     Y     => $self->y,
     prop  => { $self->defaults },
@@ -119,7 +117,7 @@ sub prime {
 sub last {
   my($self) = @_;
 
-  my $next = $self->next || return $self;
+  my $next = $self->next or return $self;
   return $next->last;
 }
 
@@ -136,16 +134,16 @@ sub msg_in {
 sub requeue_message_delayed {
   my $self = shift;
 
-  $self->{redo_msg_queue} ||= [];
+  #$self->{redo_msg_queue} ||= [];
   push @{$self->{redo_msg_queue}}, [ @_ ];
 }
 
 
 sub msg_out {
   my $self = shift;
-  my $msg  = shift || return;
+  my $msg  = shift or return;
 
-  my $next = $self->next || return;
+  my $next = $self->next or return;
 
   $self->machine->enable_idle_handler;
   $next->msg_in($msg => @_);
@@ -168,21 +166,6 @@ sub turn_once {
   return $self->work_done(1);
 }
 
-
-sub dump {
-  my($self) = @_;
-
-  my $class = ref($self);
-  print "    $class\n";
-  print "        x: ", _valu($self->x), "\n";
-  print "        y: ", _valu($self->y), "\n";
-  my $next = $self->next;
-  $next &&= $next->id;
-  print "        next: ", _valu($next), "\n";
-}
-
-
-sub _valu { my $val = shift; defined $val ? "'$val'" : 'undef'; }
 
 1;
 
