@@ -1,4 +1,3 @@
-add scrolling around listbox
 package Sprog::GtkView::Palette;
 
 use strict;
@@ -8,6 +7,7 @@ use Glib qw(TRUE FALSE);
 use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw(
+  app
   widget
   input_combo
   output_combo
@@ -159,7 +159,7 @@ sub _apply_filter {
 sub _reset_filter {
   my $self = shift;
 
-  warn "Resetting filter\n";
+  $self->app->not_implemented;
 }
 
 
@@ -236,7 +236,7 @@ sub _build_searchbox {
   $table->attach($entry, 0, 1, 0, 1, [ 'expand', 'fill'], [ 'fill'], 4, 2);
   
   my $search_btn = Gtk2::Button->new('Search');
-  $search_btn->signal_connect(clicked => sub { $self->_apply_filter; });
+  $search_btn->signal_connect(clicked => sub { $self->_reset_filter; });
   $table->attach($search_btn, 1, 2, 0, 1, [ 'fill'], [ 'fill'], 0, 2);
 
   my $clear_btn = Gtk2::Button->new('Clear');
@@ -288,7 +288,11 @@ sub _build_gearlist {
     drag_data_get  => sub { $self->_drag_data_get(@_); }
   );
 
-  return $gearlist;
+  my $sw = Gtk2::ScrolledWindow->new;
+  $sw->set_policy ('automatic', 'automatic');
+  $sw->add($gearlist);
+
+  return $sw;
 }
 
 
