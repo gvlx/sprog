@@ -1,3 +1,4 @@
+* Fix inheritance chain for CommandIn (don't inherit filename)
 * Warn about unsaved changes (before load, new or exit)
 * Implement SIG_PIPE analog
 * Perl gear - unbind escape key from cancel (for vi users)

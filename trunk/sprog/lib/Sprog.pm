@@ -4,7 +4,7 @@ use strict;
 use Sprog::Machine;
 use Sprog::GtkView;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use base qw(Class::Accessor::Fast);
 

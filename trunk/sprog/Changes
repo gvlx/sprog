@@ -1,5 +1,12 @@
 Revision history for Perl extension Sprog.
 
+0.05  Feb 09 2005
+        - implemented file save support for ApacheLogParse, CommandIn,
+          FindReplace and PerlCode gears
+        - allow derived gear classes to inherit default properties
+        - fixed broken properties dialog for ApacheLogParse gear
+        - fixed gear positioning bug when restoring from file
+
 0.04  Feb 08 2005
         - implemented File Save and File Open
 
