@@ -40,6 +40,7 @@ README
 t/00_config.t
 t/01_factory.t
 t/20_line_input.t
+t/22_pattern_match.t
 t/lib/Dummy.pm
 t/lib/DummyApp.pm
 t/lib/DummyGear.pm
