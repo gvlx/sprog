@@ -149,10 +149,18 @@ sub set_topic {
 
   $self->clear;
 
-  my $file = $self->_find_file($topic) or return;
   $self->{tag_stack} = [];
-  $self->parse_file($file);
+
+  my $file = $self->_find_file($topic);
+  if($file) {
+    $self->parse_file($file);
+    return if $self->content_seen;
+  }
+  $self->_start_block('head3');
+  $self->_emit("Unable to find help for topic '$topic'");
+  $self->_end_block;
 }
+
 
 sub clear {
   my $self = shift;
@@ -171,7 +179,6 @@ sub _find_file {
     return "$path.pod" if -r "$path.pod";
     return "$path.pm"  if -r "$path.pm";
   }
-warn "'$topic' not found\n";
 
   return;
 }
