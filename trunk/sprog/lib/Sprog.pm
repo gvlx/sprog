@@ -29,7 +29,6 @@ sub new {
   return $self;
 }
 
-
 sub run {
   my $self = shift;
 
@@ -37,6 +36,10 @@ sub run {
 
   $self->view->run;
 }
+
+sub inject           { shift->factory->inject(@_);        }
+sub make_class       { shift->factory->make_class(@_);    }
+sub load_class       { shift->factory->load_class(@_);    }
 
 sub quit             { shift->view->quit();               }
 

@@ -48,17 +48,29 @@ sub override {
 }
 
 
+sub load_class {
+  my($self, $path) = @_;
+
+  my $class;
+  eval {
+    $class = $self->{$path} or die "No class registered for '$path'\n";
+
+    my $class_file = $class . '.pm';
+    $class_file =~ s{::}{/}g;
+
+    require $class_file;
+  };
+  croak "$@" if($@);
+
+  return $class;
+}
+
+
 sub make_class {
   my($self, $path, @args) = @_;
 
   my $obj = eval {
-    my $class = $self->{$path} or die "No class registered for '$path'\n";
-
-    my $class_path = $class . '.pm';
-    $class_path =~ s{::}{/}g;
-
-    require $class_path;
-
+    my $class = $self->load_class($path);
     $class->new(@_);
   };
   croak "$@" if($@);
@@ -131,6 +143,12 @@ that is already mapped.
 Creates an object of the class defined for the specified path.  Throws a
 fatal exception if no class is defined for C<path>.  Any arguments are passed
 to the class constructor.
+
+=head2 load_class ( path )
+
+Determines the class name for the specified path; C<require>'s the class and
+returns its name.  Useful for when you need to call methods in the class other
+than the constructor.
 
 =head1 COPYRIGHT 
 
