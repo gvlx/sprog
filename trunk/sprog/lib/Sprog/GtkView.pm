@@ -51,18 +51,15 @@ sub new {
 }
 
 
-sub run {
-  my $self = shift;
-
-  Gtk2->main;
-}
+sub run  { Gtk2->main;      }
+sub quit { Gtk2->main_quit; }
 
 
 sub build_app_window {
   my $self = shift;
 
   my $app_win = $self->app_win(Gtk2::Window->new);
-  $app_win->signal_connect(destroy => sub { Gtk2->main_quit; });
+  $app_win->signal_connect(destroy => sub { $self->app->quit; });
   $app_win->set_default_size(750, 560);
 
   my $vbox = Gtk2::VBox->new(FALSE, 0);
@@ -109,7 +106,7 @@ sub _build_menubar {
           callback_action => $action++,
         },
         _Quit => {
-          callback        => sub { Gtk2->main_quit; },
+          callback        => sub { $app->quit; },
           callback_action => $action++,
           accelerator     => '<ctrl>Q',
         },
@@ -127,102 +124,6 @@ sub _build_menubar {
           callback        => sub { $app->stop_machine; },
           callback_action => $action++,
         },
-      ],
-    },
-    _Test  => {
-      item_type  => '<Branch>',
-      children => [
-        'Add a _Top gear'  => {
-          item_type  => '<Branch>',
-          children => [
-            'Read _File' => {
-              callback        => sub { $self->test_new('Sprog::Gear::ReadFile') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>F',
-            },
-            'Run a _Command' => {
-              callback        => sub { $self->test_new('Sprog::Gear::CommandIn') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>C',
-            },
-          ]
-        },
-        'Add a _Filter gear'  => {
-          item_type  => '<Branch>',
-          children => [
-            'Pattern Match' => {
-              callback        => sub { $self->test_new('Sprog::Gear::Grep') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>G',
-            },
-            'F_ind\/Replace' => {
-              callback        => sub { $self->test_new('Sprog::Gear::FindReplace') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>I',
-            },
-            '_Perl Code' => {
-              callback        => sub { $self->test_new('Sprog::Gear::PerlCode') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>P',
-            },
-            '_Lowercase' => {
-              callback        => sub { $self->test_new('Sprog::Gear::LowerCase') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>L',
-            },
-            '_Uppercase' => {
-              callback        => sub { $self->test_new('Sprog::Gear::UpperCase') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>U',
-            },
-          ]
-        },
-        'Add a _Bottom gear'  => {
-          item_type  => '<Branch>',
-          children => [
-            '_Text Window' => {
-              callback        => sub { $self->test_new('Sprog::Gear::TextWindow') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>T',
-            },
-          ]
-        },
-        'Futures (AKA vapourware)'  => {
-          item_type  => '<Branch>',
-          children => [
-            'CSV Split' => {
-              callback        => sub { $self->test_new('Sprog::Gear::CSVSplit') },
-              callback_action => $action++,
-            },
-            'Parse Apache Log' => {
-              callback        => sub { $self->test_new('Sprog::Gear::ApacheLogParse') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>A',
-            },
-            'Perl Code (hash to pipe)' => {
-              callback        => sub { $self->test_new('Sprog::Gear::PerlCodeHP') },
-              callback_action => $action++,
-              accelerator     => '<ctrl>H',
-            },
-            'Parse XML' => {
-              callback        => sub { $self->test_new('Sprog::Gear::XMLToSAX') },
-              callback_action => $action++,
-            },
-            'XSLT Transform' => {
-              callback        => sub { $self->test_new('Sprog::Gear::XSLT') },
-              callback_action => $action++,
-            },
-            'Write XML' => {
-              callback        => sub { $self->test_new('Sprog::Gear::XMLWriter') },
-              callback_action => $action++,
-            },
-          ]
-        },
-#        '_Dump machine state' => {
-#          callback        => sub { $self->dump },
-#          callback_action => $action++,
-#          accelerator     => '<ctrl>D',
-#        },
       ],
     },
     _Help  => {
@@ -525,15 +426,6 @@ sub help_about {
   my($self, $data) = @_;
 
   Sprog::GtkView::AboutDialog->invoke($self->app_win, $data);
-}
-
-
-sub test_new {
-  my($self, $gear_class) = @_;
-
-  my $machine = $self->app->machine;
-  my $gear = $machine->add_gear($gear_class) or return; # on error
-  $self->add_gear_view($gear);
 }
 
 
