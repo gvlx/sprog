@@ -1,5 +1,4 @@
 * Fix Drop Coordinates when palette is visible
-* Split event loop methods into their own class
 * Split workspace/canvas out into its own class
 * Save view (and other) preferences - in 'Correct' way for each OS
 * Make floating palette an option
@@ -17,7 +16,6 @@
 * POD viewer for reading gear documentation
 * Define gear properties (for browsing) in POD?
 * Track 'Head' gear on add/delete
-* 'Pipe' API - send blocks, read by line if rqd
 * Work out why replacement syntax error causes exit
 * File top gear: option to strip newlines
 * File top gear: newline: LF CRLF CR Auto
