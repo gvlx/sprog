@@ -3,7 +3,8 @@
 \.cvsignore$
 \.releaserc$
 \.lwpcookies$
-\.(SKIP|bak|old|swp|sprog)$
+\.(SKIP|bak|old|swp)$
+^[^/]*\.sprog$
 ^sprog$
 ^Makefile$
 blib
