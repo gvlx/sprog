@@ -1,0 +1,22 @@
+# This config file assumes you have a line like this is your
+# $HOME/dh-make-perl/overrides file:
+#
+#  do '/path/to/sprog-web/dh-make-perl-overrides';
+#
+
+$overrides{'Sprog'} = {
+  depends => 'libgtk2-perl, libgnome2-canvas-perl, libgtk2-gladexml-perl, '
+           . 'libclass-accessor-perl, libyaml-perl',
+  desc => 'GUI with a Perl centre',
+  longdesc => "Sprog is a GUI tool for building pipelines to process data.\n.\n"
+            . "Sprog allows you to select a data source; hook up some filter "
+            . "components and an output component; then feed your data "
+            . "through.\n.\n"
+            . "In Sprog jargon, the components are called 'gears' and the "
+            . "assembled result is called a 'machine'.  Sprog ships with a "
+            . "number of pre-written gears - most of which are configurable.  "
+            . "It's relatively straightforward to write your own gears using "
+            . "the supplied framework.  This allows you to make reusable "
+            . "components for the data transformations you use most often.",
+  section => 'contrib/X11',
+};
