@@ -8,7 +8,7 @@ BEGIN {
     unless(defined($ENV{DISPLAY})  &&  $ENV{DISPLAY} =~ /:\d/);
 }
 
-plan tests => 27;
+plan tests => 39;
 
 use File::Spec;
 
@@ -22,6 +22,7 @@ my $app = TestApp->make_gtk_app;
 is($app->alerts, '', 'no alerts when creating app');
 
 my $file_quit_failed = 0;
+my $last_dialog;
 
 $app->run_sequence(
 
@@ -165,9 +166,42 @@ $app->run_sequence(
     like($app->alerts, qr/^Not implemented/,
       'correct alert for File New not implemented');
     $app->alerts('');
+    $app->add_timeout(200, sub { dialog_response('Open', 'cancel') });
+    my $path = '/File/Open';
+    ok(
+      $app->view->activate_menu_item($path),
+      "selected $path"
+    );
   },
 
   sub {
+    is($last_dialog, 'Open', 'file open dialog was opened');
+    my $dialog = $app->view->find_window($last_dialog);
+    is($dialog, undef, 'and is now closed');
+    $app->add_timeout(200, sub { dialog_response('Save as', 'cancel') });
+    my $path = '/File/Save';
+    ok(
+      $app->view->activate_menu_item($path),
+      "selected $path"
+    );
+  },
+
+  sub {
+    is($last_dialog, 'Save as', 'file save dialog was opened');
+    my $dialog = $app->view->find_window($last_dialog);
+    is($dialog, undef, 'and is now closed');
+    $app->add_timeout(200, sub { dialog_response('Save as', 'cancel') });
+    my $path = '/File/Save As';
+    ok(
+      $app->view->activate_menu_item($path),
+      "selected $path"
+    );
+  },
+
+  sub {
+    is($last_dialog, 'Save as', 'file save as dialog was opened');
+    my $dialog = $app->view->find_window($last_dialog);
+    is($dialog, undef, 'and is now closed');
     my $path = '/Machine/Run';
     ok(
       $app->view->activate_menu_item($path),
@@ -196,3 +230,19 @@ $app->run_sequence(
 );
 
 ok(!$file_quit_failed, 'exited successfully using File Quit');
+
+exit;
+
+
+sub dialog_response {
+  my($window_name, $response) = @_;
+
+  $last_dialog = undef;
+  my $dialog = $app->view->find_window($window_name);
+  isa_ok($dialog, 'Gtk2::Window', "'$window_name' window");
+  $last_dialog = $dialog->get_title;
+
+  $dialog->response($response);
+  return;
+}
+
