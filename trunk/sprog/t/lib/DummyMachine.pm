@@ -23,5 +23,8 @@ sub new {
 }
 
 
+sub enable_idle_handler { 1; }
+
+
 1;
 
