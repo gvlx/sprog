@@ -10,6 +10,19 @@ __PACKAGE__->mk_accessors(qw(
   timed_out
 ));
 
+use Sprog::ClassFactory;
+
+sub make_test_app {
+  my $class = shift;
+
+  return make_app(               # Imported from ClassFactory.pm
+    '/app'         => $class,
+    '/app/machine' => 'TestMachine',
+    '/app/view'    => 'DummyView',
+  );
+
+}
+
 
 sub new {
   my $class = shift;
@@ -26,13 +39,11 @@ sub make_test_machine {
     push @gears, $self->add_gear_at_x_y($_[$i], 10, $i * 10);
   }
 
-  my $last = pop @gears;
-  while(@gears) {
-    $gears[-1]->next($last);
-    $last = pop @gears;
+  for(my $i = $#gears; $i > 0; $i--) {
+    $gears[$i-1]->next($gears[$i]);
   }
 
-  return $last;
+  return @gears;
 }
 
 
