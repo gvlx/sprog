@@ -1,12 +1,19 @@
 use 5.006;
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
+
 WriteMakefile(
     NAME              => 'Sprog',
-    VERSION_FROM      => 'lib/Sprog.pm', # finds $VERSION
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
-    ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (ABSTRACT_FROM  => 'lib/Sprog.pm', # retrieve abstract from module
-       AUTHOR         => 'Grant McLean <grant@>') : ()),
+    VERSION_FROM      => 'lib/Sprog.pm',
+    PREREQ_PM         => {
+                           Gtk2               => undef,
+                           Gnome2::Canvas     => undef,
+                           Gtk2::GladeXML     => undef,
+                           Class::Accessor    => undef,
+                           Test::Simple       => 0.41,
+                         },
+    EXE_FILES         => [ qw(bin/sprog) ],
+    ($] >= 5.005 ? (
+      AUTHOR          => 'Grant McLean <grant@cpan.org>',
+      ABSTRACT_FROM   => 'lib/Sprog.pm',
+    ) : () ),
 );
