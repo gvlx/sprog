@@ -8,6 +8,7 @@ use base qw(Sprog);
 __PACKAGE__->mk_accessors(qw(
   auto_quit
   alerts
+  intercept_alerts
   timed_out
   sequence_queue
 ));
@@ -41,7 +42,7 @@ sub make_gtk_app {
 sub new {
   my $class = shift;
 
-  $class->SUPER::new(@_, alerts => '', timed_out => 0);
+  $class->SUPER::new(@_, alerts => '', timed_out => 0, intercept_alerts => 1);
 }
 
 
@@ -64,6 +65,9 @@ sub make_test_machine {
 
 sub alert {
   my($self, $alert, $detail) = @_;
+
+  return $self->SUPER::alert($alert, $detail)
+    if(!$self->intercept_alerts);
 
   $self->{alerts} ||= '';
   $alert  = '<undef>' unless defined($alert);
