@@ -114,6 +114,7 @@ sub _build_workbench {
 
   my $canvas = Gnome2::Canvas->new_aa;
   $self->canvas($canvas);
+#  $canvas->signal_connect(size_allocate => sub { $self->_reset_canvas_scroll_region; });
 
   $sw->add($canvas);
 
@@ -158,6 +159,28 @@ sub set_window_title {
     $title = $name;
   }
   $self->app_win->set_title("$title - Sprog");
+}
+
+
+sub _reset_canvas_scroll_region {
+  my($self) = @_;
+
+
+  my($x1, $y1, $x2, $y2);
+  while(my($id, $gv) = each %{$self->{gears}}) {
+    if(!defined($x1)) {
+      ($x1, $y1, $x2, $y2) = $gv->group->get_bounds;
+      next;
+    }
+    my($ix1, $iy1, $ix2, $iy2) = $gv->group->get_bounds;
+
+    $x1 = $ix1 - 10 if($ix1 < $x1);
+    $y1 = $iy1 - 10 if($iy1 < $y1);
+    $x2 = $ix2 + 10 if($ix2 > $x2);
+    $y2 = $iy2 + 10 if($iy2 > $y2);
+  }
+  return unless defined $x1;
+  $self->canvas->set_scroll_region($x1, $y1, $x2, $y2);
 }
 
 
