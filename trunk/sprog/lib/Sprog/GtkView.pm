@@ -20,9 +20,9 @@ use Glib qw(TRUE FALSE);
 use Gnome2::Canvas;
 use Gtk2::SimpleMenu;
 
-use Sprog::GtkViewChrome;
-use Sprog::GtkViewToolbar;
-use Sprog::GtkAlertDialog;
+use Sprog::GtkView::Chrome;
+use Sprog::GtkView::Toolbar;
+use Sprog::GtkView::AlertDialog;
 use Sprog::GtkGearView;
 
 
@@ -224,7 +224,7 @@ sub add_menubar {
 sub add_toolbar {
   my($self, $vbox) = @_;
 
-  my $toolbar = Sprog::GtkViewToolbar->new(app => $self->app);
+  my $toolbar = Sprog::GtkView::Toolbar->new(app => $self->app);
   $self->toolbar($toolbar);
   $vbox->pack_start($toolbar->widget, FALSE, TRUE, 0);
 }
@@ -391,7 +391,7 @@ sub turn_cogs {
 sub alert {
   my($self, $message, $detail) = @_;
 
-  Sprog::GtkAlertDialog->invoke($self->app_win, $message, $detail);
+  Sprog::GtkView::AlertDialog->invoke($self->app_win, $message, $detail);
 
   return;
 }

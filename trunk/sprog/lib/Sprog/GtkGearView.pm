@@ -17,6 +17,7 @@ use Scalar::Util qw(weaken);
 
 use Glib qw(TRUE FALSE);
 
+use Sprog::GtkView::Chrome;
 use Sprog::GtkGearView::Paths;
 use Sprog::GtkAutoDialog;
 
@@ -137,7 +138,7 @@ sub init_cog_frames {
       height => $_->get_height,
       anchor => 'center',
     );
-  } Sprog::GtkViewChrome->cogs;
+  } Sprog::GtkView::Chrome->cogs;
 
   $self->{cog_frames} = \@frames;
   $self->{cog_index}  = 0;
