@@ -53,6 +53,7 @@ t/24_find_repl.t
 t/26_casing.t
 t/30_perl_code.t
 t/32_perl_code_hp.t
+t/counter.sprog
 t/files.txt
 t/lib/Dummy.pm
 t/lib/DummyApp.pm
