@@ -22,7 +22,7 @@ sub prime {
   delete $self->{perl_sub};
   if(defined($perl_code) and $perl_code ne '') {
     my $code = $self->_sub_preamble . $perl_code . ';' . $self->_sub_postamble;
-    $self->{perl_sub} = eval $code;
+    $self->{perl_sub} = eval "sub {\n$code\n}";
     if($@) {
       $self->app->alert('Error in Perl code', $@);
       delete $self->{perl_sub};
@@ -35,11 +35,10 @@ sub prime {
 
 sub _sub_preamble {
   return <<END_PERL;
-    sub { 
       my \$self = shift;
 
       LINE: {
-#line 0
+# line 1 "your code"
 END_PERL
 }
 
@@ -48,7 +47,6 @@ sub _sub_postamble {
   return <<END_PERL;
         \$self->msg_out(data => \$_);
       }
-    }
 END_PERL
 }
 
