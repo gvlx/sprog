@@ -10,6 +10,7 @@ WriteMakefile(
                            Gtk2::GladeXML     => undef,
                            Class::Accessor    => undef,
                            Test::Simple       => 0.41,
+                           YAML               => undef,
                          },
     EXE_FILES         => [ qw(bin/sprog) ],
     ($] >= 5.005 ? (
