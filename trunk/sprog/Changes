@@ -1,5 +1,11 @@
 Revision history for Perl extension Sprog.
 
+0.08  Mar ?? 2005
+        - added a new 'Text Input' gear
+        - added fairly comprehensive regression tests
+        - bug fixes to scheduler
+        - overhaul of code base to improve modularity and test-ability
+
 0.07  Feb 24 2005
         - fixed drop position when dragging from palette
         - added 'View' menu
