@@ -26,6 +26,7 @@ lib/Sprog/GtkView.pm
 lib/Sprog/GtkView/AboutDialog.pm
 lib/Sprog/GtkView/AlertDialog.pm
 lib/Sprog/GtkView/Chrome.pm
+lib/Sprog/GtkView/GearPalette.pm
 lib/Sprog/GtkView/Toolbar.pm
 lib/Sprog/internals.pod
 lib/Sprog/Machine.pm
