@@ -66,10 +66,20 @@ sub run_machine {
   $self->timed_out(0);
 
   $self->SUPER::run_machine(@_);
-  return unless $self->machine->running;
+  return $self->_test_return_value unless $self->machine->running;
 
   $self->add_timeout(2000, sub { $self->timed_out(1); $self->quit } );
   $self->run;
+
+  return $self->_test_return_value;
+}
+
+
+sub _test_return_value {
+  my $self = shift;
+
+  return ($self->timed_out() ? "Machine hung, interrupted by timeout\n" : '')
+         . $self->alerts;
 }
 
 
