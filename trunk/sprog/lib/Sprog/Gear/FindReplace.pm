@@ -2,13 +2,16 @@ package Sprog::Gear::FindReplace;
 
 use strict;
 
-use base qw(Sprog::Gear);
+use base qw(
+  Sprog::Gear
+  Sprog::Gear::InputByLine
+);
 
 __PACKAGE__->declare_properties(
-  pattern         => undef,
-  replacement     => undef,
+  pattern         => '',
+  replacement     => '',
   ignore_case     => 1,
-  global_replace  => 0,
+  global_replace  => 1,
 );
 
 
@@ -21,28 +24,20 @@ sub prime {
 
   delete $self->{subst};
   if(defined($pattern) and $pattern ne '') {
-    my %f = (
-      i => $self->ignore_case,
-      x => 0, 
-      s => 0, 
-      m => 0
-    );
-    my $flags  = join('', map { $f{$_} ? $_ : '' } keys %f) . '-' .
-                 join('', map { $f{$_} ? '' : $_ } keys %f);
+    $pattern =~ s{/}{\\/}g;
 
-    my $regex  = qr/(?$flags:$pattern)/;
-
-    my $sflags = $self->global_replace ? 'g' : '';
+    my $flags = $self->global_replace ? 'g' : '';
+    $flags   .= $self->ignore_case    ? 'i' : '';
 
     my $replacement = $self->replacement;
     $replacement =~ s{/}{\\/}g;
 
     local($@);
-    $self->{subst} = eval "sub { s/$regex/$replacement/$sflags }";
+    $self->{subst} = eval "sub { s/$pattern/$replacement/$flags }";
     if($@) {
-      #$self->app->alert("Error setting up find/replace", $@);
-      warn "$@\n";
+      $self->app->alert("Error setting up find/replace", $@);
       delete $self->{subst};
+      $@ = '';
     }
   }
 
