@@ -1,7 +1,9 @@
+* Fix Drop Coordinates when palette is visible
+* Split event loop methods into their own class
+* Split workspace/canvas out into its own class
 * Save view (and other) preferences - in 'Correct' way for each OS
 * Make floating palette an option
 * Clean up show/hide palette code to reduce coupling
-* Fix inheritance chain for CommandIn (don't inherit filename)
 * Warn about unsaved changes (before load, new or exit)
 * Implement SIG_PIPE analog
 * Perl gear - unbind escape key from cancel (for vi users)
