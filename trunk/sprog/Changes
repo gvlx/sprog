@@ -9,6 +9,7 @@ Revision history for Perl extension Sprog.
 
 0.06  Feb 19 2005
         - initial implementation of gear palette with drag-n-drop
+        - removed the 'Test' menu
         - implemented Help About with version, copyright and contact details
 
 0.05  Feb 09 2005
