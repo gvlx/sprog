@@ -24,7 +24,6 @@ __PACKAGE__->mk_accessors(qw(
 use Scalar::Util qw(weaken);
 use File::Basename ();
 
-use Gtk2 '-init';
 use Glib qw(TRUE FALSE);
 use Gnome2::Canvas;
 use Gtk2::SimpleMenu;
@@ -63,10 +62,6 @@ sub new {
 
   return $self;
 }
-
-
-sub run  { Gtk2->main;      }
-sub quit { Gtk2->main_quit; }
 
 
 sub build_app_window {
@@ -232,7 +227,7 @@ sub running {
     if($_[0]) {
       $self->enable_tool_button('stop');
       $self->disable_tool_button('run');
-      Glib::Timeout->add(200, sub { $self->turn_cogs });
+      $self->app->add_timeout(200, sub { $self->turn_cogs });
     }
     else {
       $self->disable_tool_button('stop');
@@ -468,20 +463,6 @@ sub drop_gear {
 }
 
 
-sub add_idle_handler {
-  my($self, $sub) = @_;
-
-  return Glib::Idle->add($sub);
-}
-
-
-sub add_io_reader {
-  my($self, $fh, $sub) = @_;
-
-  return Glib::IO->add_watch(fileno($fh), ['in', 'err', 'hup'], $sub);
-}
-
-
 sub status_message {
   my($self, $message) = @_;
 
@@ -490,13 +471,5 @@ sub status_message {
   $statusbar->push(0, $message);
 }
 
-
-sub dump {
-  my($self) = @_;
-
-  foreach my $id(sort {$a <=> $b} keys %{$self->{gears}}) {
-    $self->{gears}->{$id}->dump;
-  }
-}
-
 1;
+

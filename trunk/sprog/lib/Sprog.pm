@@ -10,6 +10,7 @@ __PACKAGE__->mk_accessors(qw(
   factory
   machine
   view
+  event_loop
 ));
 
 sub new {
@@ -20,11 +21,13 @@ sub new {
   my $factory = $self->{factory} || die "No class factory";
 
   $factory->inject(   # set default classes if not already defined
-    '/app/machine' => 'Sprog::Machine',
-    '/app/view'    => 'Sprog::GtkView',
+    '/app/machine'   => 'Sprog::Machine',
+    '/app/view'      => 'Sprog::GtkView',
+    '/app/eventloop' => 'Sprog::GtkEventLoop',
   );
-  $self->machine( $factory->make_class('/app/machine', app => $self) );
-  $self->view   ( $factory->make_class('/app/view',    app => $self) );
+  $self->event_loop( $factory->load_class('/app/eventloop') );
+  $self->machine   ( $factory->make_class('/app/machine', app => $self) );
+  $self->view      ( $factory->make_class('/app/view',    app => $self) );
 
   return $self;
 }
@@ -34,34 +37,35 @@ sub run {
 
   $self->load_from_file(shift) if(@_);
 
-  $self->view->run;
+  $self->event_loop->run;
 }
 
-sub inject           { shift->factory->inject(@_);        }
-sub make_class       { shift->factory->make_class(@_);    }
-sub load_class       { shift->factory->load_class(@_);    }
-
-sub quit             { shift->view->quit();               }
+sub inject            { shift->factory->inject(@_);              }
+sub make_class        { shift->factory->make_class(@_);          }
+sub load_class        { shift->factory->load_class(@_);          }
 
 sub show_toolbar { my $view = shift->view || return; $view->show_toolbar(); }
 sub hide_toolbar { my $view = shift->view || return; $view->hide_toolbar(); }
 
-sub set_toolbar_style { shift->view->set_toolbar_style(@_); }
-sub toggle_palette   { shift->view->toggle_palette();     }
-sub show_palette     { shift->view->show_palette();       }
-sub hide_palette     { shift->view->hide_palette();       }
+sub set_toolbar_style { shift->view->set_toolbar_style(@_);      }
+sub toggle_palette    { shift->view->toggle_palette();           }
+sub show_palette      { shift->view->show_palette();             }
+sub hide_palette      { shift->view->hide_palette();             }
 
-sub alert            { shift->view->alert(@_);            }
-sub status_message   { shift->view->status_message(@_);   }
-sub not_implemented  { shift->alert('Not implemented');   }
+sub alert             { shift->view->alert(@_);                  }
+sub status_message    { shift->view->status_message(@_);         }
+sub not_implemented   { shift->alert('Not implemented');         }
 
-sub drop_gear        { shift->view->drop_gear(@_);        }
-sub detach_gear      { shift->machine->detach_gear(@_);   }
+sub drop_gear         { shift->view->drop_gear(@_);              }
+sub detach_gear       { shift->machine->detach_gear(@_);         }
 
-sub add_idle_handler { shift->view->add_idle_handler(@_); }
-sub add_io_reader    { shift->view->add_io_reader(@_);    }
+sub file_new          { shift->not_implemented();                }
 
-sub file_new         { shift->not_implemented();          }
+
+sub quit              { shift->event_loop->quit();               }
+sub add_timeout       { shift->event_loop->add_timeout(@_);      }
+sub add_idle_handler  { shift->event_loop->add_idle_handler(@_); }
+sub add_io_reader     { shift->event_loop->add_io_reader(@_);    }
 
 
 sub file_open {
