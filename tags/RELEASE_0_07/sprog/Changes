@@ -1,0 +1,33 @@
+Revision history for Perl extension Sprog.
+
+0.07  Feb 24 2005
+        - fixed drop position when dragging from palette
+        - added 'View' menu
+        - show/hide palette via menu, toolbar and hot key
+        - show/hide toolbar via menu
+        - enable text labels on toolbar but configurable via View menu
+
+0.06  Feb 19 2005
+        - initial implementation of gear palette with drag-n-drop
+        - removed the 'Test' menu
+        - implemented Help About with version, copyright and contact details
+
+0.05  Feb 09 2005
+        - implemented file save support for ApacheLogParse, CommandIn,
+          FindReplace and PerlCode gears
+        - allow derived gear classes to inherit default properties
+        - fixed broken properties dialog for ApacheLogParse gear
+        - fixed gear positioning bug when restoring from file
+
+0.04  Feb 08 2005
+        - implemented File Save and File Open
+
+0.03  Jan 03 2005
+        - renamed modules from Pstax* to Sprog*
+        - added missing libgnome2-canvas-perl to Debian dependencies
+        - set up directory layout for CPAN, using h2xs 1.23 with options
+              -AX -b 5.6.0 -n Sprog
+
+Prehistory (~August 2004)
+        - implemented initial application framework under the name 'Pstax' 
+          using Gtk for GUI and event loop

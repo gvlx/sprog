@@ -1,0 +1,14 @@
+\.bak$
+\bCVS/
+\.cvsignore$
+\.releaserc$
+\.lwpcookies$
+\.(SKIP|bak|old|swp|sprog)$
+^sprog$
+^Makefile$
+blib
+^Sprog-
+^TODO
+^xx$
+^glade
+^misc

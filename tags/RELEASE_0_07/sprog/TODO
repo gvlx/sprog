@@ -1,0 +1,27 @@
+* Save view (and other) preferences - in 'Correct' way for each OS
+* Make floating palette an option
+* Clean up show/hide palette code to reduce coupling
+* Fix inheritance chain for CommandIn (don't inherit filename)
+* Warn about unsaved changes (before load, new or exit)
+* Implement SIG_PIPE analog
+* Perl gear - unbind escape key from cancel (for vi users)
+* TextWindow - bind escape key to hide function
+* File browse - remember last directory
+* Implement ApacheCustomLogParse
+* Fix detach resulting from click-without-drag
+* Cancel waiting events on stop
+* Highlight selected gear
+* Drag and drop handling for file top gear
+* POD viewer for reading gear documentation
+* Define gear properties (for browsing) in POD?
+* Track 'Head' gear on add/delete
+* 'Pipe' API - send blocks, read by line if rqd
+* Work out why replacement syntax error causes exit
+* File top gear: option to strip newlines
+* File top gear: newline: LF CRLF CR Auto
+* Command output gear (eg: gnuplot?)
+* Shrink the alert dialog after hiding details
+* Determine if calling ->destroy on a Gnome2::Canvas::Group is kocher
+* Cache the GearView paths
+
+* Register with www.gnomefiles.org GTK+ Software Repository
