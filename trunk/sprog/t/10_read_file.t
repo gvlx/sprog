@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More 'no_plan';# tests => 17;
 
 use File::Spec;
 
@@ -25,6 +25,7 @@ isa_ok($machine, 'DummyMachine');
 
 my $sink = TextGear->new(machine => $machine);
 isa_ok($sink, 'TextGear');
+is($sink->title, '', 'default title is empty string');
 $sink->text('');
 
 my $reader = Sprog::Gear::ReadFile->new(app => $app, machine => $machine);
@@ -74,6 +75,12 @@ is(scalar(@$io_queue), 0, "de-queued the io_reader message");
 $sub->();
 
 1 while($sink->turn_once);
+
+is(scalar(@$io_queue), 0, "no io_reader messages queued after EOF");
+
+is($reader->fh, undef, "file handle has been disposed");
+
+$reader->send_data;
 
 like($sink->text, qr{
   ^
