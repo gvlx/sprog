@@ -15,6 +15,7 @@ lib/Sprog/Gear/LowerCase.pm
 lib/Sprog/Gear/PerlCode.pm
 lib/Sprog/Gear/PerlCodeHP.pm
 lib/Sprog/Gear/ReadFile.pm
+lib/Sprog/Gear/TextInput.pm
 lib/Sprog/Gear/TextWindow.pm
 lib/Sprog/Gear/Top.pm
 lib/Sprog/Gear/UpperCase.pm
