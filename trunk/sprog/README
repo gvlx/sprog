@@ -25,12 +25,13 @@ PREREQUISITES
   Gnome2::Canvas
   Gtk2::GladeXML
   Class::Accessor
+  YAML
 
 On my Debian 'Sarge' system, this is all that's required to install the
 prerequisites:
 
   apt-get install libgtk2-perl libgnome2-canvas-perl libgtk2-gladexml-perl \
-          libclass-accessor-perl
+          libclass-accessor-perl libyaml-perl
 
 
 INSTALLING
