@@ -1,5 +1,4 @@
 * Fix coordinates where drag-n-drop ends up
-* Disconnect palette drag start if no gears match filter
 * Fix inheritance chain for CommandIn (don't inherit filename)
 * Warn about unsaved changes (before load, new or exit)
 * Implement SIG_PIPE analog

@@ -31,6 +31,7 @@ my @connector_types = (
   'Any'    => '.',
   'None'   => '_',
   'Pipe'   => 'P',
+  'List'   => 'A',
   'Record' => 'R',
 );
 
@@ -84,6 +85,24 @@ my @gear_classes = (   # Hardcoded for now - better idea coming soon
     title    => 'Text Window',
     type_in  => 'P',
     type_out => '_',
+  },
+  {
+    class => 'Sprog::Gear::CSVSplit',
+    title    => 'CSV Split',
+    type_in  => 'P',
+    type_out => 'A',
+  },
+  {
+    class => 'Sprog::Gear::ApacheLogParse',
+    title    => 'Parse Apache Log',
+    type_in  => 'P',
+    type_out => 'H',
+  },
+  {
+    class => 'Sprog::Gear::PerlCodeHP',
+    title    => 'Perl Code',
+    type_in  => 'H',
+    type_out => 'P',
   },
 );
 
@@ -210,7 +229,7 @@ sub set_item_pixbuf {
 
   my($i) = $model->get($iter, COL_GEAR_INDEX);
   my $icon_type = $gear_classes[$i]->{type_in} . $gear_classes[$i]->{type_out};
-  my $pixbuf = $mini_icons->{$icon_type} || $mini_icons->{PP};
+  my $pixbuf = $mini_icons->{$icon_type} || $mini_icons->{__};
   $cell->set(pixbuf => $pixbuf);
 }
 
@@ -230,10 +249,6 @@ sub connect_signals {
   $button->signal_connect(clicked => sub { $self->reset_filter(); });
 
   my $gearlist = $gladexml->get_widget('gear_list');
-  $gearlist->drag_source_set(
-    ['button1_mask'], ['copy'], Sprog::GtkView::drag_targets()
-  );
-
   $gearlist->signal_connect(
     cursor_changed => sub { $self->select_gear(@_);   }
   );
@@ -266,11 +281,22 @@ sub apply_filter {
   my @matches = grep { "$gear_classes[$_]->{type_in}$gear_classes[$_]->{type_out}" =~ $types } (0..$#gear_classes);
 
   $model->clear;
-  foreach my $i (@matches) {
-    my $iter = $model->append;
-    $model->set($iter, COL_GEAR_INDEX, $i);
-    $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]->{title});
+
+  my $gearlist = $gladexml->get_widget('gear_list');
+  if(@matches) {
+    foreach my $i (@matches) {
+      my $iter = $model->append;
+      $model->set($iter, COL_GEAR_INDEX, $i);
+      $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]->{title});
+    }
+    $gearlist->drag_source_set(
+      ['button1_mask'], ['copy'], Sprog::GtkView::drag_targets()
+    );
   }
+  else {
+    $gearlist->drag_source_unset;
+  }
+
 }
 
 
