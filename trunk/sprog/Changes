@@ -1,7 +1,8 @@
 Revision history for Perl extension Sprog.
 
 0.08  Mar 22 2005
-        - added a new 'Text Input' gear
+        - speed improvements
+        - added a new 'Text Input' gear and removed vapourware gears
         - added many regression tests
         - fixed numerous bugs identified by tests
         - overhaul of code base to improve modularity and test-ability
