@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 22;
+use Test::More tests => 24;
 
 use File::Spec;
 
@@ -92,6 +92,28 @@ is_deeply([ $sink->lines ], [
   "*** /var/log/syslog\n",
   "*** /var/lib/EtchingsLogo\n",
 ], "matched using default case-insensitive matching");
+$sink->reset;
+
+
+$perl->perl_code('print uc if /log/');
+$perl->prime;
+is($app->alerts, '', "doesn't choke on print statement");
+
+$perl->msg_in(data => $data);
+$perl->turn_once;
+1 while($sink->turn_once);
+
+is_deeply([ $sink->lines ], [
+  "/etc/hosts\n",
+  "/ETC/SYSLOG.CONF\n",
+  "/usr/bin/cat\n",
+  "/usr/bin/grep\n",
+  "/USR/BIN/LOGIN\n",
+  "/usr/bin/ls\n",
+  "/VAR/LOG/SYSLOG\n",
+  "/var/lib/EtchingsLogo\n",
+], "print function successfully intercepted");
+$sink->reset;
 
 
 $perl->perl_code("\nuse Bogus::NonExistant::Module");

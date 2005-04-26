@@ -2,6 +2,8 @@ package Sprog::Gear::PerlCode;
 
 use strict;
 
+use Sprog::PrintToIt;
+
 use base qw(
   Sprog::Gear::PerlBase
   Sprog::Gear::InputByLine
@@ -11,6 +13,9 @@ use base qw(
 sub _sub_preamble {
   return <<END_PERL;
       my \$self = shift;
+
+      local(*STDOUT);
+      tie(*STDOUT, 'Sprog::PrintToIt');
 
       LINE: {
 # line 1 "your code"
@@ -64,6 +69,13 @@ Thus, the default behaviour is to take the line of input in C<$_> and pass
 it directly to the next downstream gear.  The code snippet can alter the
 contents of C<$_> and can use C<next> to prevent the line being passed to
 the next gear.
+
+Note, the builtin C<print> function is overridden to assign its arguments to
+C<$_>.  So these two lines are equivalent:
+
+  print uc($_);
+  $_  = uc($_);
+
 
 =head1 COPYRIGHT 
 
