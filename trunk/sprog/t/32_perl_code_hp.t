@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 36;
 
 use File::Spec;
 
@@ -72,7 +72,19 @@ like($app->test_run_machine, qr/syntax error/, 'syntax error captured successful
 $perl->perl_code('$_ = "$r->{host}\n"');
 
 is($app->test_run_machine, '', 'run completed without timeout or alerts');
-is_deeply([ $sink->lines ], [ ("127.0.0.1\n") x 6 ], 'no output by default');
+is_deeply([ $sink->lines ], [ ("127.0.0.1\n") x 6 ], 'got expected output from $r');
+$sink->reset;
+
+$perl->perl_code('$_ = "$rec{host}\n"');
+
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
+is_deeply([ $sink->lines ], [ ("127.0.0.1\n") x 6 ], 'got expected output from %rec');
+$sink->reset;
+
+$perl->perl_code('print "$rec{host}\n"');
+
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
+is_deeply([ $sink->lines ], [ ("127.0.0.1\n") x 6 ], 'got expected output via print');
 $sink->reset;
 
 $perl->perl_code('
