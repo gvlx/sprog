@@ -34,7 +34,7 @@ my @connector_types = (
   'None'   => '_',
   'Pipe'   => 'P',
   'List'   => 'A',
-  'Record' => 'R',
+  'Record' => 'H',
 );
 
 my %type_map = @connector_types;
