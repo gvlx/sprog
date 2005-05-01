@@ -71,7 +71,7 @@ sub make_class {
 
   my $obj = eval {
     my $class = $self->load_class($path);
-    $class->new(@_);
+    $class->new(@args);
   };
   croak "$@" if($@);
 
