@@ -21,9 +21,10 @@ sub new {
   my $factory = $self->{factory} or die "No class factory";
 
   $factory->inject(   # set default classes if not already defined
-    '/app/machine'   => 'Sprog::Machine',
-    '/app/view'      => 'Sprog::GtkView',
-    '/app/eventloop' => 'Sprog::GtkEventLoop',
+    '/app/machine'     => 'Sprog::Machine',
+    '/app/view'        => 'Sprog::GtkView',
+    '/app/eventloop'   => 'Sprog::GtkEventLoop',
+    '/app/help_parser' => 'Sprog::HelpParser',
   );
   $self->event_loop( $factory->load_class('/app/eventloop') );
   $self->machine   ( $factory->make_class('/app/machine', app => $self) );
