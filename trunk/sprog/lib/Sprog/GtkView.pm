@@ -38,7 +38,7 @@ sub new {
     @_,
     gears => {},
   }, $class;
-  $self->{app} && weaken($self->{app});
+  weaken($self->{app});
 
   $self->{floating_palette} = 0;
 
@@ -420,7 +420,7 @@ sub hide_palette {
 sub show_help {
   my($self, $topic) = @_;
 
-  $self->help_class->show_help($topic);
+  $self->help_class->show_help($self->app, $topic);
 }
 
 
