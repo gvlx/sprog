@@ -238,10 +238,16 @@ sub post_context_menu {
   my $menu = Gtk2::Menu->new;
 
   foreach my $item (@{$self->context_menu_entries}) {
-    my $menu_item = new Gtk2::MenuItem($item->{title});
-    $menu_item->signal_connect('activate', $item->{callback});
+    my $menu_item;
+    if($item->{title} eq '---') {
+      $menu_item = Gtk2::SeparatorMenuItem->new();
+    }
+    else {
+      $menu_item = Gtk2::MenuItem->new($item->{title});
+      $menu_item->signal_connect('activate', $item->{callback});
+      $menu_item->set(sensitive => FALSE) if $item->{disabled};
+    }
     $menu->append($menu_item);
-    $menu_item->set(sensitive => FALSE) if $item->{disabled};
     $menu_item->show;
   }
 
@@ -262,6 +268,14 @@ sub context_menu_entries {
       title    => 'Properties',
       callback => sub { $self->properties; },
       disabled => $self->gear->no_properties,
+    },
+    {
+      title    => '---'
+    },
+    {
+      title    => 'Help',
+      callback => sub { $self->app->show_help(ref $self->gear); },
+      disabled => FALSE,
     },
   ];
 }
