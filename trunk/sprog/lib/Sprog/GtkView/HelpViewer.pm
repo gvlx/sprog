@@ -9,25 +9,35 @@ use Gtk2::Pango;
 use File::Spec;
 
 use base qw(
-  Pod::Simple::Methody
   Class::Accessor::Fast
 );
 
 __PACKAGE__->mk_accessors(qw(
-  helpwin textview buffer
+  app helpwin textview buffer statusbar
 ));
+
+use Scalar::Util qw(weaken);
+
+use constant HOME_TOPIC => 'Sprog::help::index';
 
 
 sub show_help {
-  my($class, $topic) = @_;
+  my($class, $app, $topic) = @_;
 
-  my $self = $class->new;
+  my $self = $class->new(app => $app);
 
   $self->set_topic($topic);
 }
 
 
-sub new { return shift->SUPER::new->_init; }
+sub new { 
+  my $class = shift;
+
+  my $self = bless({ @_ }, $class);
+  weaken($self->{app});
+
+  return $self->_init;
+}
 
 
 sub _init {
@@ -54,6 +64,8 @@ sub _init {
   $textview->set_right_margin(4);
 
   my $buffer = $self->buffer($self->textview->get_buffer);
+
+  $self->statusbar($gladexml->get_widget('statusbar'));
 
   $self->_init_tags($buffer, $font_desc->get_size);
 
@@ -149,16 +161,13 @@ sub set_topic {
 
   $self->clear;
 
-  $self->{tag_stack} = [];
-
   my $file = $self->_find_file($topic);
   if($file) {
-    $self->parse_file($file);
-    return if $self->content_seen;
+    my $parser = $self->app->factory->make_class('/app/help_parser', $self);
+    $parser->parse_file($file);
+    return if $parser->content_seen;
   }
-  $self->_start_block('head3');
-  $self->_emit("Unable to find help for topic '$topic'");
-  $self->_end_block;
+  $self->add_tagged_text("Unable to find help for topic '$topic'", 'head3');
 }
 
 
@@ -166,6 +175,15 @@ sub clear {
   my $self = shift;
 
   $self->buffer->set_text('');
+}
+
+
+sub add_tagged_text {
+  my($self, $text, $tags) = @_;
+
+  my $buffer = $self->buffer;
+  my $iter   = $buffer->get_end_iter;
+  $buffer->insert_with_tags_by_name($iter, $text, @$tags);
 }
 
 
@@ -183,6 +201,16 @@ sub _find_file {
   return;
 }
 
+
+sub status_message {
+  my($self, $message) = @_;
+
+  my $statusbar = $self->statusbar;
+  $statusbar->pop(0);
+  $statusbar->push(0, $message);
+}
+
+
 ########################### GUI Event Handlers ###############################
 
 sub on_close_activated {
@@ -194,88 +222,31 @@ sub on_close_activated {
 
 sub on_find_activated {
   my $self = shift;
+
+  $self->status_message('Find not implemented');
 }
 
 
 sub on_back_activated {
   my $self = shift;
+
+  $self->status_message('Back not implemented');
 }
 
 
 sub on_forward_activated {
   my $self = shift;
+
+  $self->status_message('Forward not implemented');
 }
 
 
 sub on_home_activated {
   my $self = shift;
+
+  $self->set_topic(HOME_TOPIC);
 }
 
-
-########################### POD Event Handlers ###############################
-
-sub handle_text       { $_[0]->_emit($_[1]); }
-
-sub start_head1       { $_[0]->_start_block(qw(head1));    }
-sub start_head2       { $_[0]->_start_block(qw(head2));    }
-sub start_head3       { $_[0]->_start_block(qw(head3));    }
-sub start_head4       { $_[0]->_start_block(qw(head4));    }
-sub start_Para        { $_[0]->_start_block(qw(para));     }
-sub start_Verbatim    { $_[0]->_start_block(qw(verbatim)); }
-sub start_item_number { $_[0]->_start_block;               }
-sub start_item_text   { $_[0]->_start_block;               }
-
-sub start_item_bullet {
-  my $self = shift;
-  
-  $self->_start_block(qw(bullet));
-  $self->_emit("\x{B7} ");
-}
-
-sub end_head1         { $_[0]->_end_block; }
-sub end_head2         { $_[0]->_end_block; }
-sub end_head3         { $_[0]->_end_block; }
-sub end_head4         { $_[0]->_end_block; }
-sub end_Para          { $_[0]->_end_block; }
-sub end_Verbatim      { $_[0]->_end_block; $_[0]->_emit("\n"); }
-sub end_item_bullet   { $_[0]->_end_block; $_[0]->_emit("\n"); }
-sub end_item_number   { $_[0]->_end_block; $_[0]->_emit("\n"); }
-sub end_item_text     { $_[0]->_end_block; $_[0]->_emit("\n"); }
-
-sub start_B           { push @{$_[0]->{tag_stack}->[-1]}, 'bold';   }
-sub start_I           { push @{$_[0]->{tag_stack}->[-1]}, 'italic'; }
-sub start_C           { push @{$_[0]->{tag_stack}->[-1]}, 'code';   }
-sub start_F           { push @{$_[0]->{tag_stack}->[-1]}, 'code';   }
-sub start_L           { push @{$_[0]->{tag_stack}->[-1]}, 'link';   }
-
-sub end_B             { pop  @{$_[0]->{tag_stack}->[-1]}; }
-sub end_I             { pop  @{$_[0]->{tag_stack}->[-1]}; }
-sub end_C             { pop  @{$_[0]->{tag_stack}->[-1]}; }
-sub end_F             { pop  @{$_[0]->{tag_stack}->[-1]}; }
-sub end_L             { pop  @{$_[0]->{tag_stack}->[-1]}; }
-
-sub _start_block {
-  my $self = shift;
-
-  push @{$self->{tag_stack}}, [ @_ ];
-}
-
-sub _end_block {
-  my $self = shift;
-
-  pop @{$self->{tag_stack}};
-  $self->_emit("\n");
-}
-
-sub _emit {
-  my($self, $text) = @_;
-
-  my $buffer = $self->buffer;
-
-  my $iter = $buffer->get_end_iter;
-  my $tags = $self->{tag_stack}->[-1];
-  $buffer->insert_with_tags_by_name($iter, $text, @$tags);
-}
 
 sub glade_xml {
 
@@ -516,7 +487,7 @@ sub glade_xml {
       </child>
 
       <child>
-	<widget class="GtkStatusbar" id="statusbar1">
+	<widget class="GtkStatusbar" id="statusbar">
 	  <property name="visible">True</property>
 	  <property name="has_resize_grip">True</property>
 	</widget>
