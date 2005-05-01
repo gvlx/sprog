@@ -204,3 +204,52 @@ END_XML
 }
 
 1;
+
+__END__
+
+=head1 NAME
+
+Sprog::Gear::ReadFile - Read data from a file
+
+=head1 DESCRIPTION
+
+This is a data input gear.  It reads data from a file and passes it downstream
+using a 'pipe' connector.
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+=for sprog-help-text
+
+=head1 Read File
+
+The 'Read File' gear allows you to read data from a file and pass it out
+through a 'pipe' connector.
+
+You would usually use this gear to read text files, but it can also be used
+for 'binary' files such as images.
+
+=head2 Properties
+
+The Read File gear has only one property - the name of the file to read.  You
+can set the filename property in three ways:
+
+=over 4
+
+=item * 
+
+by typing the name of a file
+
+=item * 
+
+by using the B<Browse> button and selecting a file
+
+=item * 
+
+by dragging a file and dropping into the sprog window (not implemented yet)
+
+=back
