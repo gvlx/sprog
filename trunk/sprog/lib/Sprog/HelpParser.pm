@@ -56,17 +56,24 @@ sub end_item_bullet   { $_[0]->_end_block; $_[0]->_emit("\n"); }
 sub end_item_number   { $_[0]->_end_block; $_[0]->_emit("\n"); }
 sub end_item_text     { $_[0]->_end_block; $_[0]->_emit("\n"); }
 
-sub start_B           { push @{$_[0]->{_tag_stack_}->[-1]}, 'bold';   }
-sub start_I           { push @{$_[0]->{_tag_stack_}->[-1]}, 'italic'; }
-sub start_C           { push @{$_[0]->{_tag_stack_}->[-1]}, 'code';   }
-sub start_F           { push @{$_[0]->{_tag_stack_}->[-1]}, 'code';   }
-sub start_L           { push @{$_[0]->{_tag_stack_}->[-1]}, 'link';   }
+sub start_B           { shift->_push_tag('bold'  ); }
+sub start_I           { shift->_push_tag('italic'); }
+sub start_C           { shift->_push_tag('code'  ); }
+sub start_F           { shift->_push_tag('code'  ); }
 
-sub end_B             { pop  @{$_[0]->{_tag_stack_}->[-1]}; }
-sub end_I             { pop  @{$_[0]->{_tag_stack_}->[-1]}; }
-sub end_C             { pop  @{$_[0]->{_tag_stack_}->[-1]}; }
-sub end_F             { pop  @{$_[0]->{_tag_stack_}->[-1]}; }
-sub end_L             { pop  @{$_[0]->{_tag_stack_}->[-1]}; }
+sub start_L {
+  my($self, $args) = @_;
+
+  $self->{_view_}->link_data($args->{type}, "$args->{to}"); # stringify target
+
+  push @{$self->{_tag_stack_}->[-1]}, 'link';   
+}
+
+sub end_B             { shift->_pop_tag; }
+sub end_I             { shift->_pop_tag; }
+sub end_C             { shift->_pop_tag; }
+sub end_F             { shift->_pop_tag; }
+sub end_L             { shift->_pop_tag; }
 
 sub _start_block {
   my $self = shift;
@@ -79,6 +86,18 @@ sub _end_block {
 
   pop @{$self->{_tag_stack_}};
   $self->_emit("\n");
+}
+
+sub _push_tag {
+  my($self, $tag) = @_;
+
+  push @{$self->{_tag_stack_}->[-1]}, $tag;
+}
+
+sub _pop_tag {
+  my($self, $tag) = @_;
+
+  pop @{$self->{_tag_stack_}->[-1]};
 }
 
 sub _emit {
