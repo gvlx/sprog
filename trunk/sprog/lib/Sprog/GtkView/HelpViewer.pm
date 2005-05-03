@@ -13,12 +13,16 @@ use base qw(
 );
 
 __PACKAGE__->mk_accessors(qw(
-  app helpwin textview buffer statusbar
+  app helpwin textview buffer statusbar hovering
 ));
 
 use Scalar::Util qw(weaken);
 
 use constant HOME_TOPIC => 'Sprog::help::index';
+
+
+my $cursor     = Gtk2::Gdk::Cursor->new('xterm');
+my $url_cursor = Gtk2::Gdk::Cursor->new('hand2');
 
 
 sub show_help {
@@ -57,11 +61,30 @@ sub _init {
   my $textview = $self->textview($gladexml->get_widget('textview'));
   $textview->set_editable(FALSE);
   $textview->set_cursor_visible(FALSE);
-  my $font_desc = Gtk2::Pango::FontDescription->from_string ("Serif 10");
-  $textview->modify_font ($font_desc);
+  my $font_desc = Gtk2::Pango::FontDescription->from_string("Serif 10");
+  $textview->modify_font($font_desc);
   $textview->set_wrap_mode('word');
   $textview->set_left_margin(6);
   $textview->set_right_margin(4);
+
+  $textview->get_window('text')->set_events([qw(
+    exposure-mask
+    pointer-motion-mask
+    button-press-mask
+    button-release-mask
+    key-press-mask
+    structure-mask
+    property-change-mask
+    scroll-mask
+  )]);
+
+  $textview->signal_connect(
+    'motion_notify_event' => sub { $self->on_motion_notify_event(@_); }
+  );
+
+  $textview->signal_connect(
+    'button_release_event' => sub { $self->on_clicked(@_); }
+  );
 
   my $buffer = $self->buffer($self->textview->get_buffer);
 
@@ -76,70 +99,75 @@ sub _init {
 sub _init_tags {
   my($self, $buffer, $size) = @_;
 
-  $buffer->create_tag('head1',
-    family             => 'Sans',
-    weight             => PANGO_WEIGHT_BOLD,
-    size               => $size * 1.6,
-    pixels_above_lines => 12,
-    pixels_below_lines => 4,
+  my %tag_data = (
+    head1 =>      {
+                    family             => 'Sans',
+                    weight             => PANGO_WEIGHT_BOLD,
+                    size               => $size * 1.6,
+                    pixels_above_lines => 12,
+                    pixels_below_lines => 4,
+                  },
+
+    head2 =>      {
+                    family             => 'Sans',
+                    weight             => PANGO_WEIGHT_BOLD,
+                    size               => $size * 1.4,
+                    pixels_above_lines => 4,
+                    pixels_below_lines => 2,
+                  },
+
+    head3 =>      {
+                    family             => 'Sans',
+                    weight             => PANGO_WEIGHT_BOLD,
+                    size               => $size * 1.2,
+                    pixels_above_lines => 6,
+                    pixels_below_lines => 2,
+                  },
+
+    head4 =>      {
+                    family             => 'Sans',
+                    weight             => PANGO_WEIGHT_BOLD,
+                    size               => $size,
+                    pixels_above_lines => 6,
+                    pixels_below_lines => 2,
+                  },
+
+    para =>       {
+                    pixels_below_lines => 8,
+                  },
+
+    bullet =>     {
+                    left_margin        => 20,
+                    pixels_above_lines => 2,
+                    pixels_below_lines => 2,
+                  },
+
+    verbatim =>   {
+                    wrap_mode          => 'none',
+                    family             => 'monospace',
+                    size               => $size,
+                  },
+
+    bold =>       {
+                    weight             => PANGO_WEIGHT_BOLD,
+                  },
+
+    italic =>     {
+                    style              => 'italic'
+                  },
+
+    code =>       {
+                    family             => 'monospace',
+                  },
+
+    link =>       {
+                    foreground         => 'blue',
+                  }
   );
 
-  $buffer->create_tag('head2',
-    family             => 'Sans',
-    weight             => PANGO_WEIGHT_BOLD,
-    size               => $size * 1.4,
-    pixels_above_lines => 4,
-    pixels_below_lines => 2,
-  );
-
-  $buffer->create_tag('head3',
-    family             => 'Sans',
-    weight             => PANGO_WEIGHT_BOLD,
-    size               => $size * 1.2,
-    pixels_above_lines => 6,
-    pixels_below_lines => 2,
-  );
-
-  $buffer->create_tag('head4',
-    family             => 'Sans',
-    weight             => PANGO_WEIGHT_BOLD,
-    size               => $size,
-    pixels_above_lines => 6,
-    pixels_below_lines => 2,
-  );
-
-  $buffer->create_tag('para',
-    pixels_below_lines => 8,
-  );
-
-  $buffer->create_tag('bullet',
-    left_margin        => 20,
-    pixels_above_lines => 2,
-    pixels_below_lines => 2,
-  );
-
-  $buffer->create_tag('verbatim',
-    wrap_mode          => 'none',
-    family             => 'monospace',
-    size               => $size,
-  );
-
-  $buffer->create_tag('bold',
-    weight             => PANGO_WEIGHT_BOLD,
-  );
-
-  $buffer->create_tag('italic',
-    style              => 'italic'
-  );
-
-  $buffer->create_tag('code',
-    family             => 'monospace',
-  );
-
-  $buffer->create_tag('link',
-    underline          => 'single',
-    foreground         => 'blue',
-  );
+  while(my($name, $data) = each %tag_data) {
+    $self->{tag}->{$name} = $buffer->create_tag($name, %$data);
+  }
 
 }
 
@@ -160,6 +188,7 @@ sub set_topic {
   my($self, $topic) = @_;
 
   $self->clear;
+  $self->status_message('');
 
   my $file = $self->_find_file($topic);
   if($file) {
@@ -167,7 +196,7 @@ sub set_topic {
     $parser->parse_file($file);
     return if $parser->content_seen;
   }
-  $self->add_tagged_text("Unable to find help for topic '$topic'", 'head3');
+  $self->add_tagged_text("Unable to find help for topic '$topic'", ['head3']);
 }
 
 
@@ -175,15 +204,37 @@ sub clear {
   my $self = shift;
 
   $self->buffer->set_text('');
+  my $tag_table = $self->buffer->get_tag_table;
+  $tag_table->foreach(sub { $tag_table->remove($_[0]) if $_[0]->{link_type}; });
+}
+
+
+sub link_data {
+  my $self = shift;
+
+  $self->{link_type}   = shift;
+  $self->{link_target} = shift;
 }
 
 
 sub add_tagged_text {
-  my($self, $text, $tags) = @_;
+  my($self, $text, $tag_names) = @_;
+
+  my @tags = map { $self->{tag}->{$_} ? $self->{tag}->{$_} : () } @$tag_names;
 
   my $buffer = $self->buffer;
-  my $iter   = $buffer->get_end_iter;
-  $buffer->insert_with_tags_by_name($iter, $text, @$tags);
+
+  if(grep($_ eq 'link', @$tag_names)) {
+    if($self->{link_type}) {
+      my $tag = $buffer->create_tag(undef, underline => 'single');
+      $tag->{link_type}   = delete $self->{link_type};
+      $tag->{link_target} = delete $self->{link_target};
+      push @tags, $tag;
+    }
+  }
+
+  my $iter = $buffer->get_end_iter;
+  $buffer->insert_with_tags($iter, $text, @tags);
 }
 
 
@@ -245,6 +296,67 @@ sub on_home_activated {
   my $self = shift;
 
   $self->set_topic(HOME_TOPIC);
+}
+
+
+sub on_enter_link {
+  my $self = shift;
+
+  my $link = $self->hovering or return;
+  $self->status_message($link->{link_target});
+  $self->textview->get_window('text')->set_cursor($url_cursor);
+}
+
+
+sub on_exit_link {
+  my $self = shift;
+
+  $self->status_message('');
+  $self->textview->get_window('text')->set_cursor($cursor);
+}
+
+
+sub on_clicked {
+  my($self, $event) = @_;
+
+  my $link = $self->hovering or return FALSE;
+
+  if($link->{link_type} ne 'pod') {
+    $self->status_message("'$link->{link_type}' links not implemented");
+    return FALSE;
+  }
+  
+  $self->app->add_idle_handler(
+    sub { $self->set_topic($link->{link_target}); return FALSE; }
+  );
+
+  return FALSE;
+}
+
+
+sub on_motion_notify_event {
+  my($self, $textview, $event) = @_;
+
+  return FALSE if $self->buffer->get_selection_bounds;
+
+  my($x, $y) = $textview->window_to_buffer_coords('text', $event->x, $event->y);
+  my $link_tag = $self->{tag}->{link};
+  my $iter  = $textview->get_iter_at_location($x, $y);
+  my $hover = $iter->has_tag($link_tag);
+  if($hover and !$self->hovering) {
+    my($tag) = grep { exists $_->{link_type} } $iter->get_tags;
+    $self->hovering({
+      link_type   => $tag->{link_type},
+      link_target => $tag->{link_target},
+    });
+    $self->on_enter_link;
+  }
+  elsif(!$hover and $self->hovering) {
+    $self->hovering(undef);
+    $self->on_exit_link;
+  }
+
+  return FALSE;
 }
 
 
