@@ -203,6 +203,7 @@ sub dialog_xml {
 END_XML
 }
 
+
 1;
 
 __END__
@@ -223,9 +224,11 @@ Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
+=head1 HELP VIEWER TEXT
+
 =for sprog-help-text
 
-=head1 Read File
+=head1 Read File Gear
 
 The 'Read File' gear allows you to read data from a file and pass it out
 through a 'pipe' connector.
@@ -253,3 +256,10 @@ by using the B<Browse> button and selecting a file
 by dragging a file and dropping into the sprog window (not implemented yet)
 
 =back
+
+=head2 See Also
+
+Instead of reading data directly from a file, you might want to consider
+capturing the output of another command using the 
+L<Run Command|Sprog::Gear::CommandIn> gear.
+
