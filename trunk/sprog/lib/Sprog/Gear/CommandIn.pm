@@ -186,3 +186,41 @@ END_XML
 
 
 1;
+
+__END__
+
+=head1 NAME
+
+Sprog::Gear::Command - Run a command and read its output
+
+=head1 DESCRIPTION
+
+This is a data input gear.  It runs a command, captures the STDOUT from the
+command and passes it downstream using a 'pipe' connector.
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+=head1 HELP VIEWER TEXT
+
+=for sprog-help-text
+
+=head1 Run Command Gear
+
+The 'Run Command' gear allows you to run a command, capture its output and pass
+the data out through a 'pipe' connector.
+
+You would usually use this gear to capture plain text written to STDOUT by a
+command, but it can also be used for 'binary' data such as images.
+
+=head2 Properties
+
+The Run Command gear has only one property - the command to run.  Type the
+command into the text input.  For example:
+
+  ps -u apache -o 'pid,cmd' -w --no-header
+
