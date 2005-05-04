@@ -220,7 +220,10 @@ command, but it can also be used for 'binary' data such as images.
 =head2 Properties
 
 The Run Command gear has only one property - the command to run.  Type the
-command into the text input.  For example:
+command into the text input. 
 
-  ps -u apache -o 'pid,cmd' -w --no-header
+For example this command would retrieve the weather forecast for New Zealand's
+capital city:
+
+  wget -q -O - http://weather.yahoo.com/forecast/NZXX0049_c.html
 
