@@ -13,7 +13,11 @@ use base qw(
 );
 
 __PACKAGE__->mk_accessors(qw(
-  app helpwin textview buffer statusbar hovering
+  app helpwin textview buffer menubar statusbar
+  back_button forward_button home_button
+  back_menuitem forward_menuitem home_menuitem
+  hovering
+  trail trail_index
 ));
 
 use Scalar::Util qw(weaken);
@@ -30,7 +34,7 @@ sub show_help {
 
   my $self = $class->new(app => $app);
 
-  $self->set_topic($topic);
+  $self->go_to_topic($topic);
 }
 
 
@@ -46,6 +50,9 @@ sub new {
 
 sub _init {
   my $self = shift;
+
+  $self->trail([]);
+  $self->trail_index(undef);
 
   my $glade_src = $self->glade_xml;
 
@@ -88,7 +95,16 @@ sub _init {
 
   my $buffer = $self->buffer($self->textview->get_buffer);
 
+  $self->menubar($gladexml->get_widget('menubar'));
   $self->statusbar($gladexml->get_widget('statusbar'));
+
+  $self->back_button($gladexml->get_widget('back_button'));
+  $self->forward_button($gladexml->get_widget('forward_button'));
+  $self->home_button($gladexml->get_widget('home_button'));
+
+  $self->back_menuitem($gladexml->get_widget('back_menuitem'));
+  $self->forward_menuitem($gladexml->get_widget('forward_menuitem'));
+  $self->home_menuitem($gladexml->get_widget('home_menuitem'));
 
   $self->_init_tags($buffer, $font_desc->get_size);
 
@@ -184,11 +200,92 @@ sub autoconnect {
 }
 
 
-sub set_topic {
+sub go_to_topic {
   my($self, $topic) = @_;
+
+  my $trail = $self->trail;
+
+  if(@$trail) {
+    my $i = $self->trail_index;
+    if($i < $#{$trail}) {
+      splice @$trail, $i+1;
+    }
+  }
+
+  push @$trail, $topic;
+  $self->trail_index($#{$trail});
+
+  $self->load_topic;
+}
+
+
+sub can_back {
+  my $self = shift;
+
+  my $trail = $self->trail;
+  return FALSE unless @$trail;
+
+  my $i = $self->trail_index;
+  return FALSE unless $i > 0;
+
+  return TRUE;
+}
+
+
+sub go_back {
+  my $self = shift;
+
+  return unless $self->can_back;
+
+  $self->trail_index($self->trail_index - 1);
+  $self->load_topic;
+}
+
+
+sub can_forward {
+  my $self = shift;
+
+  my $trail = $self->trail;
+  return FALSE unless @$trail;
+
+  my $i = $self->trail_index;
+  return FALSE unless $i < $#{$trail};
+
+  return TRUE;
+}
+
+
+sub go_forward {
+  my $self = shift;
+
+  return unless $self->can_forward;
+
+  $self->trail_index($self->trail_index + 1);
+  $self->load_topic;
+}
+
+
+sub is_home {
+  my $self = shift;
+
+  my $trail = $self->trail;
+  return FALSE unless @$trail;
+
+  my $i = $self->trail_index;
+
+  return $trail->[$i] eq HOME_TOPIC
+}
+
+
+sub load_topic {
+  my $self = shift;
+
+  my $i = $self->trail_index;
+  my $topic = $self->trail->[$i];
 
   $self->clear;
   $self->status_message('');
+  $self->set_button_states;
 
   my $file = $self->_find_file($topic);
   if($file) {
@@ -206,6 +303,19 @@ sub clear {
   $self->buffer->set_text('');
   my $tag_table = $self->buffer->get_tag_table;
   $tag_table->foreach(sub { $tag_table->remove($_[0]) if $_[0]->{link_type}; });
+}
+
+
+sub set_button_states {
+  my $self = shift;
+
+  $self->back_button->set(sensitive => $self->can_back);
+  $self->forward_button->set(sensitive => $self->can_forward);
+  $self->home_button->set(sensitive => !$self->is_home);
+
+  $self->back_menuitem->set(sensitive => $self->can_back);
+  $self->forward_menuitem->set(sensitive => $self->can_forward);
+  $self->home_menuitem->set(sensitive => !$self->is_home);
 }
 
 
@@ -271,6 +381,13 @@ sub on_close_activated {
 }
 
 
+sub on_reload_activated {
+  my $self = shift;
+
+  $self->load_topic;
+}
+
+
 sub on_find_activated {
   my $self = shift;
 
@@ -281,21 +398,21 @@ sub on_find_activated {
 sub on_back_activated {
   my $self = shift;
 
-  $self->status_message('Back not implemented');
+  $self->go_back;
 }
 
 
 sub on_forward_activated {
   my $self = shift;
 
-  $self->status_message('Forward not implemented');
+  $self->go_forward;
 }
 
 
 sub on_home_activated {
   my $self = shift;
 
-  $self->set_topic(HOME_TOPIC);
+  $self->go_to_topic(HOME_TOPIC);
 }
 
 
@@ -327,7 +444,7 @@ sub on_clicked {
   }
   
   $self->app->add_idle_handler(
-    sub { $self->set_topic($link->{link_target}); return FALSE; }
+    sub { $self->go_to_topic($link->{link_target}); return FALSE; }
   );
 
   return FALSE;
@@ -374,6 +491,8 @@ sub glade_xml {
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
+  <property name="default_width">400</property>
+  <property name="default_height">300</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="decorated">True</property>
@@ -389,7 +508,7 @@ sub glade_xml {
       <property name="spacing">0</property>
 
       <child>
-	<widget class="GtkMenuBar" id="menubar1">
+	<widget class="GtkMenuBar" id="menubar">
 	  <property name="visible">True</property>
 
 	  <child>
@@ -407,6 +526,28 @@ sub glade_xml {
 		      <property name="label">gtk-close</property>
 		      <property name="use_stock">True</property>
 		      <signal name="activate" handler="on_close_activated" last_modification_time="Wed, 23 Mar 2005 08:01:01 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child>
+		    <widget class="GtkImageMenuItem" id="reload_menuitem">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">_Reload</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_reload_activated" last_modification_time="Sun, 08 May 2005 10:15:21 GMT"/>
+		      <accelerator key="R" modifiers="GDK_CONTROL_MASK" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image3">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-refresh</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 		</widget>
@@ -448,18 +589,44 @@ sub glade_xml {
 		  <child>
 		    <widget class="GtkImageMenuItem" id="back_menuitem">
 		      <property name="visible">True</property>
-		      <property name="label">gtk-go-back</property>
-		      <property name="use_stock">True</property>
-		      <signal name="activate" handler="on_back_activated" last_modification_time="Wed, 23 Mar 2005 08:01:01 GMT"/>
+		      <property name="label" translatable="yes">_Back</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_back_activated" last_modification_time="Sun, 08 May 2005 10:15:21 GMT"/>
+		      <accelerator key="Left" modifiers="GDK_MOD1_MASK" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image4">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-go-back</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
 		  <child>
 		    <widget class="GtkImageMenuItem" id="forward_menuitem">
 		      <property name="visible">True</property>
-		      <property name="label">gtk-go-forward</property>
-		      <property name="use_stock">True</property>
-		      <signal name="activate" handler="on_forward_activated" last_modification_time="Wed, 23 Mar 2005 08:01:01 GMT"/>
+		      <property name="label" translatable="yes">_Forward</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_forward_activated" last_modification_time="Sun, 08 May 2005 10:15:21 GMT"/>
+		      <accelerator key="Right" modifiers="GDK_MOD1_MASK" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image5">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-media-forward</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 
@@ -472,9 +639,22 @@ sub glade_xml {
 		  <child>
 		    <widget class="GtkImageMenuItem" id="home_menuitem">
 		      <property name="visible">True</property>
-		      <property name="label">gtk-home</property>
-		      <property name="use_stock">True</property>
-		      <signal name="activate" handler="on_home_activated" last_modification_time="Wed, 23 Mar 2005 08:01:01 GMT"/>
+		      <property name="label" translatable="yes">_Home</property>
+		      <property name="use_underline">True</property>
+		      <signal name="activate" handler="on_home_activated" last_modification_time="Sun, 08 May 2005 10:15:21 GMT"/>
+		      <accelerator key="Home" modifiers="GDK_MOD1_MASK" signal="activate"/>
+
+		      <child internal-child="image">
+			<widget class="GtkImage" id="image6">
+			  <property name="visible">True</property>
+			  <property name="stock">gtk-home</property>
+			  <property name="icon_size">1</property>
+			  <property name="xalign">0.5</property>
+			  <property name="yalign">0.5</property>
+			  <property name="xpad">0</property>
+			  <property name="ypad">0</property>
+			</widget>
+		      </child>
 		    </widget>
 		  </child>
 		</widget>
