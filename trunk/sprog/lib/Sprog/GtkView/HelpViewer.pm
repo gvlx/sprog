@@ -149,13 +149,13 @@ sub _init_tags {
                   },
 
     para =>       {
-                    pixels_below_lines => 8,
+                    pixels_below_lines => 10,
                   },
 
     bullet =>     {
                     left_margin        => 20,
-                    pixels_above_lines => 2,
-                    pixels_below_lines => 2,
+                    pixels_above_lines => 3,
+                    pixels_below_lines => 7,
                   },
 
     verbatim =>   {
