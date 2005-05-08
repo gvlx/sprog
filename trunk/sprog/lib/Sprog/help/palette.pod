@@ -1,0 +1,44 @@
+=head1 Using the Palette
+
+The palette is place where you'll find gears to drag onto the workspace. 
+
+=head2 Showing/hiding the Palette
+
+You can show or hide the palette by:
+
+=over 4
+
+=item *
+
+pressing the B<F9> key
+
+=item *
+
+using the palette button on the toolbar
+
+=item *
+
+using the view menu
+
+=back
+
+=head2 Filtering the Palette View
+
+As your collection of gears grows, you may find that one long list of gears
+becomes difficult to manage.  The solution is to filter the palette view to
+show only the gears you want.
+
+For example, if you're looking for an L<input gear|Sprog::help::input_gears>
+use the drop-down menu labelled 'Connector In' and select 'None'.  This will
+hide all gears that have an input connector and leave you with a list of gears
+that can get data for themselves.
+
+=head2 Searching for Gears
+
+You can also use keyword searching to filter the view.  Simply type in a word
+that's associated with the type of gear you're looking for and press the
+B<Search> button (or the Enter key).
+
+I<Note: the palette will only display gears that match your connector type
+selections B<and> your search terms.  Set the connector drop-downs to 'Any' to
+get the most matches in a search>.

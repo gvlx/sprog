@@ -1,0 +1,18 @@
+=head1 Filter Gears
+
+Filter gears are where the work gets done in a machine.  A filter gear takes
+data in, transforms it in some way and then passes it down to the input of the
+next gear.
+
+=head2 Example Filters
+
+The L<Pattern Match|Sprog::Gear::Grep> gear is a simple filter that accepts
+or rejects lines of data based on whether they match a pattern.
+
+The L<Parse Apache Log|Sprog::Gear::ApacheLogParse> gear is a more complex
+filter that transforms the line-by-line data from the log file into structured
+records.  This transformation is reflected in the fact that the gear's output
+connector is a different type to its input connector.
+
+See also: L<input gears|Sprog::help::input_gears>,
+L<output gear|Sprog::help::output_gears>
