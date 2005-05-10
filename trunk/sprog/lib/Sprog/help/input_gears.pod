@@ -1,11 +1,14 @@
 =head1 Input Gears
 
 An input gear acts as a source of raw data for your machine.  The type of input
-gear you select dictates where it can read the data from.  Possible data
+gear you select dictates where the data can be read from.  Possible data
 sources include reading from a file, a web URL, a database, the clipboard etc.
 
-The 'input' gears are the ones that don't have an input connector.  That might
-seem a bit confusing at first but it does make sense (really).
+Input gears don't have an input connector since they act as their own data
+source.  The type of output connector will depend on the type of data and how
+much structure can be extracted from it automatically.
+
+A machine must have one input gear.
 
 See also: L<filter gears|Sprog::help::filter_gears>,
-L<output gear|Sprog::help::output_gears>
+L<output gears|Sprog::help::output_gears>

@@ -15,4 +15,4 @@ records.  This transformation is reflected in the fact that the gear's output
 connector is a different type to its input connector.
 
 See also: L<input gears|Sprog::help::input_gears>,
-L<output gear|Sprog::help::output_gears>
+L<output gears|Sprog::help::output_gears>
