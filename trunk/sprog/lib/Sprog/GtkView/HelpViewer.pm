@@ -153,9 +153,8 @@ sub _init_tags {
                   },
 
     bullet =>     {
-                    left_margin        => 20,
-                    pixels_above_lines => 3,
-                    pixels_below_lines => 7,
+                    pixels_above_lines => 1,
+                    pixels_below_lines => 9,
                   },
 
     verbatim =>   {
@@ -178,7 +177,12 @@ sub _init_tags {
 
     link =>       {
                     foreground         => 'blue',
-                  }
+                  },
+
+    indent1 =>    { left_margin        => 20 * 1, },
+    indent2 =>    { left_margin        => 20 * 2, },
+    indent3 =>    { left_margin        => 20 * 3, },
+    indent4 =>    { left_margin        => 20 * 4, },
   );
 
   while(my($name, $data) = each %tag_data) {
@@ -293,7 +297,7 @@ sub load_topic {
     $parser->parse_file($file);
     return if $parser->content_seen;
   }
-  $self->add_tagged_text("Unable to find help for topic '$topic'", ['head3']);
+  $self->add_tagged_text("Unable to find help for topic '$topic'", 0, ['head3']);
 }
 
 
@@ -328,7 +332,7 @@ sub link_data {
 
 
 sub add_tagged_text {
-  my($self, $text, $tag_names) = @_;
+  my($self, $text, $indent, $tag_names) = @_;
 
   my @tags = map { $self->{tag}->{$_} ? $self->{tag}->{$_} : () } @$tag_names;
 
@@ -342,6 +346,8 @@ sub add_tagged_text {
       push @tags, $tag;
     }
   }
+
+  push @tags, $self->{tag}->{"indent$indent"} if $indent> 0;
 
   my $iter = $buffer->get_end_iter;
   $buffer->insert_with_tags($iter, $text, @tags);

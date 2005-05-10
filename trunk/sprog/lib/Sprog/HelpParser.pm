@@ -13,13 +13,18 @@ sub new {
 
   my $self = $class->SUPER::new;
 
-  $self->{_view_} = $view;
+  $self->{_view_}      = $view;
   $self->{_tag_stack_} = [ [] ];
+  $self->{_indent_}    = 0;
 
   $self->accept_targets('sprog-help-text');
 
   return $self;
 }
+
+
+sub _increase_indent { $_[0]->{_indent_}++;              }
+sub _decrease_indent { $_[0]->{_indent_}-- if $_[0] > 0; }
 
 
 sub start_for {
@@ -36,14 +41,9 @@ sub start_head3       { $_[0]->_start_block(qw(head3));    }
 sub start_head4       { $_[0]->_start_block(qw(head4));    }
 sub start_Para        { $_[0]->_start_block(qw(para));     }
 sub start_Verbatim    { $_[0]->_start_block(qw(verbatim)); }
-sub start_item_text   { $_[0]->_start_block(qw(head4));    }
-
-sub start_over_text {
-  my $self = shift;
-
-  # TODO: Handle indenting everything except the text item tag itself
-  #use Data::Dumper; warn "start_over_text: " . Dumper(\@_);
-}
+sub start_over_bullet { $_[0]->_increase_indent;           }
+sub start_over_number { $_[0]->_increase_indent;           }
+sub start_over_text   { $_[0]->_increase_indent;           }
 
 sub start_item_bullet {
   my $self = shift;
@@ -59,15 +59,25 @@ sub start_item_number {
   $self->_emit($data->{number} . '. ');
 }
 
+sub start_item_text {
+  my $self = shift;
+  
+  $self->_decrease_indent;
+  $self->_start_block(qw(head4));
+}
+
 sub end_head1         { $_[0]->_end_block; }
 sub end_head2         { $_[0]->_end_block; }
 sub end_head3         { $_[0]->_end_block; }
 sub end_head4         { $_[0]->_end_block; }
 sub end_Para          { $_[0]->_end_block; }
 sub end_Verbatim      { $_[0]->_end_block; $_[0]->_emit("\n"); }
+sub end_over_bullet   { $_[0]->_decrease_indent; }
+sub end_over_number   { $_[0]->_decrease_indent; }
+sub end_over_text     { $_[0]->_decrease_indent; }
 sub end_item_bullet   { $_[0]->_end_block; }
 sub end_item_number   { $_[0]->_end_block; }
-sub end_item_text     { $_[0]->_end_block; }
+sub end_item_text     { $_[0]->_end_block; $_[0]->_increase_indent; }
 
 sub start_B           { shift->_push_tag('bold'  ); }
 sub start_I           { shift->_push_tag('italic'); }
@@ -116,7 +126,9 @@ sub _pop_tag {
 sub _emit {
   my($self, $text) = @_;
 
-  $self->{_view_}->add_tagged_text($text, $self->{_tag_stack_}->[-1]);
+  $self->{_view_}->add_tagged_text(
+    $text, $self->{_indent_}, $self->{_tag_stack_}->[-1]
+  );
 }
 
 
