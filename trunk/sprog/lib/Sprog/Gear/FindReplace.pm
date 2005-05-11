@@ -300,3 +300,117 @@ END_XML
 
 
 1;
+
+
+__END__
+
+=head1 NAME
+
+Sprog::Gear::FindReplace - A find/replace filter
+
+=head1 DESCRIPTION
+
+This is a filter gear.  It uses 'pipe' connectors for both input and output,
+reads a line at a time and performs a C<s/pattern/replacement/> on each line.
+next gear depending on whether the line matched a pattern (regex).  The user
+can choose to make the matching case sensitive or insensitive (C</i>) and
+to perform multiple replacements in each line (C</g>).
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+=head1 HELP VIEWER TEXT
+
+=for sprog-help-text
+
+=head1 Find and Replace Gear
+
+The 'Find and Replace' gear allows you to transform lines of text using a
+pattern match along with replacement text.  This gear is only intended to work
+with text, it probably won't do anything useful with binary data.
+
+=head2 Properties
+
+The find and replace gear has four properties:
+
+=over 4
+
+=item Find Pattern
+
+Type a Perl regular expression in the entry box.  If you don't know what that
+means, start with the
+L<Introduction to Regular Expressions|Sprog::help::regex_intro>.
+
+=item Replace With
+
+Enter the text that you want inserted in place of the matched pattern.  (See
+the 'cookbook' below).
+
+=item Ignore case in pattern match
+
+If you check this box, differences between upper and lower case letters will
+not affect pattern matching.  For example, if your pattern was 'cat', a line
+containing 'Cat' would match only if this box was checked.
+
+=item Replace globally
+
+If this box is B<not> checked, only the first match on each line will be
+replaced.
+
+If it is checked, all occurrences of the pattern match will be replaced.
+
+=back
+
+=head2 Find/Replace Cookbook
+
+Here are some examples to get you going.
+
+The simplest example is to replace all occurences of one word with another.
+For example, to turn all occurrences of 'cat' into 'dog':
+
+  Find Pattern: cat
+  Replace With: dog
+
+Of course that will match 'cat' wherever it appears so 'scatter' will become
+'sdogter' - which might not be what you want.  To replace whole words, anchor
+your match to the boundaries (beginning and end) of the word:
+
+  Find Pattern: \bcat\b
+  Replace With: dog
+
+To delete a word, leave the replacement box empty:
+
+  Find Pattern: \bcat\b
+  Replace With:
+
+To delete spaces at the start of a line:
+
+  Find Pattern: ^\s+
+  Replace With:
+
+You can 'capture' a specific part of the match using round brackets and then
+refer to it in the replacement text as C<$1>.  So to turn every occurrence of
+'cat' into '*cat*':
+
+  Find Pattern: \b(cat)\b
+  Replace With: *$1*
+
+Similarly you can use C<\U..\E> to force the characters in between to upper
+case:
+
+  Find Pattern: \b(cat)\b
+  Replace With: \U$1\E
+
+To turn a 4-digit year in a date into a 2-digit year:
+
+  Find Pattern: (\d\d?/\d\d?/)\d\d(\d\d)
+  Replace With: $1$2
+
+=head2 Related Topics
+
+If you need the full power of Perl's C<s/pattern/replacement/> syntax then
+you can use a one liner in a L<Perl Code|Sprog::Gear::PerlCode> gear.
