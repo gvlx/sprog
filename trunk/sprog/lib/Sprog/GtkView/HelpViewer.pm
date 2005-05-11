@@ -71,8 +71,8 @@ sub _init {
   my $font_desc = Gtk2::Pango::FontDescription->from_string("Serif 10");
   $textview->modify_font($font_desc);
   $textview->set_wrap_mode('word');
-  $textview->set_left_margin(6);
-  $textview->set_right_margin(4);
+  $textview->set_left_margin(16);
+  $textview->set_right_margin(12);
 
   $textview->get_window('text')->set_events([qw(
     exposure-mask
@@ -128,7 +128,7 @@ sub _init_tags {
                     family             => 'Sans',
                     weight             => PANGO_WEIGHT_BOLD,
                     size               => $size * 1.4,
-                    pixels_above_lines => 4,
+                    pixels_above_lines => 10,
                     pixels_below_lines => 2,
                   },
 
@@ -136,7 +136,7 @@ sub _init_tags {
                     family             => 'Sans',
                     weight             => PANGO_WEIGHT_BOLD,
                     size               => $size * 1.2,
-                    pixels_above_lines => 6,
+                    pixels_above_lines => 8,
                     pixels_below_lines => 2,
                   },
 
@@ -149,7 +149,8 @@ sub _init_tags {
                   },
 
     para =>       {
-                    pixels_below_lines => 10,
+                    pixels_above_lines => 6,
+                    pixels_below_lines => 6,
                   },
 
     bullet =>     {
@@ -179,10 +180,10 @@ sub _init_tags {
                     foreground         => 'blue',
                   },
 
-    indent1 =>    { left_margin        => 20 * 1, },
-    indent2 =>    { left_margin        => 20 * 2, },
-    indent3 =>    { left_margin        => 20 * 3, },
-    indent4 =>    { left_margin        => 20 * 4, },
+    indent1 =>    { left_margin        => 10 + 20 * 1, },
+    indent2 =>    { left_margin        => 10 + 20 * 2, },
+    indent3 =>    { left_margin        => 10 + 20 * 3, },
+    indent4 =>    { left_margin        => 10 + 20 * 4, },
   );
 
   while(my($name, $data) = each %tag_data) {
