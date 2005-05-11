@@ -168,6 +168,20 @@ exclamation point:
 
   ^[A-Z].*!$
 
+Another useful technique is to use 'C<\b>' to anchor a match to the beginning
+or end of a word (think of 'C<\b>' as matching the boundary between a non-word
+character such as a space and a word character such as a letter).  For example
+...
+
+  \bcat
+
+... will match words that start with 'cat' such as 'cat' or 'catch' but not
+'scatter'.  And this ...
+
+  \bcat\b
+
+... will only match 'cat' not 'catch' or 'scat'.
+
 =head1 More Information
 
 That's far more information than you can be expected to absorb in one sitting,
