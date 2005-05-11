@@ -184,5 +184,3 @@ L<http://www.google.com/search?q=perl+regular+expression+tutorial>.
 
 There are also a number of books on the subject.
 
-The L<Find and Replace|Sprog::Gear::FindReplace> gear also uses Perl regular
-expressions.
