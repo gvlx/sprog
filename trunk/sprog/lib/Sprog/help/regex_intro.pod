@@ -176,7 +176,7 @@ expressions is to use them and Sprog is an ideal tool for trying out different
 patterns and different data.
 
 This quick introduction has only scratched the surface of what's possible in a
-Perl 5 regular expression.  The official Perl 5 regular expression tutorial is
+Perl regular expression.  The official Perl regular expression tutorial is
 at: L<http://perldoc.perl.org/perlretut.html>.
 
 A web search will locate many helpful pages:
@@ -184,5 +184,5 @@ L<http://www.google.com/search?q=perl+regular+expression+tutorial>.
 
 There are also a number of books on the subject.
 
-The L<Find and Replace|Sprog::Gear::FindReplace> gear also uses Perl 5
-regular expressions.
+The L<Find and Replace|Sprog::Gear::FindReplace> gear also uses Perl regular
+expressions.
