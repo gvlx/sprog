@@ -192,3 +192,39 @@ END_XML
 
 
 1;
+
+__END__
+
+=head1 NAME
+
+Sprog::Gear::TextInput - Sprog data source, type data into a text input
+
+=head1 DESCRIPTION
+
+This is a data input gear that's mostly useful for testing.  It simply takes
+data that the user types into a multi-line text entry and passes it downstream
+using a 'pipe' connector.
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+=head1 HELP VIEWER TEXT
+
+=for sprog-help-text
+
+=head1 Text Input Gear
+
+The 'Text Input' gear is mostly useful for testing.  If you have some test data
+you want to feed into a machine, you can simply paste the data into this gear's
+text entry (rather than say saving it in a file).  The contents of the text
+entry are passed out through a 'pipe' connector.
+
+=head2 Properties
+
+The Text Input gear has only one property - the text.  You can type into the
+text entry box or paste from the clipboard.
+
