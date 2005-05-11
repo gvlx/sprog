@@ -276,8 +276,8 @@ The 'Pattern Match' gear allows you to filter lines of text using a pattern
 match.  This gear is only intended to work with text, it probably won't do
 anything useful with binary data.
 
-If a line of data matches the selected pattern, the whole line will be passed
-through, not just the bit that matches.
+If a line of data matches the pattern you entered, the whole line will be
+passed through, not just the bit that matches.
 
 =head2 Properties
 
@@ -287,7 +287,9 @@ The pattern match gear has three properties:
 
 =item Pattern
 
-Type a Perl 5 regular expression (more detail below) in the entry box.
+Type a Perl regular expression in the entry box.  If you don't know what that
+means, start with the
+L<Introduction to Regular Expressions|Sprog::help::regex_intro>.
 
 =item Ignore case in pattern match
 
@@ -302,188 +304,7 @@ lines which do not match will be passed through.
 
 =back
 
-=head2 Perl 5 Regular Expressions
+=head2 Related Topics
 
-A 'regular expression' is just a fancy name for a pattern.  You're probably
-already familiar with filename patterns like 'C<*.doc>'.  Perl 5 regular
-expressions are similar but much more powerful.  Here's a brief introduction
-and some examples to get you started.
-
-=head3 Plain Text
-
-The simplest pattern is just plain text.  For example, this pattern ...
-
-  cat
-
-... will match any line containing a 'c' followed by an 'a' followed by a 't'.
-So all these lines would match:
-
-  The cat sat on the mat
-  He picked up the catcher's mitt
-  She scattered rose petals in the wind
-
-But this line ...
-
-  Cat Doors - $35 each
-
-... would not match unless you checked the 'ignore case' box.
-
-I<Note: you don't need to say 'C<*cat*>' and in fact it would be a mistake
-to do so.  We'll get to stars shortly>.
-
-
-=head3 Character Classes
-
-You can use square brackets to specify a list of characters that should
-match.  For example, this pattern ...
-
-  [bcr]at
-
-... will match any line containing either a 'b', a 'c' or an 'r' followed by
-an 'a' followed by a 't'.  So all these lines would match:
-
-  The cat sat on the mat
-  He picked up the bat
-  The gazed into the crater
-
-But these would not:
-
-  The hat sat on the mat
-  canned flat bacon rashers
-
-You can use '-' to specify a range of characters.  For example, this pattern
-will match any of the first ten letters of the (english) alphabet:
-
-  [a-j]
-
-If the very first character in the square brackets is a '^' then it will match
-any character this is B<not> in the list.  For example:
-
-  [^bc]at
-
-Will match 'hat' and 'mat' but not 'bat' or 'cat'.
-  
-
-=head3 Predefined Character Classes
-
-There are a number of predefined character classes:
-
-  \d   [0-9]         any digit
-  \s   [ \t\r\n\f]   any 'whitespace' character
-  \w   [a-zA-Z0-9_]  any letter, digit or underscore
-
-  \D   [^0-9]        anything except a digit
-  \S   [^\s]         anything except whitespace
-  \W   [^\w]         anything except a letter, digit or underscore
-
-So this pattern ...
-
-  \d\dth
-
-... would match any line containing two digits followed by 'th', such as:
-
-  the 19th hole
-
-The '.' can be thought of as a class which matches any character.  So for
-example 'C<p.t>' would match 'pet', 'pot', 'p8t' and 'p@t'.  It would not match
-'pt'.
-
-=head3 Matching Multiple Times
-
-If you wanted to match any line containing 5 consecutive 'W' characters, you
-could use this:
-
-  WWWWW
-
-or this:
-
-  W{5}
-
-If you wanted to match 'bet' and 'beet' but not 'beeet', you could use this:
-
-  be{1,2}t
-
-I<Note: the number or numbers in the curly brackets only apply to the character
-or character class immediately before the '{'.  In the above example it will match at least 1 but no more than 2 consecutive 'e's>.
-
-Often you want to include an optional character in a match, you could match on
-zero or one occurences:
-
-  pots{0,1}
-
-which will match 'pot' or 'pots' (and also 'potscrub').  This is so common it
-has a shorthand form - just replace 'C<{0,1}>' with '?' which means exactly
-the same thing:
-
-  pots?
-
-There are two other important shorthand forms.  '*' mean 0 or more so this:
-
-  po*t
-
-is the same as:
-
-  po{0,}t
-
-which will match 'pt', 'pot', 'poot', etc.
-
-The other import form is '+' meaning one or more matches:
-
-  po+t
-
-will match 'pot', 'poot', etc.
-
-
-=head3 Anchoring a Match
-
-If the very first character in your pattern is '^' then what follows is
-'anchored' to the start of the line.  For example ...
-
-  ^pot
-
-... will match these lines:
-
-  potato
-  potentially
-
-but not these:
-
-  a pot-plant
-  spotted
-
-Similarly, '$' can be used to anchor to the end of the line, so ...
-
-  end$
-
-... will match:
-
-  Max is my friend
-
-but not:
-
-  My friend is Max
-
-You can use both '^' and '$' in the same pattern.  Here for example is a
-pattern that matches lines which start with a capital letter and end with an
-exclamation point:
-
-  ^[A-Z].*!$
-
-=head2 More Information
-
-That's far more information than you can be expected to absorb in one sitting,
-so we'll stop there.  The best way to become proficient with regular
-expressions is to use them and Sprog is an ideal tool for trying out different
-patterns and different data.
-
-This quick introduction has only scratched the surface of what's possible in a
-Perl 5 regular expression.  The official Perl 5 regular expression tutorial is
-at: L<http://perldoc.perl.org/perlretut.html>.
-
-A web search will locate many helpful pages:
-L<http://www.google.com/search?q=perl+regular+expression+tutorial>.
-
-There are also a number of books on the subject.
-
-The L<Find and Replace|Sprog::Gear::FindReplace> gear also uses Perl 5
-regular expressions.
+The L<Find and Replace|Sprog::Gear::FindReplace> gear also uses Perl regular
+expressions.
