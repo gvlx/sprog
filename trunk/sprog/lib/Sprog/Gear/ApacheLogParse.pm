@@ -266,4 +266,80 @@ sub rename_this_name {
 
   return $name;
 }
+
 1;
+
+__END__
+
+
+
+=head1 NAME
+
+Sprog::Gear::ApacheLogParse - parses Apache log entries into records
+
+=head1 DESCRIPTION
+
+This gear parses Apache access log entries by reading data a line at a time
+from the 'pipe' input connector and producing a matching output 'record' for
+each line.  The fields from the log entry are parsed into keys in the the hash
+record.
+
+=head1 SEE ALSO
+
+This module uses L<Apache::LogRegex> for the parsing.
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+=head1 HELP VIEWER TEXT
+
+  =for sprog-help-text
+
+=head1 Parse Apache Log Gear
+
+The 'Parse Apache Log' gear takes a line at a time from the input 'pipe'
+connector and produces data for the output 'record' connector.
+
+Lines which match the selected Apache log file format will be split out into
+separate keys in the output record.  Lines which cannot be parsed will be
+ignored.
+
+=head2 Properties
+
+The Parse Apache Log gear has only one property - the log format.  Select one 
+of:
+
+=over 4
+
+=item *
+
+Combined log format (with Referer and User-agent)
+
+=item *
+
+Common log format (CLF)
+
+=back
+
+=head2 Output Record Format
+
+The output record (hash) will have the following keys:
+
+  host
+  client_login
+  auth_user
+  time
+  request
+  status
+  bytes_sent
+  User-Agent
+  Referer
+
+The last two keys will not be present if the 'Common Log Format' was selected.
+
+I<Remember, the hash keys are both case-sensitive and unordered>.
+
