@@ -6,7 +6,6 @@ use warnings;
 use Glib qw(TRUE FALSE);
 use Gtk2::GladeXML;
 use Gtk2::Pango;
-use File::Spec;
 
 use base qw(
   Class::Accessor::Fast
@@ -292,12 +291,10 @@ sub load_topic {
   $self->status_message('');
   $self->set_button_states;
 
-  my $file = $self->_find_file($topic);
-  if($file) {
-    my $parser = $self->app->factory->make_class('/app/help_parser', $self);
-    $parser->parse_file($file);
-    return if $parser->content_seen;
-  }
+  my $parser = $self->app->factory->make_class('/app/help_parser', $self);
+  $parser->parse_topic($topic);
+  return if $parser->content_seen;
+
   $self->add_tagged_text("Unable to find help for topic '$topic'", 0, ['head3']);
 }
 
@@ -355,23 +352,10 @@ sub add_tagged_text {
 }
 
 
-sub _find_file {
-  my($self, $topic) = @_;
-
-  my @parts = split /::/, $topic;
-
-  foreach my $dir (@INC) {
-    my $path = File::Spec->catfile($dir, @parts);
-    return "$path.pod" if -r "$path.pod";
-    return "$path.pm"  if -r "$path.pm";
-  }
-
-  return;
-}
-
-
 sub status_message {
-  my($self, $message) = @_;
+  my($self, $message)= @_;
+  
+  return unless defined $message;
 
   my $statusbar = $self->statusbar;
   $statusbar->pop(0);
