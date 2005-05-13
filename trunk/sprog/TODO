@@ -1,5 +1,8 @@
+* Help Topics required:
+  - PerlCode
+  - PerlCodeHP
+  - ApacheLogParse
 * Fix Drop Coordinates when palette is visible
-* POD viewer for reading gear documentation
 * Define gear properties (for browsing) in POD?
 * Cancel waiting events on stop
 * Fix detach resulting from click-without-drag
