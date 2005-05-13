@@ -32,10 +32,18 @@ lib/Sprog/GtkView/HelpViewer.pm
 lib/Sprog/GtkView/Menubar.pm
 lib/Sprog/GtkView/Palette.pm
 lib/Sprog/GtkView/Toolbar.pm
-lib/Sprog/PrintToIt.pm
+lib/Sprog/help/build_machine.pod
+lib/Sprog/help/connectors.pod
+lib/Sprog/help/filter_gears.pod
 lib/Sprog/help/index.pod
+lib/Sprog/help/input_gears.pod
+lib/Sprog/help/output_gears.pod
+lib/Sprog/help/palette.pod
+lib/Sprog/help/regex_intro.pod
+lib/Sprog/HelpParser.pm
 lib/Sprog/internals.pod
 lib/Sprog/Machine.pm
+lib/Sprog/PrintProxy.pm
 Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
