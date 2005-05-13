@@ -19,6 +19,10 @@ L<Building a machine|Sprog::help::build_machine>
 
 =item *
 
+L<Understanding connectors|Sprog::help::connectors>
+
+=item *
+
 L<Using the Palette|Sprog::help::palette>
 
 =back

@@ -14,8 +14,8 @@ L<output gear|Sprog::help::output_gears>.
 =head2 Connect Gears Together
 
 To connect gears together simply drop one gear on top of another - if the input
-and output connectors match then the gear you dropped should snap into place
-below the other.
+and output L<connectors|Sprog::help::connectors> match then the gear you
+dropped should snap into place below the other.
 
 =head2 Configure the Gears
 
