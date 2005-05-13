@@ -1,20 +1,21 @@
-* Help Topics required:
-  - PerlCode
-  - PerlCodeHP
-  - ApacheLogParse
+* Define gear attributes (for browsing) in gear files (POD?)
+* Save view (and other) preferences - in 'Correct' way for each OS
 * Fix Drop Coordinates when palette is visible
-* Define gear properties (for browsing) in POD?
-* Cancel waiting events on stop
 * Fix detach resulting from click-without-drag
 * Split workspace/canvas out into its own class
 * Implement a console window (capture warnings, STDERR?, exceptions)
-* Allow output window to 'swallow' properties dialogs for other gears (eg: text in, pattern match etc)
-* Save view (and other) preferences - in 'Correct' way for each OS
+* PerlCode: unbind escape key from cancel (for vi users)
+* PerlCode: fixed pitch font in input box(?)
+* Warn about unsaved changes (before load, new or exit)
+* Palette: access help from right-click menu
+* HelpViewer: hourglass cursor when loading a topic
+* HelpViewer: support links within a page
+* HelpViewer: add image support (eg: pictures of the connector types)
 * Make floating palette an option
 * Clean up show/hide palette code to reduce coupling
-* Warn about unsaved changes (before load, new or exit)
+* Allow output window to 'swallow' properties dialogs for other gears (eg: text in, pattern match etc)
+* Cancel waiting events on stop
 * Implement SIG_PIPE analog
-* Perl gear - unbind escape key from cancel (for vi users)
 * TextWindow - bind escape key to hide function
 * File browse - remember last directory
 * Implement ApacheCustomLogParse
@@ -22,6 +23,8 @@
 * Drag and drop handling for file top gear
 * Track 'Head' gear on add/delete
 * Work out why replacement syntax error causes exit
+* HelpViewer: Implement Edit menu
+* Implement keyboard alternatives to mouse actions
 * File top gear: option to strip newlines
 * File top gear: newline: LF CRLF CR Auto
 * Command output gear (eg: gnuplot?)
