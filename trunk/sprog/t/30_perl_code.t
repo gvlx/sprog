@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 24;
+use Test::More tests => 26;
 
 use File::Spec;
 
@@ -106,13 +106,45 @@ $perl->turn_once;
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/ETC/SYSLOG.CONF\n",
+  "/etc/syslog.conf\n",
   "/usr/bin/cat\n",
   "/usr/bin/grep\n",
   "/USR/BIN/LOGIN\n",
+  "/usr/bin/login\n",
   "/usr/bin/ls\n",
   "/VAR/LOG/SYSLOG\n",
+  "/var/log/syslog\n",
   "/var/lib/EtchingsLogo\n",
 ], "print function successfully intercepted");
+$sink->reset;
+
+
+$perl->perl_code('
+  if(m{/bin/(\w+)}) {
+    print "Command: $1\n";
+    print "Gotta love that grep!\n" if /grep/;
+    next LINE;
+  }
+  print "Library - " if /lib/;
+');
+$perl->prime;
+is($app->alerts, '', "more complex code snippet compiles OK");
+
+$perl->msg_in(data => $data);
+$perl->turn_once;
+1 while($sink->turn_once);
+
+is_deeply([ $sink->lines ], [
+  "/etc/hosts\n",
+  "/etc/syslog.conf\n",
+  "Command: cat\n",
+  "Command: grep\n",
+  "Gotta love that grep!\n",
+  "Command: login\n",
+  "Command: ls\n",
+  "/var/log/syslog\n",
+  "Library - /var/lib/EtchingsLogo\n",
+], "multiple prints and 'next' play nice");
 $sink->reset;
 
 
