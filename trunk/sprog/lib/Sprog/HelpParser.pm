@@ -7,6 +7,8 @@ use base qw(
   Pod::Simple::Methody
 );
 
+use File::Spec;
+
 
 sub new {
   my($class, $view) = @_;
@@ -20,6 +22,33 @@ sub new {
   $self->accept_targets('sprog-help-text');
 
   return $self;
+}
+
+
+sub parse_topic {
+  my($self, $topic) = @_;
+
+  my $file = $self->_find_file($topic) or return;
+  $self->parse_file($file);
+}
+
+
+sub _find_file {
+  my($self, $topic) = @_;
+
+  my @parts = split /::/, $topic;
+
+  foreach my $dir (@INC) {
+    my $path = File::Spec->catfile($dir, @parts);
+    return "$path.pod" if -r "$path.pod";
+    return "$path.pm"  if -r "$path.pm";
+    $path = File::Spec->catfile($dir, 'pod', @parts);
+    return "$path.pod" if -r "$path.pod";
+    $path = File::Spec->catfile($dir, 'Pod', @parts);
+    return "$path.pod" if -r "$path.pod";
+  }
+
+  return;
 }
 
 
@@ -87,6 +116,8 @@ sub start_F           { shift->_push_tag('code'  ); }
 sub start_L {
   my($self, $args) = @_;
 
+  return unless $args->{to};
+
   $self->{_view_}->link_data($args->{type}, "$args->{to}"); # stringify target
 
   push @{$self->{_tag_stack_}->[-1]}, 'link';   
@@ -96,7 +127,11 @@ sub end_B             { shift->_pop_tag; }
 sub end_I             { shift->_pop_tag; }
 sub end_C             { shift->_pop_tag; }
 sub end_F             { shift->_pop_tag; }
-sub end_L             { shift->_pop_tag; }
+
+sub end_L {
+  my $self = shift;
+  $self->_pop_tag if $self->{_tag_stack_}->[-1]->[-1] eq 'link';
+}
 
 sub _start_block {
   my $self = shift;
