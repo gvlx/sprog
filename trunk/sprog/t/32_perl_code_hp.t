@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More tests => 34;
 
 use File::Spec;
 
@@ -69,27 +69,21 @@ $perl->perl_code('{');
 
 like($app->test_run_machine, qr/syntax error/, 'syntax error captured successfully');
 
-$perl->perl_code('$_ = "$r->{host}\n"');
+$perl->perl_code('print "$r->{host}\n"');
 
 is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [ ("127.0.0.1\n") x 6 ], 'got expected output from $r');
 $sink->reset;
 
-$perl->perl_code('$_ = "$rec{host}\n"');
+$perl->perl_code('print "$rec{host}\n"');
 
 is($app->test_run_machine, '', 'run completed without timeout or alerts');
 is_deeply([ $sink->lines ], [ ("127.0.0.1\n") x 6 ], 'got expected output from %rec');
 $sink->reset;
 
-$perl->perl_code('print "$rec{host}\n"');
-
-is($app->test_run_machine, '', 'run completed without timeout or alerts');
-is_deeply([ $sink->lines ], [ ("127.0.0.1\n") x 6 ], 'got expected output via print');
-$sink->reset;
-
 $perl->perl_code('
   next RECORD unless $r->{request} =~ /proxy/;
-  $_ = "$r->{bytes_sent}\n"
+  print "$r->{bytes_sent}\n"
 ');
 
 is($app->test_run_machine, '', 'run completed without timeout or alerts');
