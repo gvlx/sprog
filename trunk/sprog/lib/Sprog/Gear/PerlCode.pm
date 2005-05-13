@@ -2,7 +2,7 @@ package Sprog::Gear::PerlCode;
 
 use strict;
 
-use Sprog::PrintToIt;
+use Sprog::PrintProxy;
 
 use base qw(
   Sprog::Gear::PerlBase
@@ -10,12 +10,18 @@ use base qw(
 );
 
 
+sub prime {
+  my $self = shift;
+
+  $self->{proxy} ||= Sprog::PrintProxy->new($self);
+
+  return $self->SUPER::prime;
+}
+
+
 sub _sub_preamble {
   return <<END_PERL;
       my \$self = shift;
-
-      local(*STDOUT);
-      tie(*STDOUT, 'Sprog::PrintToIt');
 
       LINE: {
 # line 1 "your code"
@@ -25,7 +31,7 @@ END_PERL
 
 sub _sub_postamble {
   return <<END_PERL;
-        \$self->msg_out(data => \$_);
+        print \$_;
       }
 END_PERL
 }
@@ -35,13 +41,20 @@ sub line {
 
   if(ref $self->{perl_sub}) {
     local($_) = shift;
-    $self->{perl_sub}->($self) 
+    my $stdout = select $self->{proxy};
+    $self->{perl_sub}->($self);
+    select $stdout;
   }
   else {
     $self->msg_out(data => @_);
   }
 }
 
+
+sub print {
+  my $self = shift;
+  $self->msg_out(data => join('', @_));
+}
 
 1;
 
