@@ -297,7 +297,7 @@ under the same terms as Perl itself.
 
 =head1 HELP VIEWER TEXT
 
-  =for sprog-help-text
+=for sprog-help-text
 
 =head1 Parse Apache Log Gear
 
