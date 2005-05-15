@@ -15,111 +15,33 @@ __PACKAGE__->mk_accessors(qw(
   search_button
   gearlist
   gearlist_model
-  drag_index
+  filtered_list
+  selected_class
 ));
 
 use Scalar::Util qw(weaken);
 
 use constant COL_TYPE => 0;
 
-use constant COL_GEAR_INDEX => 0;
-use constant COL_GEAR_CLASS => 1;
+use constant COL_GEAR_CLASS => 0;
+use constant COL_GEAR_TITLE => 1;
 
 use constant ALPHA_THRESHOLD => 127;
 
 my $mini_icons;
 
-my @connector_types = (
-  'Any'    => '.',
-  'None'   => '_',
-  'Pipe'   => 'P',
-  'List'   => 'A',
-  'Record' => 'H',
-);
-
-my %type_map = @connector_types;
-
-my @gear_classes = (   # Hardcoded for now - better idea coming soon
-  {
-    class    => 'Sprog::Gear::ReadFile',
-    title    => 'Read File',
-    type_in  => '_',
-    type_out => 'P',
-  },
-  {
-    class    => 'Sprog::Gear::TextInput',
-    title    => 'Text Input',
-    type_in  => '_',
-    type_out => 'P',
-  },
-  {
-    class => 'Sprog::Gear::CommandIn',
-    title    => 'Run Command',
-    type_in  => '_',
-    type_out => 'P',
-  },
-  {
-    class => 'Sprog::Gear::Grep',
-    title    => 'Pattern Match',
-    type_in  => 'P',
-    type_out => 'P',
-  },
-  {
-    class => 'Sprog::Gear::FindReplace',
-    title    => 'Find and Replace',
-    type_in  => 'P',
-    type_out => 'P',
-  },
-  {
-    class => 'Sprog::Gear::PerlCode',
-    title    => 'Perl Code',
-    type_in  => 'P',
-    type_out => 'P',
-  },
-  {
-    class => 'Sprog::Gear::LowerCase',
-    title    => 'Lowercase',
-    type_in  => 'P',
-    type_out => 'P',
-  },
-  {
-    class => 'Sprog::Gear::UpperCase',
-    title    => 'Uppercase',
-    type_in  => 'P',
-    type_out => 'P',
-  },
-  {
-    class => 'Sprog::Gear::TextWindow',
-    title    => 'Text Window',
-    type_in  => 'P',
-    type_out => '_',
-  },
-#  {
-#    class => 'Sprog::Gear::CSVSplit',
-#    title    => 'CSV Split',
-#    type_in  => 'P',
-#    type_out => 'A',
-#  },
-  {
-    class => 'Sprog::Gear::ApacheLogParse',
-    title    => 'Parse Apache Log',
-    type_in  => 'P',
-    type_out => 'H',
-  },
-  {
-    class => 'Sprog::Gear::PerlCodeHP',
-    title    => 'Perl Code',
-    type_in  => 'H',
-    type_out => 'P',
-  },
-);
+my @connector_types;
 
 
 sub new {
   my $class = shift;
 
-  my $self = bless { @_ }, $class;
+  my $self = bless { @_, filtered_list => [] }, $class;
   weaken($self->{app});
+
+  if(!@connector_types) {
+    @connector_types = $self->{app}->geardb->connector_types;
+  }
 
   $mini_icons = Sprog::GtkView::Chrome::mini_icons() if !defined($mini_icons);
 
@@ -134,32 +56,23 @@ sub new {
 sub _apply_filter {
   my $self = shift;
 
-  $self->drag_index(undef);
-
-  my $model = $self->gearlist_model;
+  $self->selected_class(undef);
 
   my $type_in  = $connector_types[$self->input_combo->get_active  * 2 + 1];
   my $type_out = $connector_types[$self->output_combo->get_active * 2 + 1];
+  my $keyword  = $self->search_entry->get_text || '';
+  
+  my @matches = $self->app->geardb->search($type_in, $type_out, $keyword);
+  $self->filtered_list(\@matches);
 
-  my $text = $self->search_entry->get_text || '';
-  my $pattern = qr/\Q$text\E/i;
-
-  my $types = qr/^$type_in$type_out$/;
-  my @matches;
-  foreach my $i (0..$#gear_classes) {
-    next unless
-      "$gear_classes[$i]->{type_in}$gear_classes[$i]->{type_out}" =~ $types;
-    next if $text && $gear_classes[$i]->{title} !~ $pattern;
-    push @matches, $i;
-  }
-
+  my $model = $self->gearlist_model;
   $model->clear;
 
   if(@matches) {
-    foreach my $i (@matches) {
+    foreach (@matches) {
       my $iter = $model->append;
-      $model->set($iter, COL_GEAR_INDEX, $i);
-      $model->set($iter, COL_GEAR_CLASS, $gear_classes[$i]->{title});
+      $model->set($iter, COL_GEAR_CLASS, $_->{class});
+      $model->set($iter, COL_GEAR_TITLE, $_->{title});
     }
     $self->gearlist->drag_source_set(
       ['button1_mask'], ['copy'], Sprog::GtkView::drag_targets()
@@ -272,8 +185,8 @@ sub _build_gearlist {
   my $self = shift;
 
   my $model = Gtk2::ListStore->new(
-    'Glib::String',      # COL_GEAR_INDEX
     'Glib::String',      # COL_GEAR_CLASS
+    'Glib::String',      # COL_GEAR_TITLE
   );
   $self->gearlist_model($model);
 
@@ -292,9 +205,9 @@ sub _build_gearlist {
 
   $renderer = Gtk2::CellRendererText->new;
   $column   = Gtk2::TreeViewColumn->new_with_attributes (
-    "Class",
+    "Gear Name",
     $renderer,
-    text => COL_GEAR_CLASS,
+    text => COL_GEAR_TITLE,
   );
   $gearlist->append_column($column);
 
@@ -320,8 +233,10 @@ sub _build_gearlist {
 sub _set_item_pixbuf {
   my($self, $tree_column, $cell, $model, $iter) = @_;
 
-  my($i) = $model->get($iter, COL_GEAR_INDEX);
-  my $icon_type = $gear_classes[$i]->{type_in} . $gear_classes[$i]->{type_out};
+  my($class) = $model->get($iter, COL_GEAR_CLASS);
+  my $info = $self->app->geardb->gear_class_info($class);
+
+  my $icon_type = $info->{type_in} . $info->{type_out};
   my $pixbuf = $mini_icons->{$icon_type} || $mini_icons->{__};
   $cell->set(pixbuf => $pixbuf);
 }
@@ -332,17 +247,18 @@ sub _select_gear {
 
   my $selection = $gearlist->get_selection  || return;
   my($path) = $selection->get_selected_rows || return;
-  $self->drag_index($path->to_string);
+  my $info = $self->filtered_list->[$path->to_string] || {};
+  $self->selected_class($info->{class});
 }
 
 
 sub _drag_begin {
   my($self, $gearlist, $context) = @_;
 
-  my $i = $self->drag_index;
-  return unless defined($i);
+  my $class = $self->selected_class or return;
+  my $info  = $self->app->geardb->gear_class_info($class);
 
-  my $icon_type = $gear_classes[$i]->{type_in} . $gear_classes[$i]->{type_out};
+  my $icon_type = $info->{type_in} . $info->{type_out};
   my $pixbuf = $mini_icons->{$icon_type} || $mini_icons->{PP};
   my($drag_icon, $drag_mask) = $pixbuf->render_pixmap_and_mask(ALPHA_THRESHOLD);
 
@@ -355,11 +271,9 @@ sub _drag_begin {
 sub _drag_data_get {
   my($self, $gearlist, $context, $data, $info, $time) = @_;
 
-  my $i = $self->drag_index;
-  return unless defined($i);
+  my $class = $self->selected_class or return;
 
-  my $gear_class = $gear_classes[$i]->{class};
-  $data->set($data->target, 8, $gear_class);
+  $data->set($data->target, 8, $class);
 }
 
 
