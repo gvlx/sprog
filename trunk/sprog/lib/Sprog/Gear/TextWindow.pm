@@ -5,6 +5,7 @@ package Sprog::Gear::TextWindow;
   title: Text Window
   type_in: P
   type_out: _
+  view_subclass: TextWindow
 
 =end sprog-gear-metadata
 
@@ -12,7 +13,7 @@ package Sprog::Gear::TextWindow;
 
 use strict;
 
-use base qw(Sprog::Gear::Bottom);
+use base qw(Sprog::Gear);
 
 __PACKAGE__->declare_properties(
   clear_on_run      => 1, 
@@ -26,9 +27,6 @@ __PACKAGE__->mk_accessors(qw(
 ));
 
 use Scalar::Util qw(weaken);
-
-sub title         { 'Text Window'; };
-sub view_subclass { 'TextWindow';  }
 
 sub prime {
   my $self = shift;

@@ -5,6 +5,7 @@ package Sprog::Gear::UpperCase;
   title: Uppercase
   type_in: P
   type_out: P
+  no_properties: 1
 
 =end sprog-gear-metadata
 
@@ -13,11 +14,6 @@ package Sprog::Gear::UpperCase;
 use strict;
 
 use base qw(Sprog::Gear);
-
-
-sub title { 'Uppercase'; };
-
-sub no_properties { 1;}
 
 sub data {
   my($self, $data) = @_;

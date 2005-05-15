@@ -16,8 +16,6 @@ use Sprog::PrintProxy;
 
 use base qw(Sprog::Gear::PerlBase);
 
-sub input_type   { 'H'; }
-
 
 sub prime {
   my $self = shift;

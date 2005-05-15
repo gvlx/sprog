@@ -5,6 +5,7 @@ package Sprog::Gear::LowerCase;
   title: Lowercase
   type_in: P
   type_out: P
+  no_properties: 1
 
 =end sprog-gear-metadata
 
@@ -13,11 +14,6 @@ package Sprog::Gear::LowerCase;
 use strict;
 
 use base qw(Sprog::Gear);
-
-
-sub no_properties { 1;}
-
-sub title { 'Lowercase' };
 
 sub data {
   my($self, $data) = @_;

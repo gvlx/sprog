@@ -23,10 +23,6 @@ __PACKAGE__->declare_properties(
   log_format => 'combined',
 );
 
-sub title { 'Parse Apache Log' };
-
-sub output_type   { 'H'; }
-
 sub prime {
   my $self = shift;
 

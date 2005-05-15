@@ -21,8 +21,6 @@ __PACKAGE__->declare_properties(
   command => '',
 );
 
-sub title { 'Run a Command' };
-
 sub prime {
   my($self) = @_;
 

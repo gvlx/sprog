@@ -11,8 +11,6 @@ __PACKAGE__->declare_properties(
 );
 
 
-sub title { 'Perl Code' };
-
 sub prime {
   my $self = shift;
 

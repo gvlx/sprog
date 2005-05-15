@@ -26,8 +26,6 @@ __PACKAGE__->declare_properties(
 );
 
 
-sub title { 'Find and Replace' };
-
 sub prime {
   my $self = shift;
 

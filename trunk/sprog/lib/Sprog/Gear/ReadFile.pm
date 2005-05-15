@@ -13,7 +13,7 @@ package Sprog::Gear::ReadFile;
 use strict;
 
 use base qw(
-  Sprog::Gear::Top
+  Sprog::Gear
   Sprog::Gear::InputFromFH
 );
 
@@ -21,8 +21,6 @@ __PACKAGE__->declare_properties(
   filename   =>  '',
 );
 
-
-sub title { 'Read File' };
 
 sub prime {
   my($self) = @_;

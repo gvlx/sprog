@@ -25,9 +25,6 @@ __PACKAGE__->declare_properties(
 );
 
 
-sub title { 'Pattern Match' };
-
-
 sub prime {
   my $self = shift;
 

@@ -12,7 +12,7 @@ package Sprog::Gear::TextInput;
 
 use strict;
 
-use base qw(Sprog::Gear::Top);
+use base qw(Sprog::Gear);
 
 __PACKAGE__->declare_properties(
   text => '',
@@ -23,8 +23,6 @@ __PACKAGE__->mk_accessors(qw(
 ));
 
 use Scalar::Util qw(weaken);
-
-sub title         { 'Text Input'; };
 
 sub prime {
   my $self = shift;
