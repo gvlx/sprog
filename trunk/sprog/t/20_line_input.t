@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 
 use File::Spec;
 
@@ -9,13 +9,19 @@ BEGIN {
   unshift @INC, File::Spec->catfile('t', 'lib');
 }
 
+use_ok('Sprog::ClassFactory');
+my $app = make_app(               # Imported from ClassFactory.pm
+  '/app'         => 'TestApp',
+  '/app/view'    => 'DummyView',
+);
+isa_ok($app, 'TestApp', 'test app object');
+
 use_ok('LineGear');
 
-my $gear = LineGear->new;
+my $gear = LineGear->new(app => $app);
 
 isa_ok($gear, 'LineGear');
 isa_ok($gear, 'Sprog::Gear::InputByLine');
-isa_ok($gear, 'Sprog::Gear::Bottom');
 isa_ok($gear, 'Sprog::Gear');
 
 $gear->prime;    # Create the incoming message queue
@@ -84,7 +90,7 @@ is_deeply([ $gear->lines ], [
 
 use_ok('DummyGear');
 
-$gear = DummyGear->new;
+$gear = DummyGear->new(app => $app);
 
 isa_ok($gear, 'DummyGear');
 isa_ok($gear, 'Sprog::Gear::InputByLine');

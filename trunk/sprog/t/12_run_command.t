@@ -31,7 +31,7 @@ isa_ok($app, 'DummyApp');
 my $machine = $app->machine;
 isa_ok($machine, 'DummyMachine');
 
-my $sink = TextGear->new(machine => $machine);
+my $sink = TextGear->new(machine => $machine, app => $app);
 isa_ok($sink, 'TextGear');
 $sink->text('');
 
@@ -40,7 +40,7 @@ my $src = Sprog::Gear::CommandIn->new(app => $app, machine => $machine);
 isa_ok($src, 'Sprog::Gear::CommandIn');
 isa_ok($src, 'Sprog::Gear::InputFromFH');
 isa_ok($src, 'Sprog::Gear');
-is($src->title, 'Run a Command', 'title looks good');
+is($src->title, 'Run Command', 'title looks good');
 like($src->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
   'Glade XML looks plausible');
 

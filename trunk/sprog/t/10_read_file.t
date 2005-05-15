@@ -23,7 +23,7 @@ isa_ok($app, 'DummyApp');
 my $machine = $app->machine;
 isa_ok($machine, 'DummyMachine');
 
-my $sink = TextGear->new(machine => $machine);
+my $sink = TextGear->new(machine => $machine, app => $app);
 isa_ok($sink, 'TextGear');
 $sink->text('');
 

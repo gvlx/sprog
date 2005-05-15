@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 26;
 
 use File::Spec;
 use YAML;
@@ -147,7 +147,7 @@ like($app->test_run_machine, qr/^You must complete your machine with an output g
 $app->alerts('');
 
 
-$INC{'AcceptNothingGear.pm'} = __FILE__;
+use_ok('AcceptNothingGear');
 my $last = $app->machine->add_gear('AcceptNothingGear');
 is($app->alerts, '', 'added a test gear to the machine');
 $app->alerts('');
@@ -169,44 +169,5 @@ ok($app->machine->parts->{$last->id}, 'but still exists');
 $app->machine->delete_gear_by_id($last->id);
 ok(!exists $app->machine->parts->{$last->id}, 'successfully removed last gear');
 
-
-$INC{'StopOnInput.pm'} = __FILE__;
-$last = $app->machine->add_gear('StopOnInput');
-is($app->alerts, '', 'added another test gear to the machine');
-$app->alerts('');
-$reader->next($last);
-$reader->filename(File::Spec->catfile('t', 'rgb.txt'));
-
-like($app->test_run_machine, qr/^Stopped/, 'stop method seems to work');
-$app->alerts('');
-
 unlink($test_file);
-
-exit;
-
-
-package AcceptNothingGear;
-
-use base qw(Sprog::Gear::Bottom);
-
-sub prime {
-  my $self = shift;
-
-  return $self->app->alert('I will not accept input!');
-}
-
-
-package StopOnInput;
-
-use base qw(Sprog::Gear::Bottom);
-
-sub data {
-  my $self = shift;
-
-  $self->app->alert('Stopped');
-  $self->app->stop_machine;
-}
-
-
-1;
 

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 26;
 
 use File::Spec;
 
@@ -21,7 +21,6 @@ my($input, $caser, $sink) = $app->make_test_machine(qw(
 is($app->alerts, '', 'no alerts while creating machine');
 
 isa_ok($input, 'Sprog::Gear::TextInput', 'input gear');
-isa_ok($input, 'Sprog::Gear::Top', 'input gear also');
 isa_ok($input, 'Sprog::Gear', 'input gear also');
 
 isa_ok($caser, 'Sprog::Gear::UpperCase', 'transform gear');

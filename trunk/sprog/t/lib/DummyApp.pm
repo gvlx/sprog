@@ -7,6 +7,7 @@ use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw(
   factory
+  geardb
   machine
   view
   alerts
@@ -22,9 +23,11 @@ sub new {
   my $factory = $self->{factory} || die "No class factory";
 
   $factory->inject(   # set default classes if not already defined
+    '/app/geardb'  => 'Sprog::GearMetadata',
     '/app/machine' => 'DummyMachine',
     '/app/view'    => 'DummyView',
   );
+  $self->geardb ( $factory->load_class('/app/geardb'               ) );
   $self->machine( $factory->make_class('/app/machine', app => $self) );
   $self->view   ( $factory->make_class('/app/view',    app => $self) );
 

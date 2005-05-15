@@ -1,7 +1,17 @@
 package TextGear;
 
+=begin sprog-gear-metadata
+
+  title: Text Gear
+  type_in: P
+  type_out: _
+
+=end sprog-gear-metadata
+
+=cut
+
 use base qw(
-  Sprog::Gear::Bottom
+  Sprog::Gear
 );
 
 __PACKAGE__->mk_accessors(qw(

@@ -1,7 +1,17 @@
 package LineGear;
 
+=begin sprog-gear-metadata
+
+  title: Line Gear
+  type_in: P
+  type_out: _
+
+=end sprog-gear-metadata
+
+=cut
+
 use base qw(
-  Sprog::Gear::Bottom
+  Sprog::Gear
   Sprog::Gear::InputByLine
 );
 
