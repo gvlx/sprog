@@ -5,7 +5,7 @@ package Sprog::Gear::FindReplace;
   title: Find and Replace
   type_in: P
   type_out: P
-  keywords: grep regex regular expression search
+  keywords: grep pattern regex regular expression search
 
 =end sprog-gear-metadata
 
