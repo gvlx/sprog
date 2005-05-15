@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 62;
+use Test::More tests => 63;
 
 use File::Spec;
 
@@ -39,6 +39,7 @@ is($info->type_in,  '_',                     'input  connector type looks ok');
 is($info->type_out, 'P',                     'output connector type looks ok');
 ok(defined($info->keywords),                 'gear has keywords');
 like($info->keywords, qr/read file/,         'lc(title) is in keywords');
+like($info->file, qr/Gear.*?ReadFile\.pm/,   'file path looks plausible');
 
 my(@gears, @match);
 @gears = $db_class->search;
