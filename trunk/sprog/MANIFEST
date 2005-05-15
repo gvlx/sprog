@@ -4,7 +4,6 @@ lib/Sprog.pm
 lib/Sprog/ClassFactory.pm
 lib/Sprog/Gear.pm
 lib/Sprog/Gear/ApacheLogParse.pm
-lib/Sprog/Gear/Bottom.pm
 lib/Sprog/Gear/CommandIn.pm
 lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
@@ -17,7 +16,6 @@ lib/Sprog/Gear/PerlCodeHP.pm
 lib/Sprog/Gear/ReadFile.pm
 lib/Sprog/Gear/TextInput.pm
 lib/Sprog/Gear/TextWindow.pm
-lib/Sprog/Gear/Top.pm
 lib/Sprog/Gear/UpperCase.pm
 lib/Sprog/GearMetadata.pm
 lib/Sprog/GtkAutoDialog.pm
