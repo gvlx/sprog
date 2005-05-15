@@ -22,13 +22,17 @@ my %sort_key = (
 
 # Accessor methods - all read-only
 
-sub class    { return shift->{class};    }
-sub file     { return shift->{file};     }
-sub title    { return shift->{title};    }
-sub type_in  { return shift->{type_in};  }
-sub type_out { return shift->{type_out}; }
-sub keywords { return shift->{keywords}; }
+sub class         { return shift->{class};         }
+sub file          { return shift->{file};          }
+sub title         { return shift->{title};         }
+sub type_in       { return shift->{type_in};       }
+sub type_out      { return shift->{type_out};      }
+sub keywords      { return shift->{keywords};      }
+sub no_properties { return shift->{no_properties}; }
+sub view_subclass { return shift->{view_subclass}; }
 
+
+# Public class methods
 
 sub connector_types {
   return (
@@ -50,6 +54,34 @@ sub gear_class_info {
   return $class->_get_gear_attributes($gear_class);
 }
 
+
+sub search {
+  my $class    = shift;
+  my $type_in  = shift || '*';
+  my $type_out = shift || '*';
+  my $keyword  = shift;
+
+  $keyword = '' unless defined($keyword);
+  $keyword = lc($keyword);
+  $keyword =~ s/\s+/ /sg;
+  $keyword =~ s/^\s+//sg;
+  $keyword =~ s/\s+$//sg;
+
+  $class->_find_all_classes unless $scanned;
+
+  my @matches;
+  foreach (values %$geardb) {
+    next if($type_in  ne '*' and $_->{type_in}  ne $type_in );
+    next if($type_out ne '*' and $_->{type_out} ne $type_out);
+    next if(length $keyword  and index($_->{keywords}, $keyword) < 0);
+
+    push @matches, $_;
+  }
+  return $class->_sort(@matches);
+}
+
+
+# Private class methods
 
 sub _get_gear_attributes {
   my($class, $gear_class) = @_;
@@ -103,32 +135,6 @@ sub _extract_metadata {
   $info->{keywords} =~ s/\s+/ /sg;
 
   $geardb->{$package} ||= bless $info, $class;
-}
-
-
-sub search {
-  my $class    = shift;
-  my $type_in  = shift || '*';
-  my $type_out = shift || '*';
-  my $keyword  = shift;
-
-  $keyword = '' unless defined($keyword);
-  $keyword = lc($keyword);
-  $keyword =~ s/\s+/ /sg;
-  $keyword =~ s/^\s+//sg;
-  $keyword =~ s/\s+$//sg;
-
-  $class->_find_all_classes unless $scanned;
-
-  my @matches;
-  foreach (values %$geardb) {
-    next if($type_in  ne '*' and $_->{type_in}  ne $type_in );
-    next if($type_out ne '*' and $_->{type_out} ne $type_out);
-    next if(length $keyword  and index($_->{keywords}, $keyword) < 0);
-
-    push @matches, $_;
-  }
-  return $class->_sort(@matches);
 }
 
 
@@ -202,11 +208,51 @@ metadata POD section, like this:
 
   =cut
 
-The 'title, 'type_in' and 'type_out attributes are mandatory.  The 'keywords'
-attribute is optional and should be omitted if no keywords apply.
-
 A cache of metadata is maintained so that each gear class file only needs to be
 parsed once.
+
+=head1 GEAR ATTRIBUTES
+
+The following attributes can be defined in the metadata section:
+
+=over4
+
+=item title
+
+Mandatory - defines the text which will appear on the gear.
+
+=item type_in
+
+Mandatory - the input connector type.  One of:
+
+  _ - no connector
+  P - a 'Pipe' connector
+  A - a 'List' connector
+  H - a 'Record' connector
+
+=item type_out
+
+Mandatory - the output connector type.  (Same values as above).
+
+=item keywords
+
+An optional list of keywords that describe the gears function.  Used by the 
+palette search function.
+
+=item no_properties
+
+An optional boolean which should be set to true (1) if the gear has no
+properties dialog.  This will cause the properties option to be greyed out on
+the gear's right-click menu.
+
+=item view_subclass
+
+An optional attribute for defining a view (user interface) class for the gear.
+Rather than defining the whole class name, only the final component is
+required.  For example, the L<Sprog::Gear::TextWindow> gear sets this value to
+'TextWindow' which gets translated to L<Sprog::GtkGearView::TextWindow>.
+
+=back
 
 =head1 CLASS METHODS
 
@@ -265,6 +311,10 @@ The type of the output connector (same values as for C<type_in>).
 =head2 keywords
 
 A space separated string of keywords describing the gear.
+
+=head2 view_subclass
+
+The gear view subclass which implements the gear's user interface.
 
 =head1 COPYRIGHT 
 
