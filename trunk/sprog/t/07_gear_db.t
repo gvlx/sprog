@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 63;
+use Test::More tests => 71;
 
 use File::Spec;
 
@@ -81,6 +81,33 @@ ok(@match == 1, '  Sprog::Gear::ApacheLogParse was in the list');
 
 @match = grep { $_->class eq 'Sprog::Gear::PerlCodeHP' } @gears;
 ok(@match == 1, '  Sprog::Gear::PerlCodeHP was in the list');
+
+
+$_ = join '', map { $_->{type_in} } @gears;
+like($_, qr/^_+[^_]+$/, 'sorting: input gears come first');
+
+$_ = join '', map { $_->{type_out} } @gears;
+like($_, qr/^[^_]+_+$/, 'sorting: output gears come last');
+
+$_ = join '', 
+       map { $_->{type_in} } 
+       grep { $_->{type_in} ne '_' and $_->{type_out} ne '_' } @gears;
+like($_, qr/^P+[^P]+$/, "sorting: 'Pipe' input filters come first");
+like($_, qr/A*[^A]+$/,  "sorting: 'List' input filters come next");
+like($_, qr/H+[^H]*$/,  "sorting: 'Record' input filters come last");
+
+
+$_ = join '', map { '~' . $_->{class} . '~' } @gears;
+s/~Sprog::Gear::/~/g;
+
+like($_, qr/~ReadFile~.*~CommandIn~/,
+     "sorting: 'Read File' comes before 'Run Command'");
+
+like($_, qr/~LowerCase~.*~UpperCase~/,
+     "sorting: 'Lowercase' comes before 'Uppercase'");
+
+like($_, qr/~LowerCase~.*~Grep~/,
+     "sorting: 'Lowercase' comes before 'Pattern Match'");
 
 
 @gears = $db_class->search('_');
