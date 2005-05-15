@@ -44,8 +44,6 @@ sub _find_file {
     return "$path.pm"  if -r "$path.pm";
     $path = File::Spec->catfile($dir, 'pod', @parts);
     return "$path.pod" if -r "$path.pod";
-    $path = File::Spec->catfile($dir, 'Pod', @parts);
-    return "$path.pod" if -r "$path.pod";
   }
 
   return;
