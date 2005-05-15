@@ -1,3 +1,10 @@
+* WriteFile: implement gear
+* ReplaceFile: implement gear
+* CSVSplit: implement gear
+* SelectColumns: implement gear
+* CSVCombine: implement gear
+* PerlAP: implement gear
+* PerlPA: implement gear
 * Save view (and other) preferences - in 'Correct' way for each OS
 * Fix Drop Coordinates when palette is visible
 * Fix detach resulting from click-without-drag
