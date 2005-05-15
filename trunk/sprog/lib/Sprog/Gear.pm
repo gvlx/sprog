@@ -7,6 +7,12 @@ use base qw(Class::Accessor::Fast);
 __PACKAGE__->mk_accessors(qw(
   app
   machine
+  meta
+  title
+  input_type
+  output_type
+  view_subclass
+  no_properties
   id
   next
   x
@@ -19,13 +25,8 @@ __PACKAGE__->mk_accessors(qw(
 our @ISA;
 use Scalar::Util qw(weaken);
 
-sub input_type    { 'P'; }
-sub output_type   { 'P'; }
 sub has_input     {  return defined shift->input_type;  }
 sub has_output    {  return defined shift->output_type; }
-sub view_subclass { ''; }
-sub no_properties {  0; }
-sub title         { ''; }
 
 sub new {
   my $class = shift;
@@ -34,12 +35,21 @@ sub new {
     $class->defaults,
     @_,
   }, $class;
-
-  $self->{x} = 0 unless defined($self->{x});
-  $self->{y} = 0 unless defined($self->{y});
   
   $self->{app} && weaken($self->{app});
   $self->{machine} && weaken($self->{machine});
+
+  my $meta = $self->{app}->geardb->gear_class_info($class)
+    or die "Could not find sprog-gear-metadata for $class";
+
+  $self->{title}         = $meta->title;
+  $self->{input_type}    = $meta->type_in  eq '_' ? undef : $meta->type_in;
+  $self->{output_type}   = $meta->type_out eq '_' ? undef : $meta->type_out;
+  $self->{no_properties} = $meta->no_properties || 0;
+  $self->{view_subclass} = $meta->view_subclass || '';
+
+  $self->{x} = 0 unless defined($self->{x});
+  $self->{y} = 0 unless defined($self->{y});
   
   return $self;
 }
