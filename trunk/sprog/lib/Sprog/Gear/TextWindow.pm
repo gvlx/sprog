@@ -252,5 +252,81 @@ sub dialog_xml {
 END_XML
 }
 
-
 1;
+
+__END__
+
+
+=head1 NAME
+
+Sprog::Gear::TextWindow - display text in a window
+
+=head1 DESCRIPTION
+
+This is a output gear.  It takes any data received through the 'Pipe' input
+connector and displays it in a scrolling text window.
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+
+=begin :sprog-help-text
+
+=head1 Text Window Gear
+
+The 'Text Window' is for displaying the output from the machine.  Any data
+that's received on the 'pipe' input connector is displayed in a scrollable
+windows.  This gear is only intended to work with text, it probably won't do
+anything useful with binary data.
+
+=head2 Properties
+
+The Text Window gear has four properties:
+
+=over 4
+
+=item Clear window on each run
+
+This option is enabled by default.  Un-check the box to keep the data in the
+output window even when you re-run the machine.
+
+=item Auto-scroll to show last line
+
+Turn this option on to have the text window automatically scroll as lines are
+added to the bottom.
+
+I<Note: this will make the machine run noticeably slower>.
+
+=item Show file start events
+
+Turn this option on to insert a one line message to mark the start of each
+file.
+
+=item Show file end events
+
+Turn this option on to insert a one line message to mark the end of each file.
+
+=back
+
+=head2 Text Window Controls
+
+The text window will pop up as soon as it receives some text to display.  That
+might not be until some time after your machine starts running - depending on
+what sort of filtering you're using.
+
+You can manually pop-up the window at any time by right-clicking on the gear
+and selecting 'Show text window'.
+
+When the window is visible, you can use the 'Clear' button to discard the text
+already displayed.  Or you can use the 'Hide' button to hide the window.  It 
+will re-appear as soon as more data is received.
+
+To copy data from the text window, click and drag to highlight it with the 
+mouse and then press Ctrl-C or right click and select 'Copy'.
+
+=end :sprog-help-text
+
