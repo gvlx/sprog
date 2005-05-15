@@ -88,8 +88,7 @@ sub _get_gear_attributes {
 
   # Search for class .pm file in @INC
 
-  return unless($gear_class);
-  my @parts = split /::/, $gear_class or return;
+  my @parts = split /::/, $gear_class;
   $parts[-1] .= '.pm';
 
   foreach my $dir (@INC) {
@@ -115,6 +114,7 @@ sub _extract_metadata {
     if(!$in_meta) {
       if(/^\s*package\s+([\w:]+)/) {
         $package = $1;
+        return $geardb->{$package} if($geardb->{$package});
         next;
       }
       next unless /^=begin sprog-gear-metadata/;
@@ -134,7 +134,7 @@ sub _extract_metadata {
   $info->{keywords} = lc "$info->{title} $info->{keywords}";
   $info->{keywords} =~ s/\s+/ /sg;
 
-  $geardb->{$package} ||= bless $info, $class;
+  $geardb->{$package} = bless $info, $class;
 }
 
 
@@ -282,6 +282,13 @@ a case-insensitive match against each gear's title and keywords attributes.
 
 The list of gears returned will be those that match all three arguments (or
 as many as were supplied).
+
+=head2 connector_types
+
+This method returns a list of connector type names and the corresponding codes.
+It is intended to be used to build GUI widgets for selecting input and output
+connector types.
+
 
 =head1 OBJECT METHODS
 
