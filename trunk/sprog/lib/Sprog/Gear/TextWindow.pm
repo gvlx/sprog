@@ -1,5 +1,15 @@
 package Sprog::Gear::TextWindow;
 
+=begin sprog-gear-metadata
+
+  title: Text Window
+  type_in: P
+  type_out: _
+
+=end sprog-gear-metadata
+
+=cut
+
 use strict;
 
 use base qw(Sprog::Gear::Bottom);

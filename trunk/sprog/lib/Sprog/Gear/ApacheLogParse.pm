@@ -1,5 +1,15 @@
 package Sprog::Gear::ApacheLogParse;
 
+=begin sprog-gear-metadata
+
+  title: Parse Apache Log
+  type_in: P
+  type_out: H
+
+=end sprog-gear-metadata
+
+=cut
+
 use strict;
 
 use base qw(

@@ -1,5 +1,15 @@
 package Sprog::Gear::UpperCase;
 
+=begin sprog-gear-metadata
+
+  title: Uppercase
+  type_in: P
+  type_out: P
+
+=end sprog-gear-metadata
+
+=cut
+
 use strict;
 
 use base qw(Sprog::Gear);

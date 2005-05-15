@@ -1,5 +1,15 @@
 package Sprog::Gear::CommandIn;
 
+=begin sprog-gear-metadata
+
+  title: Run Command
+  type_in: _
+  type_out: P
+
+=end sprog-gear-metadata
+
+=cut
+
 use strict;
 
 use base qw(

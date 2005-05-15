@@ -1,5 +1,15 @@
 package Sprog::Gear::ReadFile;
 
+=begin sprog-gear-metadata
+
+  title: Read File
+  type_in: _
+  type_out: P
+
+=end sprog-gear-metadata
+
+=cut
+
 use strict;
 
 use base qw(

@@ -1,5 +1,15 @@
 package Sprog::Gear::TextInput;
 
+=begin sprog-gear-metadata
+
+  title: Text Input
+  type_in: _
+  type_out: P
+
+=end sprog-gear-metadata
+
+=cut
+
 use strict;
 
 use base qw(Sprog::Gear::Top);

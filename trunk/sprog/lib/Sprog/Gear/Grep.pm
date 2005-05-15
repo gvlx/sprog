@@ -1,5 +1,16 @@
 package Sprog::Gear::Grep;
 
+=begin sprog-gear-metadata
+
+  title: Pattern Match
+  type_in: P
+  type_out: P
+  keywords: grep regex regular expression search
+
+=end sprog-gear-metadata
+
+=cut
+
 use strict;
 
 use base qw(

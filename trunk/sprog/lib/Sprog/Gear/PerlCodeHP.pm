@@ -1,5 +1,15 @@
 package Sprog::Gear::PerlCodeHP;
 
+=begin sprog-gear-metadata
+
+  title: Perl Code
+  type_in: H
+  type_out: P
+
+=end sprog-gear-metadata
+
+=cut
+
 use strict;
 
 use Sprog::PrintProxy;
