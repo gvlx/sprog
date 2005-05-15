@@ -33,7 +33,7 @@ sub create_window {
   my $app_win = $self->app->view->app_win;
 
   my $dialog = Gtk2::Dialog->new(
-    "sprog Text Output",
+    "Sprog Text Output",
     $app_win,
     [qw/destroy-with-parent no-separator/],
   );
