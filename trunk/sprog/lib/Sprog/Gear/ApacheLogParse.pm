@@ -305,9 +305,8 @@ Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
-=head1 HELP VIEWER TEXT
 
-=for sprog-help-text
+=begin :sprog-help-text
 
 =head1 Parse Apache Log Gear
 
@@ -352,4 +351,6 @@ The output record (hash) will have the following keys:
 The last two keys will not be present if the 'Common Log Format' was selected.
 
 I<Remember, the hash keys are both case-sensitive and unordered>.
+
+=end :sprog-help-text
 

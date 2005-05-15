@@ -56,7 +56,7 @@ sub _decrease_indent { $_[0]->{_indent_}-- if $_[0] > 0; }
 
 sub start_for {
   my($self, $info) = @_; 
-  $self->{_view_}->clear if $info->{target} eq 'sprog-help-text';
+  $self->{_view_}->clear if $info->{target} eq ':sprog-help-text';
 }
 
 

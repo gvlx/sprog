@@ -32,11 +32,11 @@ __END__
 
 =head1 NAME
 
-Sprog::Gear::Uppercase - convert text to uppercase
+Sprog::Gear::UpperCase - convert text to uppercase
 
 =head1 DESCRIPTION
 
-Any text passed through this gear will be converted to upper case.
+Any text passed through this gear will be converted to uppercase.
 
 =head1 COPYRIGHT 
 
@@ -46,11 +46,9 @@ This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
 
-=head1 HELP VIEWER TEXT
+=begin :sprog-help-text
 
-=for sprog-help-text
-
-=head1 Uppercase File Gear
+=head1 Uppercase Gear
 
 This gear converts all text passed through it, to uppercase.  Both input and
 output use 'pipe' connectors.
@@ -59,3 +57,4 @@ output use 'pipe' connectors.
 
 The Uppercase gear has no properties.
 
+=end :sprog-help-text

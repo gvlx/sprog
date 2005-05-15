@@ -107,9 +107,8 @@ This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
 
-=head1 HELP VIEWER TEXT
 
-=for sprog-help-text
+=begin :sprog-help-text
 
 =head1 Perl Code Gear
 
@@ -171,3 +170,6 @@ list of L<built-in functions|perlfunc> will give you some ideas.
 
 Both of the documents are likely to be a bit intimidating for non-programmers,
 however there are many good introductory books available.
+
+=end :sprog-help-text
+

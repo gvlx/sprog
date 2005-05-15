@@ -334,9 +334,8 @@ Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
-=head1 HELP VIEWER TEXT
 
-=for sprog-help-text
+=begin :sprog-help-text
 
 =head1 Find and Replace Gear
 
@@ -425,3 +424,6 @@ To turn a 4-digit year in a date into a 2-digit year:
 
 If you need the full power of Perl's C<s/pattern/replacement/> syntax then
 you can use a one liner in a L<Perl Code|Sprog::Gear::PerlCode> gear.
+
+=end :sprog-help-text
+

@@ -102,9 +102,7 @@ This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
 
-=head1 HELP VIEWER TEXT
-
-=for sprog-help-text
+=begin :sprog-help-text
 
 =head1 Perl Code Gear (Record to Pipe)
 
@@ -157,4 +155,6 @@ errors and prints out the original request and the referring URL:
 
 I<Remember, both Perl language keywords and Perl hash keys are case sensitive.
 And yes, the word referrer is misspelled in the HTTP spec>.
+
+=end :sprog-help-text
 

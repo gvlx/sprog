@@ -277,9 +277,8 @@ Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
-=head1 HELP VIEWER TEXT
 
-=for sprog-help-text
+=begin :sprog-help-text
 
 =head1 Pattern Match Gear
 
@@ -319,3 +318,5 @@ lines which do not match will be passed through.
 
 The L<Find and Replace|Sprog::Gear::FindReplace> gear also uses Perl regular
 expressions.
+
+=end :sprog-help-text

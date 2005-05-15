@@ -215,9 +215,8 @@ Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
-=head1 HELP VIEWER TEXT
 
-=for sprog-help-text
+=begin :sprog-help-text
 
 =head1 Run Command Gear
 
@@ -236,4 +235,6 @@ For example this command would retrieve the weather forecast for New Zealand's
 capital city:
 
   wget -q -O - http://weather.yahoo.com/forecast/NZXX0049_c.html
+
+=end :sprog-help-text
 

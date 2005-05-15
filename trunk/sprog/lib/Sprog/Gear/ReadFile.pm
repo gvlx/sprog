@@ -234,9 +234,8 @@ Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
-=head1 HELP VIEWER TEXT
 
-=for sprog-help-text
+=begin :sprog-help-text
 
 =head1 Read File Gear
 
@@ -272,4 +271,6 @@ by dragging a file and dropping into the sprog window (not implemented yet)
 Instead of reading data directly from a file, you might want to consider
 capturing the output of another command using the 
 L<Run Command|Sprog::Gear::CommandIn> gear.
+
+=end :sprog-help-text
 

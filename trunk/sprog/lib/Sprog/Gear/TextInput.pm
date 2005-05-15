@@ -222,9 +222,8 @@ Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 
 
-=head1 HELP VIEWER TEXT
 
-=for sprog-help-text
+=begin :sprog-help-text
 
 =head1 Text Input Gear
 
@@ -237,4 +236,6 @@ entry are passed out through a 'pipe' connector.
 
 The Text Input gear has only one property - the text.  You can type into the
 text entry box or paste from the clipboard.
+
+=end :sprog-help-text
 
