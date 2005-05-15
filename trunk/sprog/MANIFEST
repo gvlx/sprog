@@ -19,6 +19,7 @@ lib/Sprog/Gear/TextInput.pm
 lib/Sprog/Gear/TextWindow.pm
 lib/Sprog/Gear/Top.pm
 lib/Sprog/Gear/UpperCase.pm
+lib/Sprog/GearMetadata.pm
 lib/Sprog/GtkAutoDialog.pm
 lib/Sprog/GtkEventLoop.pm
 lib/Sprog/GtkGearView.pm
@@ -53,6 +54,7 @@ t/01_require_all.t
 t/02_factory.t
 t/05_eventloop.t
 t/06_app.t
+t/07_gear_db.t
 t/08_gear.t
 t/10_read_file.t
 t/12_run_command.t
