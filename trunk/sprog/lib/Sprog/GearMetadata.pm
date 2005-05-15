@@ -12,11 +12,11 @@ use YAML       ();
 my $geardb  = {};      # metadata cache
 my $scanned = 0;       # flag to prevent re-scanning
 
-my %sort_key = (
-  '_' => 0,
-  'P' => 1,
-  'A' => 2,
-  'H' => 3,
+my %_connector_sort_key = (
+  '_' => 1,
+  'P' => 2,
+  'A' => 3,
+  'H' => 4,
 );
 
 
@@ -75,9 +75,9 @@ sub search {
     next if($type_out ne '*' and $_->{type_out} ne $type_out);
     next if(length $keyword  and index($_->{keywords}, $keyword) < 0);
 
-    push @matches, $_;
+    push @matches, [ _sort_key($keyword, $_), $_ ];
   }
-  return $class->_sort(@matches);
+  return map { $_->[1] } sort { $a->[0] cmp $b->[0] } @matches;
 }
 
 
@@ -138,21 +138,22 @@ sub _extract_metadata {
 }
 
 
-sub _sort {
-  my($class, @gears) = @_;
+sub _sort_key {
+  my($keyword, $g) = @_;
 
-  return(
-    (sort _sub_sort grep($_->{type_in} eq '_', @gears)),
-    (sort _sub_sort grep($_->{type_in} ne '_' && $_->{type_out} ne '_', @gears)),
-    (sort _sub_sort grep($_->{type_out} eq '_', @gears)),
+  my $rank = 9;                  # smaller number is better (for easy sorting)
+  if(length $keyword) {
+    $rank -= 2 if index(lc($g->{title}),    $keyword) > -1;
+    $rank -= 1 if index(lc($g->{keywords}), $keyword) > -1;
+  }
+  return sprintf(
+    "%d%d%d%d %s",
+    ($g->{type_in} eq '_' ? 1 : ($g->{type_out} eq '_' ? 3 : 2)),
+    $_connector_sort_key{$g->{type_in}},
+    $_connector_sort_key{$g->{type_out}},
+    $rank,
+    lc("$g->{title} $g->{class}"),
   );
-}
-
-sub _sub_sort {
-  return
-    $sort_key{$a->{type_in}} <=> $sort_key{$b->{type_in}}
-      || $sort_key{$a->{type_out}} <=> $sort_key{$b->{type_out}}
-      || $a->{title} cmp $b->{title}
 }
 
 
@@ -215,7 +216,7 @@ parsed once.
 
 The following attributes can be defined in the metadata section:
 
-=over4
+=over 4
 
 =item title
 
