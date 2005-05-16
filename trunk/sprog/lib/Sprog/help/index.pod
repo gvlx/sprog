@@ -26,3 +26,20 @@ L<Understanding connectors|Sprog::help::connectors>
 L<Using the Palette|Sprog::help::palette>
 
 =back
+
+=head2 Help for Developers
+
+Here's some information which may be useful to people wanting to create their
+own gear classes or to extend Sprog in other ways:
+
+=over 4
+
+=item *
+
+L<Sprog internals|Sprog::help::internals>
+
+=item *
+
+L<The Sprog scheduler|Sprog::help::scheduler>
+
+=back
