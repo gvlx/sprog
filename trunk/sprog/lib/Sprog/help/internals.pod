@@ -1,0 +1,75 @@
+=head1 Sprog Internals - Notes for Developers
+
+If you're intending to hack on Sprog, these notes may help ...
+
+The application uses an MVC(ish) architecture in which the Model is implemented
+in L<Sprog::Machine>, the View is L<Sprog::GtkView> and the two are tied
+together by the L<Sprog> class itself.
+
+A Sprog 'machine' is comprised of 'gears'.
+
+The L<Sprog::Machine> class implements the logic for connecting the gears as
+well as a simple event-driven scheduler.
+
+Gears inherit from L<Sprog::Gear.>  A gear passes data downstream to the next
+gear by sending a message:
+
+  $self->msg_out(data => $string);
+
+This example places a message of type 'data', with a single string argument in
+the next gear's input queue.  The scheduler would deliver the example message
+by calling the C<data()> method and passing it the string argument.  If the
+gear has no C<data()> method, then the message is simply delivered to the
+following gear's input queue.
+
+=head2 Example Gears
+
+A simple gear to look at for a start is L<Sprog::Gear::UpperCase> which simply
+takes all input and converts it to upper case before passing it to the next
+gear.
+
+A more elaborate example is L<Sprog::Gear::Grep> which passes through any lines
+which match a specified pattern.  This gear has two configurable options: the
+pattern to match and a boolean flag controlling case-sensitivity.  The
+properties dialog (accessed via the right click menu) is handled automatically
+by the L<Sprog::Gear> base class.
+
+=head2 Properties Dialogs
+
+A gear class would not normally handle GUI interactions itself.  If you really
+need to, you can implement a gear-view class which inherits from
+L<Sprog::GtkGearView> and implements your gear's user interface.  Your gear
+class would override the C<view_subclass()> method and have it return the name
+of your view class.  (See L<Sprog::Gear::TextWindow> and
+L<Sprog::GtkGearView::TextWindow> for example).
+
+If you only need a GUI for simple properties setting, then a simpler approach
+is to use the properties auto-dialog (PAD) framework that your class will
+inherit from L<Sprog::Gear>.
+
+First, build your dialog box using the Glade GUI builder and save it to an XML
+.glade file.  Then paste the XML into your gear class file as the string
+returned by the C<dialog_xml()> method (you can just return the filename while
+you're trying things out).  That's all you need to do to have your dialog
+appear.
+
+The properties auto-dialog (PAD) framework uses the widget names in your dialog
+definition to connect widgets to properties in your class.  For example, if you
+assign the name 'PAD.filename' to a GtkEntry widget, then when you press 'OK'
+to save the values in the dialog, the PAD framework will take the text contents
+from the widget and pass them to the C<filename()> accessor method of your
+class.  Only widgets named with the 'PAD.' prefix get this special treatment.
+
+The PAD framework currently only supports GtkEntry and GtkCheckButton widgets
+directly.  It also supports a GtkButton widget with 'browse_to_entry' behaviour
+- pressing the button pops up a file chooser, when a file is selected the
+filename is written to the named text entry (which in turn is associated with a
+property).  Support for more widget types and more reusable behaviours will be
+added as the need arises.
+
+The PAD framework is implemented in the L<Sprog::GtkGearView> and
+L<Sprog::GtkAutoDialog> classes.
+
+=head2 Related Topics
+
+See also the L<Sprog scheduler|Sprog::help::scheduler>.
