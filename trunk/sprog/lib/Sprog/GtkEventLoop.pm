@@ -29,6 +29,13 @@ sub add_io_reader {
 }
 
 
+sub add_io_writer {
+  my($class, $fh, $sub) = @_;
+
+  return Glib::IO->add_watch(fileno($fh), ['out', 'err', 'hup'], $sub);
+}
+
+
 1;
 
 __END__
