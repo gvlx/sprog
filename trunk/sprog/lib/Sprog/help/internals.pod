@@ -28,11 +28,16 @@ A simple gear to look at for a start is L<Sprog::Gear::UpperCase> which simply
 takes all input and converts it to upper case before passing it to the next
 gear.
 
-A more elaborate example is L<Sprog::Gear::Grep> which passes through any lines
-which match a specified pattern.  This gear has two configurable options: the
-pattern to match and a boolean flag controlling case-sensitivity.  The
-properties dialog (accessed via the right click menu) is handled automatically
-by the L<Sprog::Gear> base class.
+A more complex example is L<Sprog::Gear::Grep> which passes through any lines
+which match a specified pattern.  This gear has three configurable options: the
+pattern to match, a boolean flag controlling case-sensitivity (like C<grep -i>)
+and another boolean to toggle whether matching lines or non-matching lines
+should be passed through (like C<grep -v>).  The properties dialog (accessed
+via the right click menu) is handled automatically by the L<Sprog::Gear> base
+class.
+
+The L<Sprog::Gear::ReadFile> gear is a moderately complex data provider.  It
+uses an IO event handler to watch for data from a file.
 
 =head2 Properties Dialogs
 
