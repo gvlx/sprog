@@ -189,7 +189,7 @@ __END__
 
 =head1 NAME
 
-Sprog - GUI with a Perl centre
+Sprog - Scripting for the GUI Guys
 
 =head1 SYNOPSIS
 
@@ -228,6 +228,8 @@ The properties auto-dialog (PAD) framework uses L<Gtk2::GladeXML>.
 
 File save and restore uses L<YAML>.
 
+The help viewer uses L<Pod::Simple>.
+
 If you don't already have gtk2-perl installed then you may find that is a major
 hurdle.  Of course if you're running Debian GNU/Linux then you'll just need to
 run:
@@ -237,7 +239,7 @@ run:
 
 =head1 SEE ALSO
 
-L<Sprog::internals> contains notes for developers.
+L<Sprog::help::internals> contains notes for developers.
 
 The Sprog web site is hosted by SourceForge at: L<http://sprog.sourceforge.net/>
 
