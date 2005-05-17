@@ -10,6 +10,7 @@ lib/Sprog/Gear/Grep.pm
 lib/Sprog/Gear/InputByLine.pm
 lib/Sprog/Gear/InputFromFH.pm
 lib/Sprog/Gear/LowerCase.pm
+lib/Sprog/Gear/OutputToFH.pm
 lib/Sprog/Gear/PerlBase.pm
 lib/Sprog/Gear/PerlCode.pm
 lib/Sprog/Gear/PerlCodeHP.pm
@@ -17,6 +18,7 @@ lib/Sprog/Gear/ReadFile.pm
 lib/Sprog/Gear/TextInput.pm
 lib/Sprog/Gear/TextWindow.pm
 lib/Sprog/Gear/UpperCase.pm
+lib/Sprog/Gear/WriteFile.pm
 lib/Sprog/GearMetadata.pm
 lib/Sprog/GtkAutoDialog.pm
 lib/Sprog/GtkEventLoop.pm
@@ -36,11 +38,12 @@ lib/Sprog/help/connectors.pod
 lib/Sprog/help/filter_gears.pod
 lib/Sprog/help/index.pod
 lib/Sprog/help/input_gears.pod
+lib/Sprog/help/internals.pod
 lib/Sprog/help/output_gears.pod
 lib/Sprog/help/palette.pod
 lib/Sprog/help/regex_intro.pod
+lib/Sprog/help/scheduler.pod
 lib/Sprog/HelpParser.pm
-lib/Sprog/internals.pod
 lib/Sprog/Machine.pm
 lib/Sprog/PrintProxy.pm
 Makefile.PL
@@ -58,6 +61,7 @@ t/10_read_file.t
 t/12_run_command.t
 t/14_machine.t
 t/15_bad_data.t
+t/17_write_file.t
 t/20_line_input.t
 t/22_pattern_match.t
 t/24_find_repl.t
@@ -66,6 +70,7 @@ t/30_perl_code.t
 t/32_perl_code_hp.t
 t/counter.sprog
 t/files.txt
+t/lib/AcceptNothingGear.pm
 t/lib/Dummy.pm
 t/lib/DummyApp.pm
 t/lib/DummyGear.pm
