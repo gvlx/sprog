@@ -353,6 +353,23 @@ sub alert {
 }
 
 
+sub confirm_yes_no {
+  my($self, $message) = @_;
+
+  my $dialog = Gtk2::MessageDialog->new(
+    $self->app_win,
+    [qw/modal destroy-with-parent/],
+    'question',
+    'yes-no',
+    $message
+  );
+  my $response = $dialog->run;
+  $dialog->destroy;
+
+  return $response eq 'yes';
+}
+
+
 sub _add_palette {
   my($self) = @_;
 

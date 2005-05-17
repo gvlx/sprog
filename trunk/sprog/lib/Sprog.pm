@@ -60,6 +60,8 @@ sub alert             { shift->view->alert(@_);                  }
 sub status_message    { shift->view->status_message(@_);         }
 sub not_implemented   { shift->alert('Not implemented');         }
 
+sub confirm_yes_no    { shift->view->confirm_yes_no(@_);         }
+
 sub drop_gear         { shift->view->drop_gear(@_);              }
 sub detach_gear       { shift->machine->detach_gear(@_);         }
 
