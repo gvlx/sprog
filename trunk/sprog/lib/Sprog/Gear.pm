@@ -19,6 +19,7 @@ __PACKAGE__->mk_accessors(qw(
   y
   msg_queue
   work_done
+  sleeping
 ));
 
 
