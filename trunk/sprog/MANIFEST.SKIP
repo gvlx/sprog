@@ -15,3 +15,4 @@ blib
 ^misc
 ^cover_db
 ^runtest
+^t/output.txt$
