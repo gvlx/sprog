@@ -11,6 +11,7 @@ __PACKAGE__->mk_accessors(qw(
   intercept_alerts
   timed_out
   sequence_queue
+  confirm_yes_no_handler
 ));
 
 use Glib qw(TRUE FALSE);
@@ -88,7 +89,10 @@ sub test_run_machine {
   $self->SUPER::run_machine(@_);
   return $self->alerts unless $self->machine->running;
 
-  $self->add_timeout(2000, sub { $self->timed_out(1); $self->quit } );
+  $self->add_timeout(2000, sub { 
+    $self->machine->_dump_machine_state('in timeout'); 
+    $self->timed_out(1); $self->quit;
+  } );
   $self->run;
 
   return $self->_test_return_value;
@@ -146,6 +150,14 @@ sub _sequence_step {
     $self->add_timeout($step, sub { $self->_sequence_step } );
   }
   return FALSE;
+}
+
+
+sub confirm_yes_no {
+  my $self = shift;
+
+  my $handler = $self->confirm_yes_no_handler or return;
+  return $handler->(@_);
 }
 
 1;
