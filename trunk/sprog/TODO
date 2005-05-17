@@ -1,11 +1,10 @@
-* WriteFile: implement gear
 * ReplaceFile: implement gear
 * CSVSplit: implement gear
 * SelectColumns: implement gear
 * CSVCombine: implement gear
 * PerlAP: implement gear
 * PerlPA: implement gear
-* Save view (and other) preferences - in 'Correct' way for each OS
+* Save view (and other) preferences, in 'Correct' way for each OS (Glib::Utils?)
 * Fix Drop Coordinates when palette is visible
 * Fix detach resulting from click-without-drag
 * Split workspace/canvas out into its own class
@@ -20,7 +19,7 @@
 * Make floating palette an option
 * Clean up show/hide palette code to reduce coupling
 * Allow output window to 'swallow' properties dialogs for other gears (eg: text in, pattern match etc)
-* Cancel waiting events on stop
+* Cancel waiting (io) events on stop
 * Implement SIG_PIPE analog
 * TextWindow - bind escape key to hide function
 * File browse - remember last directory
