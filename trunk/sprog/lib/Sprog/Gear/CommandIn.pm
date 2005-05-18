@@ -13,7 +13,7 @@ package Sprog::Gear::CommandIn;
 use strict;
 
 use base qw(
-  Sprog::Gear::Top
+  Sprog::Gear
   Sprog::Gear::InputFromFH
 );
 
