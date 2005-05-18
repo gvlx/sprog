@@ -100,7 +100,7 @@ $sub->();
 
 is(scalar(@$io_queue), 0, "no io_reader messages queued after EOF");
 
-is($reader->fh, undef, "file handle has been disposed");
+is($reader->fh_in, undef, "file handle has been disposed");
 
 $reader->send_data;
 
