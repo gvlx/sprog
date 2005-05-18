@@ -199,7 +199,7 @@ __END__
 
 =head1 NAME
 
-Sprog::Gear::Command - Run a command and read its output
+Sprog::Gear::CommandIn - Run a command and read its output
 
 =head1 DESCRIPTION
 
