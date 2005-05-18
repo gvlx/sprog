@@ -44,7 +44,7 @@ sub _run_command {
     $self->app->alert(qq(Can't run "$command"), "$!");
     return;
   }
-  $self->fh($fh);
+  $self->fh_in($fh);
   $self->msg_out(file_start => undef);
 
   return 1;

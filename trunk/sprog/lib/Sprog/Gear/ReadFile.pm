@@ -25,7 +25,8 @@ __PACKAGE__->declare_properties(
 sub prime {
   my($self) = @_;
 
-  $self->_open_file() || return;
+  my $fh = $self->_open_file or return;
+  $self->fh_in($fh);
   $self->register();
   return $self->SUPER::prime;
 }
@@ -45,10 +46,9 @@ sub _open_file {
     $self->app->alert(qq(Can't open "$filename"), "$!");
     return;
   }
-  $self->fh($fh);
   $self->msg_out(file_start => $filename);
 
-  return 1;
+  return $fh;
 }
 
 sub dialog_xml {

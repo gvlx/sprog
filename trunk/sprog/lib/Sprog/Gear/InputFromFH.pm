@@ -4,7 +4,7 @@ package Sprog::Gear::InputFromFH;
 use constant BUF_SIZE => 65536;
 
 
-sub fh { $_[0]->{fh} = $_[1] if(@_ > 1); return $_[0]->{fh}; }
+sub fh_in { $_[0]->{fh_in} = $_[1] if(@_ > 1); return $_[0]->{fh_in}; }
 
 sub register   { $_[0]->machine->register_data_provider($_[0]); }
 sub unregister { $_[0]->machine->unregister_data_provider($_[0]); }
@@ -13,18 +13,18 @@ sub unregister { $_[0]->machine->unregister_data_provider($_[0]); }
 sub send_data {
   my($self) = @_;
 
-  return if $self->{io_tag};  # We're already waiting
-  my $fh = $self->fh or return;
-  $self->{io_tag} = $self->app->add_io_reader($fh, sub { $self->_data_ready });
+  return if $self->{in_tag};  # We're already waiting
+  my $fh = $self->fh_in or return;
+  $self->{in_tag} = $self->app->add_io_reader($fh, sub { $self->_data_ready });
 }
 
 
 sub _data_ready {
   my($self) = @_;
 
-  delete $self->{io_tag};
+  delete $self->{in_tag};
   my $buf;
-  if(sysread($self->fh, $buf, BUF_SIZE)) {
+  if(sysread($self->fh_in, $buf, BUF_SIZE)) {
     $self->msg_out(data => $buf);
   }
   else {
@@ -32,7 +32,7 @@ sub _data_ready {
     $filename = $self->filename if($self->can('filename'));
     $self->msg_out(file_end => $filename);
     $self->unregister();
-    $self->fh(undef);
+    $self->fh_in(undef);
   }
   
   $self->work_done(1);
@@ -57,8 +57,10 @@ Sprog::Gear::InputFromFH - a 'mixin' class for gears reading input from a file h
   sub prime {
     my($self) = @_;
 
-    $self->open_file() || return;   # open() should call fh()
+    my $fh = $self->_open_file or return;
+    $self->fh_in($fh);
     $self->register();
+
     return $self->SUPER::prime;
   }
 
@@ -73,7 +75,7 @@ handle to the next gear as a C<data> message.
 
 =head1 METHODS
 
-=head2 fh ( filehandle )
+=head2 fh_in ( filehandle )
 
 The gear class is responsible for opening the file handle and then passing it
 to this method to make it available to the other methods in this class.
