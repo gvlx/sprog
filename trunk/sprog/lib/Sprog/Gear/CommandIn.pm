@@ -24,7 +24,8 @@ __PACKAGE__->declare_properties(
 sub prime {
   my($self) = @_;
 
-  $self->_run_command() || return;
+  my $fh = $self->_run_command() or return;
+  $self->fh_in($fh);
   $self->register();
   return $self->SUPER::prime;
 }
@@ -44,10 +45,9 @@ sub _run_command {
     $self->app->alert(qq(Can't run "$command"), "$!");
     return;
   }
-  $self->fh_in($fh);
   $self->msg_out(file_start => undef);
 
-  return 1;
+  return $fh;
 }
 
 
