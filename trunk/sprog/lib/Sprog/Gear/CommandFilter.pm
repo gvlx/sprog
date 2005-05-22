@@ -13,9 +13,9 @@ package Sprog::Gear::CommandFilter;
 use strict;
 
 use base qw(
-  Sprog::Gear
   Sprog::Gear::OutputToFH
   Sprog::Gear::InputFromFH
+  Sprog::Gear
 );
 
 __PACKAGE__->declare_properties(
@@ -58,18 +58,6 @@ sub _run_command {
   $self->fh_out($fh_out);
 
   return 1;
-}
-
-
-sub data {
-  my $self = shift;
-
-  my $result = $self->SUPER::data(@_);
-#  my $fh = $self->fh_out;
-#  close($fh);
-#  $self->fh_out(undef);
-#
-#  return $result;
 }
 
 
