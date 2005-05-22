@@ -192,6 +192,7 @@ sub running {
     $self->{running} = shift;
     if($self->{running}) {
       $self->start_time(time());
+      $self->app->status_message("Machine running");
     }
     else {
       my $run_time = sprintf("%4.2fs", time() - $self->start_time);
