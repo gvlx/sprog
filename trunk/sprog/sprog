@@ -1,5 +1,5 @@
 #!/bin/bash
 
 DIR=`dirname $0`
-
-PERL5LIB=$DIR/lib $DIR/bin/sprog "$@"
+export PERL5LIB=$DIR/lib 
+exec $DIR/bin/sprog "$@"
