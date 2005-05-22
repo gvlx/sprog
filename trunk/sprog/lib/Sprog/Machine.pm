@@ -7,9 +7,9 @@ use base qw(Class::Accessor::Fast);
 __PACKAGE__->mk_accessors(qw(
   app
   parts
-  gear_train
   start_time
   stalled
+  scheduler
 ));
 
 use Scalar::Util qw(weaken);
@@ -28,6 +28,11 @@ sub new {
     @_
   }, $class;
   weaken($self->{app});
+
+  $self->app->factory->inject(   # set default classes if not already defined
+    '/app/machine/scheduler' => 'Sprog::Machine::Scheduler',
+  );
+
   return $self;
 }
 
@@ -191,6 +196,10 @@ sub running {
     else {
       my $run_time = sprintf("%4.2fs", time() - $self->start_time);
       $self->app->status_message("Machine stopped (elapsed time: $run_time)");
+      if(my $sched = $self->scheduler) {
+        $sched->stop;
+        $self->scheduler(undef);
+      }
     }
   }
   return $self->{running};
@@ -208,95 +217,21 @@ sub head_gear {
 }
 
 
-sub build_gear_train {
+sub run {
   my $self = shift;
-
-  $self->stalled(1);                 # send_data will un-stall it
 
   my $head = $self->head_gear;
   return $self->app->alert("You must add an input gear") unless($head);
   return $self->app->alert("You must complete your machine with an output gear")
     if($head->last->has_output);
 
+  my $sched = $self->scheduler(
+    $self->app->factory->make_class('/app/machine/scheduler', $head)
+  ) or return;
 
-  $self->init_data_providers;
+  $sched->schedule_main_loop;
 
-  my @train = ();
-  my $gear = $head;
-  while($gear = $gear->next) {
-    $gear->prime || return;
-    push @train, $gear;
-  }
-
-  $head->prime || return;
-
-  $self->gear_train([ reverse @train ]);
-
-  $self->send_data;
-
-  return 1;
-}
-
-
-sub init_data_providers { $_[0]->{providers} = {} }
-
-sub register_data_provider {
-  my($self, $gear) = @_;
-
-  $self->{providers}->{$gear->id} = $gear;
-}
-
-sub unregister_data_provider {
-  my($self, $gear) = @_;
-
-  delete $self->{providers}->{$gear->id};
-}
-
-sub send_data {
-  my($self) = @_;
-
-  my $count = 0;
-  foreach my $gear (values %{$self->{providers}}) {
-    $count++;
-    $gear->send_data;
-  }
-
-  return $count;
-}
-
-
-sub turn_gears {
-  my $self = shift;
-
-  return 0 unless $self->running;
-
-  my $sleepers = 0;
-  my $train = $self->gear_train;
-  foreach my $gear (@$train) {
-    if($gear->sleeping) {
-      $sleepers++;
-      next;
-    }
-    $gear->turn_once && return 1;      # re-enable idle callback
-  }
-
-  # No gears processed queued messages
-  $self->stalled(1);
-  if(!$sleepers) {                     # no gears with events pending
-    if(!$self->send_data) {            # no registered providers left
-      $self->app->machine_running(0);  # stop the machine - we're done
-    }
-  }
-  return 0;
-}
-
-
-sub enable_idle_handler {
-  my($self) = @_;
-
-  return unless $self->stalled();
-  $self->app->add_idle_handler(sub { $self->turn_gears });
-  $self->stalled(0);
+  $self->app->machine_running(1);  # let the GUI know we've started
 }
 
 
@@ -307,29 +242,5 @@ sub stop {
 }
 
 
-sub _dump_machine_state {
-  my $self = shift;
-  my $msg  = shift;
-
-  warn "Dumping machine state" . ($msg ? " ($msg)" : '') . ":\n";
-  warn "Machine " . ($self->stalled ? 'is' : 'is not') . " stalled\n";
-
-  if(keys %{$self->{providers}}) {
-    warn "Registered data providers:\n";
-    foreach my $gear (values %{$self->{providers}}) {
-        warn "  " . ref($gear) . "\n";
-    }
-  }
-  else {
-    warn "No registered data providers\n";
-  }
-  warn "Gear Train:\n";
-  my $train = $self->gear_train;
-  foreach my $gear (reverse @$train) {
-    warn "  " . ref($gear) . " - " . scalar(@{$gear->{msg_queue}}) .
-         " message(s) queued\n" .
-         "    Gear " . ($gear->sleeping ? 'is' : 'is not') . " sleeping\n";
-  }
-}
-
 1;
+
