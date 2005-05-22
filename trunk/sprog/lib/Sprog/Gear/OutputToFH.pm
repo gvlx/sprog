@@ -6,6 +6,7 @@ sub fh_out {
   if(@_) {
     $self->{fh_out} = shift;
     $self->{buffer} = '';
+    $self->{close_on_flush} = 0;
   }
   return $self->{fh_out}; 
 }
@@ -24,6 +25,18 @@ sub data {
 }
 
 
+sub no_more_data {
+  my $self = shift;
+
+  if(length $self->{buffer}) {                # data left to send
+    $self->{close_on_flush} = 1;
+  }
+  else {
+    $self->_close_output_fh;
+  }
+}
+
+
 sub _can_write {
   my $self = shift;
 
@@ -37,8 +50,12 @@ sub _can_write {
     substr $self->{buffer}, 0, $i, '';
   }
 
-  if(length $self->{buffer}) {                # data left to send
-    return 1;
+  return 1 if(length $self->{buffer});
+
+  # No more data left to send
+
+  if($self->{close_on_flush}) {
+    $self->_close_output_fh;
   }
 
   $self->sleeping(0);
@@ -47,6 +64,14 @@ sub _can_write {
   }
   delete $self->{out_tag};
   return 0;
+}
+
+
+sub _close_output_fh {
+  my $self = shift;
+
+  my $fh = delete $self->{fh_out};
+  close $fh;
 }
 
 
