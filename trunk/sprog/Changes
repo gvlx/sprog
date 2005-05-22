@@ -3,6 +3,8 @@ Revision history for Perl extension Sprog.
 0.09  May ?? 2005
         - added a help viewer and help text for all gears
         - implemented auto-discovery of gear classes
+        - new scheduler implementation with some API changes
+        - new gears: WriteFile, CommandFilter
         - major changes to API of PerlCode gear(s) to use overridden 'print'
 
 0.08  Mar 22 2005
