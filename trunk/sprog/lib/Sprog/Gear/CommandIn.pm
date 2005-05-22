@@ -13,8 +13,8 @@ package Sprog::Gear::CommandIn;
 use strict;
 
 use base qw(
-  Sprog::Gear
   Sprog::Gear::InputFromFH
+  Sprog::Gear
 );
 
 __PACKAGE__->declare_properties(

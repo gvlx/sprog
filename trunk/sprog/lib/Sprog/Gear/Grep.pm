@@ -14,8 +14,8 @@ package Sprog::Gear::Grep;
 use strict;
 
 use base qw(
-  Sprog::Gear
   Sprog::Gear::InputByLine
+  Sprog::Gear
 );
 
 __PACKAGE__->declare_properties(

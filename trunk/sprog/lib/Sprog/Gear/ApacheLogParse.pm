@@ -13,8 +13,8 @@ package Sprog::Gear::ApacheLogParse;
 use strict;
 
 use base qw(
-  Sprog::Gear
   Sprog::Gear::InputByLine
+  Sprog::Gear
 );
 
 use Apache::LogRegex;

@@ -15,8 +15,8 @@ use strict;
 use Sprog::PrintProxy;
 
 use base qw(
-  Sprog::Gear::PerlBase
   Sprog::Gear::InputByLine
+  Sprog::Gear::PerlBase
 );
 
 

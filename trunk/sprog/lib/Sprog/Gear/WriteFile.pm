@@ -13,8 +13,8 @@ package Sprog::Gear::WriteFile;
 use strict;
 
 use base qw(
-  Sprog::Gear
   Sprog::Gear::OutputToFH
+  Sprog::Gear
 );
 
 __PACKAGE__->declare_properties(
