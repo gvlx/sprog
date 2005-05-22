@@ -16,8 +16,6 @@ use base qw(
 );
 
 
-sub has_input { 1; }
-
 sub new {
   my $class = shift;
 
@@ -28,11 +26,11 @@ sub new {
 }
 
 
-sub prime {
+sub engage {
   my $self = shift;
 
   $self->reset;
-  $self->SUPER::prime;
+  $self->SUPER::engage;
 }
 
 

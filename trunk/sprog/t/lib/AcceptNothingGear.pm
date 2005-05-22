@@ -12,7 +12,7 @@ package AcceptNothingGear;
 
 use base qw(Sprog::Gear);
 
-sub prime {
+sub engage {
   my $self = shift;
 
   return $self->app->alert('I will not accept input!');

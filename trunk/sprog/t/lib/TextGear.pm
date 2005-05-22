@@ -19,11 +19,11 @@ __PACKAGE__->mk_accessors(qw(
 ));
 
 
-sub prime {
+sub engage {
   my $self = shift;
 
   $self->text('');
-  $self->SUPER::prime();
+  $self->SUPER::engage();
 }
 
 

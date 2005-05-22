@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 13;
 
 use File::Spec;
 
@@ -9,72 +9,65 @@ BEGIN {
   unshift @INC, File::Spec->catfile('t', 'lib');
 }
 
-use_ok('Sprog::ClassFactory');
-my $app = make_app(               # Imported from ClassFactory.pm
-  '/app'         => 'TestApp',
-  '/app/view'    => 'DummyView',
-);
+use_ok('TestApp');
+
+my $app = TestApp->make_test_app;
+
 isa_ok($app, 'TestApp', 'test app object');
 
-use_ok('LineGear');
+my($source, $sink) = $app->make_test_machine(qw(
+  MessageSource
+  LineGear
+));
 
-my $gear = LineGear->new(app => $app);
+isa_ok($sink, 'LineGear');
+isa_ok($sink, 'Sprog::Gear::InputByLine');
+isa_ok($sink, 'Sprog::Gear');
 
-isa_ok($gear, 'LineGear');
-isa_ok($gear, 'Sprog::Gear::InputByLine');
-isa_ok($gear, 'Sprog::Gear');
+$source->messages(
+  [ data => '' ],
+);
 
-$gear->prime;    # Create the incoming message queue
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 
-$gear->msg_in(data => '');
-
-$gear->turn_once;
-
-is_deeply([ $gear->lines ], [ ], "no data yet (as expected)");
+is_deeply([ $sink->lines ], [ ], "no data yet (as expected)");
 
 
-$gear->msg_in(data => "Line one\nLine two\n");
+$source->messages(
+  [ data => "Line one\nLine two\n" ],
+);
 
-$gear->turn_once;
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 
-is_deeply([ $gear->lines ], [
+is_deeply([ $sink->lines ], [
   "Line one\n",
   "Line two\n",
 ], "got the expected lines of data");
 
 
-$gear->msg_in(data => "Line three\nLine f");
+$source->messages(
+  [ data => "Line three\nLine f" ],
+  [ data => "our\n" ],
+);
 
-$gear->turn_once;
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 
-is_deeply([ $gear->lines ], [
-  "Line one\n",
-  "Line two\n",
-  "Line three\n",
-], "got the expected lines of data");
-
-
-$gear->msg_in(data => "our\nLine five");
-
-$gear->turn_once;
-
-is_deeply([ $gear->lines ], [
-  "Line one\n",
-  "Line two\n",
+is_deeply([ $sink->lines ], [
   "Line three\n",
   "Line four\n",
 ], "got the expected lines of data");
 
+$source->messages(
+  [ data => "Line three\nLine f" ],
+  [ data => "our\nLine five" ],
+  [ data => "\nLine six\n\n0" ],
+  [ data => "\n1\nTHE END!" ],
+  [ file_end => "filename.txt" ],
+);
 
-$gear->msg_in(data => "\nLine six\n\n0");
-$gear->msg_in(data => "\n1\nTHE END!");
-$gear->msg_in(file_end => "filename.txt");
+is($app->test_run_machine, '', 'run completed without timeout or alerts');
 
-$gear->turn_once;
-
-is_deeply([ $gear->lines ], [
-  "Line one\n",
-  "Line two\n",
+is_deeply([ $sink->lines ], [
   "Line three\n",
   "Line four\n",
   "Line five\n",
@@ -84,26 +77,4 @@ is_deeply([ $gear->lines ], [
   "1\n",
   "THE END!"
 ], "got the expected lines of data");
-
-
-# Now try a gear without a 'line' method
-
-use_ok('DummyGear');
-
-$gear = DummyGear->new(app => $app);
-
-isa_ok($gear, 'DummyGear');
-isa_ok($gear, 'Sprog::Gear::InputByLine');
-isa_ok($gear, 'Sprog::Gear');
-
-$gear->prime;    # Create the incoming message queue
-
-$gear->msg_in(data => "Line one\nLine two\n");
-
-$@ = '';
-eval {
-  $gear->turn_once;
-};
-like("$@", qr/Gear has no 'line' method/,
-  "correct failure mode if 'line' method not implemented");
 

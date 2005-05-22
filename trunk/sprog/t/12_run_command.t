@@ -15,27 +15,20 @@ BEGIN {
   }
 };
 
-plan tests => 23;
+plan tests => 13;
 
-use_ok('TextGear');
-use_ok('Sprog::Gear::CommandIn');
-use_ok('Sprog::ClassFactory');
+use_ok('TestApp');
 
-my $app = make_app(               # Imported from ClassFactory.pm
-  '/app'         => 'DummyApp',
-  '/app/machine' => 'DummyMachine',
-);
+my $app = TestApp->make_test_app;
 
-isa_ok($app, 'DummyApp');
+my($src, $sink) = $app->make_test_machine(qw(
+  Sprog::Gear::CommandIn
+  TextGear
+));
+is($app->alerts, '', 'no alerts while creating machine');
 
-my $machine = $app->machine;
-isa_ok($machine, 'DummyMachine');
-
-my $sink = TextGear->new(machine => $machine, app => $app);
 isa_ok($sink, 'TextGear');
 $sink->text('');
-
-my $src = Sprog::Gear::CommandIn->new(app => $app, machine => $machine);
 
 isa_ok($src, 'Sprog::Gear::CommandIn');
 isa_ok($src, 'Sprog::Gear::InputFromFH');
@@ -45,23 +38,16 @@ like($src->dialog_xml, qr{<glade-interface>.*</glade-interface>}s,
   'Glade XML looks plausible');
 
 
-$src->next($sink);
 $src->command(undef);
 
-$src->prime;
-
-like($app->alerts, qr/You must enter an input command/,
+like($app->test_run_machine, qr/You must enter an input command/,
   "correct alert generated when command undefined");
-$app->alerts('');
 
 
 $src->command('');
 
-$src->prime;
-
-like($app->alerts, qr/You must enter an input command/,
+like($app->test_run_machine, qr/You must enter an input command/,
   "correct alert generated when command blank");
-$app->alerts('');
 
 
 SKIP: {
@@ -70,51 +56,15 @@ SKIP: {
 
   $src->command(File::Spec->catfile('t', 'bogus.txt'));
 
-  $src->prime;
-
   open STDERR, '>&', $save_fd or die "$!";
 
-  like($app->alerts, qr/Can't run ".*?bogus.txt.*"/,
+  like($app->test_run_machine, qr/Can't run ".*?bogus.txt.*"/,
     "correct alert generated for bad command");
-  $app->alerts('');
 }
 
 $src->command($test_command);
 
-$sink->prime;
-$src->prime;
-
-is($app->alerts, '', "successfully started command");
-
-$src->send_data;
-
-my $io_queue = $app->io_readers || [];
-
-is(scalar(@$io_queue), 1, "one io_reader message queued");
-
-$src->send_data;
-
-is(scalar(@$io_queue), 1, "still only one io_reader message queued");
-
-my $sub = shift @$io_queue;
-is(scalar(@$io_queue), 0, "de-queued the io_reader message");
-$sub->();
-
-$src->send_data;    # Go for the EOF event
-
-is(scalar(@$io_queue), 1, "one new io_reader message queued");
-
-$sub = shift @$io_queue;
-is(scalar(@$io_queue), 0, "de-queued the io_reader message");
-$sub->();
-
-1 while($sink->turn_once);
-
-is(scalar(@$io_queue), 0, "no io_reader messages queued after EOF");
-
-is($src->fh_in, undef, "file handle has been disposed");
-
-$src->send_data;
+is($app->test_run_machine, '', "run completed without timeout or alerts");
 
 like($sink->text, qr{
   ^

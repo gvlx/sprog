@@ -89,10 +89,7 @@ sub test_run_machine {
   $self->SUPER::run_machine(@_);
   return $self->alerts unless $self->machine->running;
 
-  $self->add_timeout(2000, sub { 
-    $self->machine->_dump_machine_state('in timeout'); 
-    $self->timed_out(1); $self->quit;
-  } );
+  $self->add_timeout(2000, sub { $self->timed_out(1); $self->quit; } );
   $self->run;
 
   return $self->_test_return_value;

@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 20;
 
 use File::Spec;
 
@@ -41,7 +41,7 @@ $reader->next($sink);
 
 $reader->filename(undef);
 
-$reader->prime;
+$reader->engage;
 
 like($app->alerts, qr/You must select an input file/,
   "correct alert generated when filename undefined");
@@ -50,7 +50,7 @@ $app->alerts('');
 
 $reader->filename('');
 
-$reader->prime;
+$reader->engage;
 
 like($app->alerts, qr/You must select an input file/,
   "correct alert generated when filename blank");
@@ -59,7 +59,7 @@ $app->alerts('');
 
 $reader->filename(File::Spec->catfile('t', 'bogus.txt'));
 
-$reader->prime;
+$reader->engage;
 
 like($app->alerts, qr/Can't open ".*?bogus.txt"/,
   "correct alert generated when file does not exist");
@@ -69,8 +69,8 @@ $app->alerts('');
 
 $reader->filename(File::Spec->catfile('t', 'rgb.txt'));
 
-$sink->prime;
-$reader->prime;
+$sink->engage;
+$reader->engage;
 
 is($app->alerts, '', "successfully opened named file");
 
@@ -96,6 +96,7 @@ $sub = shift @$io_queue;
 is(scalar(@$io_queue), 0, "de-queued the io_reader message");
 $sub->();
 
+__END__
 1 while($sink->turn_once);
 
 is(scalar(@$io_queue), 0, "no io_reader messages queued after EOF");

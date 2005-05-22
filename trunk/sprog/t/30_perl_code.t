@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 24;
 
 use File::Spec;
 
@@ -52,22 +52,17 @@ isa_ok($perl->last, 'LineGear');
 
 
 $input->text($data);
-is($app->test_run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'ran successfully with no code');
 is_deeply([ $sink->lines ], \@all, 'All lines passed through by default');
 
 
 $perl->perl_code(undef);
-$sink->reset;
-is($app->test_run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'same again but with code = undef');
 is_deeply([ $sink->lines ], \@all, 'All lines passed through by default 2');
 
 
 $perl->perl_code('$_ = "*** $_"');
-$perl->prime;
-is($app->alerts, '', 'no problem compiling code');
-$sink->reset;
-
-is($app->test_run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'successfully operated on $_');
 is_deeply([ $sink->lines ], [
   "*** /etc/hosts\n",
   "*** /etc/syslog.conf\n",
@@ -78,14 +73,10 @@ is_deeply([ $sink->lines ], [
   "*** /var/log/syslog\n",
   "*** /var/lib/EtchingsLogo\n",
 ], "matched using default case-insensitive matching");
-$sink->reset;
 
 
 $perl->perl_code('print uc if /log/');
-$perl->prime;
-is($app->alerts, '', "doesn't choke on print statement");
-
-is($app->test_run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'ran ok with a print');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/ETC/SYSLOG.CONF\n",
@@ -99,7 +90,6 @@ is_deeply([ $sink->lines ], [
   "/var/log/syslog\n",
   "/var/lib/EtchingsLogo\n",
 ], "print function successfully intercepted");
-$sink->reset;
 
 
 $perl->perl_code('
@@ -110,10 +100,7 @@ $perl->perl_code('
   }
   print "Library - " if /lib/;
 ');
-$perl->prime;
-is($app->alerts, '', "more complex code snippet compiles OK");
-
-is($app->test_run_machine, '', 'run completed without timeout or alerts');
+is($app->test_run_machine, '', 'ran ok with multiple prints');
 is_deeply([ $sink->lines ], [
   "/etc/hosts\n",
   "/etc/syslog.conf\n",
@@ -125,11 +112,9 @@ is_deeply([ $sink->lines ], [
   "/var/log/syslog\n",
   "Library - /var/lib/EtchingsLogo\n",
 ], "multiple prints and 'next' play nice");
-$sink->reset;
 
 
 $perl->perl_code("\nuse Bogus::NonExistant::Module");
-$perl->prime;
-like($app->alerts, qr/Can't locate Bogus.* at your code line 2/i, 
+like($app->test_run_machine, qr/Can't locate Bogus.* at your code line 2/i, 
   'problem compiling bad code was reported correctly');
 $sink->reset;

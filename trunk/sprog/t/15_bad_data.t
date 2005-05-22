@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 26;
+use Test::More tests => 25;
 
 use File::Spec;
 use YAML;
@@ -159,8 +159,6 @@ isa_ok($reader->last, 'AcceptNothingGear', 'the last gear');
 like($app->test_run_machine, qr/^I will not accept input!/,
   'building of gear chain was successfully aborted');
 $app->alerts('');
-
-is($app->machine->turn_gears, 0, "can't turn gears unless machine is running");
 
 $app->detach_gear($last);
 ok(!$reader->next, 'last gear is no longer attached to first');
