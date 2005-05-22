@@ -136,12 +136,7 @@ sub add_gear_at_x_y {
 sub run_machine {
   my $self = shift;
 
-  my $machine = $self->machine;
-  $machine->build_gear_train or return;
-
-  $self->machine_running(1);
-
-  $machine->enable_idle_handler;
+  $self->machine->run;
 }
 
 
