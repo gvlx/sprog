@@ -20,12 +20,12 @@ use base qw(
 );
 
 
-sub prime {
+sub engage {
   my $self = shift;
 
   $self->{proxy} ||= Sprog::PrintProxy->new($self);
 
-  return $self->SUPER::prime;
+  return $self->SUPER::engage;
 }
 
 

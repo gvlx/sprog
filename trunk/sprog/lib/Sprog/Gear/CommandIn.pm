@@ -21,13 +21,13 @@ __PACKAGE__->declare_properties(
   command => '',
 );
 
-sub prime {
+sub engage {
   my($self) = @_;
 
   my $fh = $self->_run_command() or return;
   $self->fh_in($fh);
-  $self->register();
-  return $self->SUPER::prime;
+
+  return $self->SUPER::engage;
 }
 
 

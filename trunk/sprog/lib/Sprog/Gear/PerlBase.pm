@@ -11,7 +11,7 @@ __PACKAGE__->declare_properties(
 );
 
 
-sub prime {
+sub engage {
   my $self = shift;
 
   my $perl_code = $self->perl_code;
@@ -26,7 +26,7 @@ sub prime {
     }
   }
 
-  return $self->SUPER::prime;
+  return $self->SUPER::engage;
 }
 
 

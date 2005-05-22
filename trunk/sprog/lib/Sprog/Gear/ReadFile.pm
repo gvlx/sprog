@@ -22,13 +22,13 @@ __PACKAGE__->declare_properties(
 );
 
 
-sub prime {
+sub engage {
   my($self) = @_;
 
   my $fh = $self->_open_file or return;
   $self->fh_in($fh);
-  $self->register();
-  return $self->SUPER::prime;
+
+  return $self->SUPER::engage;
 }
 
 

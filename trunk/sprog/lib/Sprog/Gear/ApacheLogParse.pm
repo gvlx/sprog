@@ -23,7 +23,7 @@ __PACKAGE__->declare_properties(
   log_format => 'combined',
 );
 
-sub prime {
+sub engage {
   my $self = shift;
 
   my $parser = eval {
@@ -36,7 +36,7 @@ sub prime {
 
   $self->{parser} = $parser;
 
-  return $self->SUPER::prime;
+  return $self->SUPER::engage;
 }
 
 

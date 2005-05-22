@@ -4,6 +4,7 @@ use strict;
 
 use base qw(Class::Accessor::Fast);
 
+# TODO: remove msg_queue
 __PACKAGE__->mk_accessors(qw(
   app
   machine
@@ -37,8 +38,8 @@ sub new {
     @_,
   }, $class;
   
-  $self->{app} && weaken($self->{app});
-  $self->{machine} && weaken($self->{machine});
+  weaken($self->{app});
+  weaken($self->{machine});
 
   my $meta = $self->{app}->geardb->gear_class_info($class)
     or die "Could not find sprog-gear-metadata for $class";
@@ -116,15 +117,6 @@ sub serialise {
 }
 
 
-sub prime {
-  my($self) = @_;
-
-  $self->msg_queue([]) if$self->has_input; 
-
-  return 1;
-}
-
-
 sub last {
   my($self) = @_;
 
@@ -133,50 +125,45 @@ sub last {
 }
 
 
-sub msg_in {
-  my $self = shift;
-
-  my $queue = $self->msg_queue;
-  push @$queue, @{delete $self->{redo_msg_queue}} if $self->{redo_msg_queue};
-  push @$queue, [ @_ ];
-}
-
-
 sub requeue_message_delayed {
   my $self = shift;
 
-  #$self->{redo_msg_queue} ||= [];
-  push @{$self->{redo_msg_queue}}, [ @_ ];
+  $self->scheduler->requeue_message_delayed($self->id, @_);
 }
 
 
 sub msg_out {
   my $self = shift;
-  my $msg  = shift or return;
 
-  my $next = $self->next or return;
-
-  $self->machine->enable_idle_handler;
-  $next->msg_in($msg => @_);
+  my $sched = $self->scheduler or return;
+  $sched->msg_from($self->id, @_);
 }
 
 
-sub turn_once {
+sub scheduler {
   my $self = shift;
 
-  my $queue = $self->msg_queue;
-  return unless @$queue;
-  my $args = shift @$queue;
-  my $method = shift @$args;
-  if($self->can($method)) {
-    $self->$method(@$args);
+  if(@_) {
+    $self->{scheduler} = shift;
+    weaken $self->{scheduler};
   }
-  else {
-    $self->msg_out($method => @$args);
-  }
-  return $self->work_done(1);
+
+  return $self->{scheduler};
 }
 
+
+sub engage { 1; }
+
+sub disengage {
+  my $self = shift;
+  
+  my $sched = $self->scheduler or return;
+  $sched->disengage($self->id);
+}
+
+sub no_more_data { shift->disengage; }
+
+sub stop { return; }  # default is a NOP
 
 1;
 

@@ -28,14 +28,15 @@ __PACKAGE__->mk_accessors(qw(
 
 use Scalar::Util qw(weaken);
 
-sub prime {
+sub engage {
   my $self = shift;
 
   my $gear_view = $self->app->view->gear_view_by_id($self->id);
   $self->gear_view($gear_view);
   weaken($self->{gear_view});
   $gear_view->clear if $self->clear_on_run;
-  return $self->SUPER::prime;
+
+  return $self->SUPER::engage;
 }
 
 

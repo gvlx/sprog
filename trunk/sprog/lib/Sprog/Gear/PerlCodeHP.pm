@@ -17,12 +17,12 @@ use Sprog::PrintProxy;
 use base qw(Sprog::Gear::PerlBase);
 
 
-sub prime {
+sub engage {
   my $self = shift;
 
   $self->{proxy} ||= Sprog::PrintProxy->new($self);
 
-  return $self->SUPER::prime;
+  return $self->SUPER::engage;
 }
 
 

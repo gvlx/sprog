@@ -1,13 +1,11 @@
 package Sprog::Gear::InputFromFH;
+#TODO: cancel event on stop
 
 
 use constant BUF_SIZE => 65536;
 
 
 sub fh_in { $_[0]->{fh_in} = $_[1] if(@_ > 1); return $_[0]->{fh_in}; }
-
-sub register   { $_[0]->machine->register_data_provider($_[0]); }
-sub unregister { $_[0]->machine->unregister_data_provider($_[0]); }
 
 
 sub send_data {
@@ -31,7 +29,7 @@ sub _data_ready {
     my $filename = undef;
     $filename = $self->filename if($self->can('filename'));
     $self->msg_out(file_end => $filename);
-    $self->unregister();
+    $self->disengage();
     $self->fh_in(undef);
   }
   
@@ -54,14 +52,13 @@ Sprog::Gear::InputFromFH - a 'mixin' class for gears reading input from a file h
     Sprog::Gear::InputFromFH
   );
 
-  sub prime {
+  sub engage {
     my($self) = @_;
 
     my $fh = $self->_open_file or return;
     $self->fh_in($fh);
-    $self->register();
 
-    return $self->SUPER::prime;
+    return $self->SUPER::engage;
   }
 
 

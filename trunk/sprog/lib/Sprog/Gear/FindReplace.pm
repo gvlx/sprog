@@ -26,7 +26,7 @@ __PACKAGE__->declare_properties(
 );
 
 
-sub prime {
+sub engage {
   my $self = shift;
 
   my $pattern = $self->pattern;
@@ -50,7 +50,7 @@ sub prime {
     }
   }
 
-  return $self->SUPER::prime;
+  return $self->SUPER::engage;
 }
 
 

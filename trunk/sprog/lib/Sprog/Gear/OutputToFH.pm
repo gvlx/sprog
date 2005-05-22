@@ -29,15 +29,22 @@ sub _can_write {
 
   my $fh = $self->fh_out;
   my $i  = syswrite $fh, $self->{buffer};
-  
-  substr $self->{buffer}, 0, $i, '';
+
+  if(!defined $i) {
+    warn "Error while writing: $!\n";
+  }
+  else {
+    substr $self->{buffer}, 0, $i, '';
+  }
 
   if(length $self->{buffer}) {                # data left to send
     return 1;
   }
 
   $self->sleeping(0);
-  $self->machine->enable_idle_handler;
+  if(my $sched = $self->scheduler) {
+    $sched->schedule_main_loop;
+  }
   delete $self->{out_tag};
   return 0;
 }
@@ -57,13 +64,13 @@ Sprog::Gear::OutputToFH - a 'mixin' class for gears writing output to a file han
     Sprog::Gear::OutputToFH
   );
 
-  sub prime {
+  sub engage {
     my($self) = @_;
 
     my $fh = $self->_open_output_file or return;
     $self->fh_out($fh);
 
-    return $self->SUPER::prime;
+    return $self->SUPER::engage;
   }
 
 

@@ -24,13 +24,6 @@ __PACKAGE__->mk_accessors(qw(
 
 use Scalar::Util qw(weaken);
 
-sub prime {
-  my $self = shift;
-
-  $self->machine->register_data_provider($self);
-  return $self->SUPER::prime;
-}
-
 
 sub send_data {
   my($self, $data) = @_;
@@ -38,7 +31,7 @@ sub send_data {
   $self->msg_out(file_start => undef);
   $self->msg_out(data       => $self->text);
   $self->msg_out(file_end   => undef);
-  $self->machine->unregister_data_provider($self);
+  $self->disengage;
 }
 
 
