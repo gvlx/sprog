@@ -56,10 +56,10 @@ SKIP: {
 
   $src->command(File::Spec->catfile('t', 'bogus.txt'));
 
-  open STDERR, '>&', $save_fd or die "$!";
-
   like($app->test_run_machine, qr/Can't run ".*?bogus.txt.*"/,
     "correct alert generated for bad command");
+
+  open STDERR, '>&', $save_fd or die "$!";
 }
 
 $src->command($test_command);
