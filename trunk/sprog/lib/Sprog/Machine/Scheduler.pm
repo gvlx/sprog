@@ -77,7 +77,11 @@ sub main_loop {
 
   my $delivered = 0;
   my $sleepers  = 0;
-  my $train = $self->{gear_train};
+  my $train     = $self->{gear_train};
+
+
+  # Attempt delivery for each gear from last to first
+  
   my $i = $#$train;
   while($i >= 0) {
     my $id   = $train->[$i];
@@ -86,6 +90,9 @@ sub main_loop {
       $sleepers++;
       next;
     }
+
+    # Deliver all messages to this gear
+
     my $queue = $self->{msg_queue}->{$id} or next;
     while(@$queue) {
       my $msg = shift @$queue;
@@ -105,13 +112,28 @@ sub main_loop {
   }
   return 1 if $delivered;
 
+
+  # No messages were delivered so the idle handler is no longer required
+
   delete $self->{idle_tag};
+
+  # Remove spent gears from head of train
+
+  while(@$train) {
+    my $gear = $self->{gear_by_id}->{$train->[0]};
+    last if(!$gear->has_input or $gear->sleeping);
+    $self->disengage($train->[0]);
+  }
+
+  # Stop machine if all gears disengaged
 
   if(!@$train) {
     my $app = $self->{app} or return 0;
     $app->machine_running(0);
     return 0;
   }
+
+  # Or, ask providers to send more data
 
   if(!$sleepers) {                     # no gears with events pending
     foreach my $id (@{$self->{providers}}) {

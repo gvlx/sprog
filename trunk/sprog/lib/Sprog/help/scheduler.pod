@@ -84,6 +84,12 @@ default handler for the C<no_more_data> message simply calls C<disengage>, so
 each gear removes itself from the gear train as it gets to the end of the
 incoming data.
 
+If a gear finds itself at the head of the gear train and is not sleeping,
+(waiting on an IO event etc), then it has no hope of ever receiving messages,
+so the scheduler will disengage it.  This typically only happens to gears that
+have scheduled some action in the C<no_more_data> handler, but then failed to
+disengage themselves when that action is complete.
+
 It is also possible for a gear at any point in the gear train to disengage at
 any time.  If this happens, the scheduler will arrange for the immediate
 upstream gear to be disengaged as well, since there is nowhere for the data to
