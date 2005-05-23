@@ -12,9 +12,9 @@ package Sprog::Gear::PerlCodeHP;
 
 use strict;
 
-use Sprog::PrintProxy;
-
 use base qw(Sprog::Gear::PerlBase);
+
+use Sprog::PrintProxy;
 
 
 sub engage {
@@ -88,7 +88,7 @@ code:
 
 The default behaviour is to produce no output at all.
 
-The input record is available in the both hash C<%rec> and the hashref C<$r>
+The input record is available in both the hash C<%rec> and the hashref C<$r>
 (one is an alias for the other).  The user-supplied code should use C<print> to
 send data to the next downstream gear.
 
@@ -105,13 +105,13 @@ under the same terms as Perl itself.
 =head1 Perl Code Gear (Record to Pipe)
 
 This 'Perl Code' gear is used to transform data from the 'record' input
-connector to produce data for the 'pipe' output connector.
+connector into a form suitable for the 'pipe' output connector.
 
 The default behaviour is to produce no output at all.
 
 =head2 Properties
 
-The Read File gear has only one property - the Perl code to be run.  Type it
+The Perl Code gear has only one property - the Perl code to be run.  Type it
 in or paste it from the clipboard.
 
 =head2 Perl Wrapper
