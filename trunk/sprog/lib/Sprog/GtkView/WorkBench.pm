@@ -17,8 +17,6 @@ use Scalar::Util qw(weaken);
 use Glib qw(TRUE FALSE);
 use Gnome2::Canvas;
 
-use constant TARG_STRING  => 0;
-
 sub new {
   my $class = shift;
 
