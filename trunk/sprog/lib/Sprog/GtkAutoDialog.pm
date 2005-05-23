@@ -129,12 +129,13 @@ sub connect_behaviour {
   my($self, $widget, $behaviour, $args) = @_;
 
   if($behaviour eq 'browse_to_entry') {
-    my $target = $args;
+    my($target, $type) = split(/\s*,\s*/, $args);
+    $type ||= 'open';
     $widget->signal_connect(clicked => sub {
       my $file_chooser = Gtk2::FileChooserDialog->new(
-        'Open',
+        ucfirst($type),
         undef,
-        'open',
+        $type,
         'gtk-cancel' => 'cancel',
         'gtk-ok'     => 'ok'
       );

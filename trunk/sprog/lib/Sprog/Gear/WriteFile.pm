@@ -193,7 +193,7 @@ sub dialog_xml {
 	  </child>
 
 	  <child>
-	    <widget class="GtkButton" id="PAD.browse_to_entry(filename)">
+	    <widget class="GtkButton" id="PAD.browse_to_entry(filename,save)">
 	      <property name="visible">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="label" translatable="yes"> Browse </property>
