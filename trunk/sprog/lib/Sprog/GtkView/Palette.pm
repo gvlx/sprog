@@ -166,7 +166,7 @@ sub _build_searchbox {
   my $table = Gtk2::Table->new(1, 3, FALSE);
   
   my $entry = Gtk2::Entry->new;
-  $entry->set_width_chars(9);
+  $entry->set_width_chars(11);
   $entry->set('activates-default' => TRUE);
   $self->search_entry($entry);
   $table->attach($entry, 0, 1, 0, 1, ['expand', 'fill'], ['fill'], 4, 2);
