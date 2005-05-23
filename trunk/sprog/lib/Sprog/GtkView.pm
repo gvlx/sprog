@@ -1,6 +1,7 @@
 package Sprog::GtkView;
 
 use strict;
+use warnings;
 
 use base qw(Class::Accessor::Fast);
 
@@ -12,7 +13,7 @@ __PACKAGE__->mk_accessors(qw(
   about_class
   menubar
   toolbar
-  canvas
+  workbench
   statusbar
   palette_pane
   palette_win
@@ -26,18 +27,13 @@ use Scalar::Util qw(weaken);
 use File::Basename ();
 
 use Glib qw(TRUE FALSE);
-use Gnome2::Canvas;
-use Gtk2::SimpleMenu;
 
 use constant TARG_STRING  => 0;
 
 sub new {
   my $class = shift;
 
-  my $self = bless {
-    @_,
-    gears => {},
-  }, $class;
+  my $self = bless { @_, }, $class;
   weaken($self->{app});
 
   $self->{floating_palette} = 0;
@@ -47,19 +43,17 @@ sub new {
     '/app/view/chrome'       => 'Sprog::GtkView::Chrome',
     '/app/view/menubar'      => 'Sprog::GtkView::Menubar',
     '/app/view/toolbar'      => 'Sprog::GtkView::Toolbar',
+    '/app/view/workbench'    => 'Sprog::GtkView::WorkBench',
     '/app/view/alert_dialog' => 'Sprog::GtkView::AlertDialog',
     '/app/view/about_dialog' => 'Sprog::GtkView::AboutDialog',
     '/app/view/palette'      => 'Sprog::GtkView::Palette',
     '/app/view/help_viewer'  => 'Sprog::GtkView::HelpViewer',
-    '/app/view/gearview'     => 'Sprog::GtkGearView',
   );
 
   $self->chrome_class($app->load_class('/app/view/chrome'));
   $self->alert_class($app->load_class('/app/view/alert_dialog'));
   $self->help_class($app->load_class('/app/view/help_viewer'));
   $self->about_class($app->load_class('/app/view/about_dialog'));
-
-  $app->load_class('/app/view/gearview');
 
   $self->build_app_window;
 
@@ -77,9 +71,12 @@ sub build_app_window {
   my $vbox = Gtk2::VBox->new(FALSE, 0);
   $app_win->add($vbox);
 
+  my $hpaned = $self->palette_pane(Gtk2::HPaned->new);
+  $hpaned->pack2($self->_build_workbench, TRUE, FALSE);
+
   $vbox->pack_start($self->_build_menubar,   FALSE, TRUE, 0);
   $vbox->pack_start($self->_build_toolbar,   FALSE, TRUE, 0);
-  $vbox->pack_start($self->_build_workbench, TRUE,  TRUE, 0);
+  $vbox->pack_start($hpaned,                 TRUE,  TRUE, 0);
   $vbox->pack_start($self->_build_statusbar, FALSE, TRUE, 0);
 
   $self->set_window_title;
@@ -105,10 +102,9 @@ sub _build_menubar {
 sub _build_toolbar {
   my($self) = @_;
 
-  my $toolbar = $self->app->make_class('/app/view/toolbar', app => $self->app);
-  $self->toolbar($toolbar);
-
-  return $toolbar->widget;
+  return $self->toolbar(
+    $self->app->make_class('/app/view/toolbar', app => $self->app)
+  )->widget;
 }
 
 sub show_toolbar        { $_[0]->toolbar->widget->show                 }
@@ -125,36 +121,17 @@ sub disable_menu_item   { $_[0]->menubar->set_sensitive($_[1], FALSE); }
 sub _build_workbench {
   my($self) = @_;
 
-  my $sw = Gtk2::ScrolledWindow->new;
-  $sw->set_policy('automatic', 'automatic');
-
-  my $canvas = Gnome2::Canvas->new_aa;
-  $self->canvas($canvas);
-#  $canvas->signal_connect(size_allocate => sub { $self->_reset_canvas_scroll_region; });
-
-  $sw->add($canvas);
-
-  my $color = Gtk2::Gdk::Color->parse("#007f00");
-  $canvas->modify_bg('normal', $color);
-
-  $canvas->set_scroll_region(0, 0, 400, 300);
-
-  # Set up as target for drag-n-drop
-
-  $canvas->drag_dest_set('all', ['copy'], $self->drag_targets);
-  $canvas->signal_connect(
-    drag_data_received => sub { $self->drag_data_received(@_); }
-  );
-
-  #return $sw;
-
-  my $hpaned = Gtk2::HPaned->new;
-  $hpaned->pack2($sw, TRUE, FALSE);
-
-  $self->palette_pane($hpaned);
-
-  return $hpaned;
+  return $self->workbench(
+    $self->app->make_class(
+      '/app/view/workbench', app => $self->app, view => $self
+    )
+  )->widget;
 }
+
+sub gear_view_by_id        { shift->workbench->gear_view_by_id(@_);        }
+sub delete_gear_view_by_id { shift->workbench->delete_gear_view_by_id(@_); }
+sub add_gear_view          { shift->workbench->add_gear_view(@_);          }
+sub drop_gear              { shift->workbench->drop_gear(@_);              }
 
 
 sub _build_statusbar {
@@ -178,52 +155,9 @@ sub set_window_title {
 }
 
 
-sub _reset_canvas_scroll_region {
-  my($self) = @_;
-
-
-  my($x1, $y1, $x2, $y2);
-  while(my($id, $gv) = each %{$self->{gears}}) {
-    if(!defined($x1)) {
-      ($x1, $y1, $x2, $y2) = $gv->group->get_bounds;
-      next;
-    }
-    my($ix1, $iy1, $ix2, $iy2) = $gv->group->get_bounds;
-
-    $x1 = $ix1 - 10 if($ix1 < $x1);
-    $y1 = $iy1 - 10 if($iy1 < $y1);
-    $x2 = $ix2 + 10 if($ix2 > $x2);
-    $y2 = $iy2 + 10 if($iy2 > $y2);
-  }
-  return unless defined $x1;
-  $self->canvas->set_scroll_region($x1, $y1, $x2, $y2);
-}
-
-
 sub drag_targets {
   return {'target' => "STRING", 'flags' => ['same-app'], 'info' => TARG_STRING};
 };
-
-
-sub drag_data_received {
-  my($self, $canvas, $context, $x, $y, $data, $info, $time) = @_;
-
-  if(($data->length < 1) || ($data->format != 8)) {
-    $context->finish (0, 0, $time);
-    return
-  }
-
-  my $gear_class = $data->data;
-  $context->finish (1, 0, $time);
-
-  my $gear = $self->app->add_gear_at_x_y($gear_class, $x, $y) or return;
-  my $gearview = $self->gear_view_by_id($gear->id);
-
-  my($cx, $cy) = $canvas->window_to_world($x, $y);
-  $self->app->drop_gear($gearview, $cx, $cy);
-
-  return;
-}
 
 
 sub running {
@@ -328,19 +262,12 @@ sub _add_sprog_file_filter {
   $file_chooser->add_filter($filter);
 }
 
+
 sub turn_cogs {
   my $self = shift;
 
   return FALSE unless $self->{running};
-
-  foreach my $gear_view (values %{$self->{gears}}) {
-    my $gear = $gear_view->gear;
-    if($gear->work_done) {
-      $gear_view->turn_cog;
-      $gear->work_done(0);
-    }
-  }
-  return TRUE;
+  return $self->workbench->turn_cogs;
 }
 
 
@@ -373,7 +300,9 @@ sub confirm_yes_no {
 sub _add_palette {
   my($self) = @_;
 
-  my $palette = $self->app->make_class('/app/view/palette', app => $self->app);
+  my $palette = $self->app->make_class(
+    '/app/view/palette', app => $self->app, view => $self
+  );
   $self->palette($palette);
 
   return $self->_add_floating_palette($palette) if($self->floating_palette);
@@ -445,55 +374,6 @@ sub help_about {
   my($self, $data) = @_;
 
   $self->about_class->invoke($self->app_win, $data, $self->chrome_class);
-}
-
-
-sub add_gear_view {
-  my($self, $gear) = @_;
-
-  my $gear_view = Sprog::GtkGearView->add_gear($self->app, $self->canvas, $gear);
-  $self->gear_view_by_id($gear->id, $gear_view);
-}
-
-
-sub gear_view_by_id {
-  my $self = shift;
-  my $id   = shift;
-  $self->{gears}->{$id} = shift if(@_);
-  return $self->{gears}->{$id};
-}
-
-
-sub delete_gear_view_by_id {
-  my($self, $id) = @_;
-
-  my $gear_view = delete $self->{gears}->{$id} || return;
-  $gear_view->delete_view;
-}
-
-
-sub drop_gear {
-  my($self, $gearv, $x, $y) = @_;
-
-  my $gear = $gearv->gear;
-  my $input_type = $gear->input_type              || return;
-
-  my $target = $self->canvas->get_item_at($x, $y) || return;
-  $target = $target->parent                       || return;
-  my $tg_id = $target->get_property('user_data')  || return;
-  my $tgv = $self->gear_view_by_id($tg_id)        || return;
-  $tg_id = $tgv->gear->last->id;
-  $tgv = $self->gear_view_by_id($tg_id)           || return;
-  my $tg = $tgv->gear;
-  my $output_type = $tg->output_type              || return;
-  return unless $input_type eq $output_type;
-
-  $tg->next($gear);
-
-  $gearv->move(
-    $tg->x - $gear->x, 
-    $tg->y + $tgv->gear_height - $gear->y
-  );
 }
 
 
