@@ -56,7 +56,9 @@ sub create_window {
   $text_view->set_editable (FALSE);
   $text_view->set_cursor_visible (FALSE);
 
-  my $font_desc = Gtk2::Pango::FontDescription->from_string ("Courier 8");
+  my $font_desc = Gtk2::Pango::FontDescription->from_string(
+    "Bitstream Vera Sans Mono 9"
+  );
   $text_view->modify_font ($font_desc);
   $text_view->set_wrap_mode ('none');
 
