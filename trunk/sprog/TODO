@@ -1,16 +1,16 @@
-* ReplaceFile: implement gear
-* CSVSplit: implement gear
+* Tests for CSVSplit and PerlCodeAP
 * SelectColumns: implement gear
 * CSVCombine: implement gear
-* PerlAP: implement gear
 * PerlPA: implement gear
+* ReplaceFile: implement gear
+* CSVSplit: replace with proper implementation
 * Save view (and other) preferences, in 'Correct' way for each OS (Glib::Utils?)
 * Fix Drop Coordinates when palette is visible
 * Fix detach resulting from click-without-drag
-* Split workspace/canvas out into its own class
 * Implement a console window (capture warnings, STDERR?, exceptions)
 * PerlCode: unbind escape key from cancel (for vi users)
 * PerlCode: fixed pitch font in input box(?)
+* TextWindow - bind escape key to hide function
 * Warn about unsaved changes (before load, new or exit)
 * Palette: access help from right-click menu
 * HelpViewer: hourglass cursor when loading a topic
@@ -20,15 +20,13 @@
 * Clean up show/hide palette code to reduce coupling
 * Allow output window to 'swallow' properties dialogs for other gears (eg: text in, pattern match etc)
 * Cancel waiting (io) events on stop
-* Implement SIG_PIPE analog
-* TextWindow - bind escape key to hide function
 * File browse - remember last directory
 * Implement ApacheCustomLogParse
 * Highlight selected gear
 * Drag and drop handling for file top gear
 * Track 'Head' gear on add/delete
 * Work out why replacement syntax error causes exit
-* HelpViewer: Implement Edit menu
+* HelpViewer: Implement Edit menu (copy/paste)
 * Implement keyboard alternatives to mouse actions
 * File top gear: option to strip newlines
 * File top gear: newline: LF CRLF CR Auto
