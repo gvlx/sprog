@@ -47,7 +47,7 @@ END_PERL
 }
 
 
-sub list {
+sub row {
   my($self, $r) = @_;
 
   return unless ref $self->{perl_sub};
@@ -60,6 +60,7 @@ sub list {
 
 sub print {
   my $self = shift;
+
   $self->msg_out(data => join('', @_));
 }
 

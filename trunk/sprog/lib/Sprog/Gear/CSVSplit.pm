@@ -26,7 +26,7 @@ sub line {
   chomp $line;
   my @a = split /,/, $line;
 
-  $self->msg_out(list => \@a);
+  $self->msg_out(row => \@a);
 }
 
 1;
@@ -41,9 +41,9 @@ Sprog::Gear::CSVSplit - a naive CSV parser
 =head1 DESCRIPTION
 
 This is a I<very> naive CSV parser that takes each line from the input
-connector and generates a 'list' event on the output connector.  It doesn't
-handle quoting, escaping or embedded newlines.  It will be replaced with a
-more capable version soon.
+connector and generates a 'row' event on the list output connector.  It doesn't
+handle quoting, escaping or embedded newlines.  It will be replaced with a more
+capable version soon.
 
 =head1 COPYRIGHT 
 
