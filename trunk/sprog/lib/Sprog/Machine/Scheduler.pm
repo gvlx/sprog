@@ -121,7 +121,7 @@ sub main_loop {
 
   while(@$train) {
     my $gear = $self->{gear_by_id}->{$train->[0]};
-    last if(!$gear->has_input or $gear->sleeping);
+    last if($gear->can('send_data') or $gear->sleeping);
     $self->disengage($train->[0]);
   }
 
