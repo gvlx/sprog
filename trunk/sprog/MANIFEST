@@ -6,6 +6,7 @@ lib/Sprog/Gear.pm
 lib/Sprog/Gear/ApacheLogParse.pm
 lib/Sprog/Gear/CommandFilter.pm
 lib/Sprog/Gear/CommandIn.pm
+lib/Sprog/Gear/CSVSplit.pm
 lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
 lib/Sprog/Gear/InputByLine.pm
@@ -14,6 +15,7 @@ lib/Sprog/Gear/LowerCase.pm
 lib/Sprog/Gear/OutputToFH.pm
 lib/Sprog/Gear/PerlBase.pm
 lib/Sprog/Gear/PerlCode.pm
+lib/Sprog/Gear/PerlCodeAP.pm
 lib/Sprog/Gear/PerlCodeHP.pm
 lib/Sprog/Gear/ReadFile.pm
 lib/Sprog/Gear/TextInput.pm
@@ -34,6 +36,7 @@ lib/Sprog/GtkView/HelpViewer.pm
 lib/Sprog/GtkView/Menubar.pm
 lib/Sprog/GtkView/Palette.pm
 lib/Sprog/GtkView/Toolbar.pm
+lib/Sprog/GtkView/WorkBench.pm
 lib/Sprog/help/build_machine.pod
 lib/Sprog/help/connectors.pod
 lib/Sprog/help/filter_gears.pod
@@ -65,6 +68,7 @@ t/14_machine.t
 t/15_bad_data.t
 t/16_scheduler.t
 t/17_write_file.t
+t/18_command_filter.t
 t/20_line_input.t
 t/22_pattern_match.t
 t/24_find_repl.t
