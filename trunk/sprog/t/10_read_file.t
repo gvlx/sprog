@@ -9,7 +9,7 @@ BEGIN {
   unshift @INC, File::Spec->catfile('t', 'lib');
 }
 
-use_ok('TextGear');
+use_ok('TextSink');
 use_ok('Sprog::Gear::ReadFile');
 use_ok('Sprog::ClassFactory');
 
@@ -23,8 +23,8 @@ isa_ok($app, 'DummyApp');
 my $machine = $app->machine;
 isa_ok($machine, 'DummyMachine');
 
-my $sink = TextGear->new(machine => $machine, app => $app);
-isa_ok($sink, 'TextGear');
+my $sink = TextSink->new(machine => $machine, app => $app);
+isa_ok($sink, 'TextSink');
 $sink->text('');
 
 my $reader = Sprog::Gear::ReadFile->new(app => $app, machine => $machine);

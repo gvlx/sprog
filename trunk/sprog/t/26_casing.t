@@ -16,7 +16,7 @@ my $app = TestApp->make_test_app;
 my($input, $caser, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::TextInput
   Sprog::Gear::UpperCase
-  TextGear
+  TextSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
@@ -26,7 +26,7 @@ isa_ok($input, 'Sprog::Gear', 'input gear also');
 isa_ok($caser, 'Sprog::Gear::UpperCase', 'transform gear');
 isa_ok($caser, 'Sprog::Gear', 'transform gear also');
 
-isa_ok($sink,  'TextGear', 'output gear');
+isa_ok($sink,  'TextSink', 'output gear');
 
 
 my $data = "Line One\nLine Two\n";
@@ -52,7 +52,7 @@ like($sink->text, qr/LINE ONE\s+LINE TWO/s,
 ($input, $caser, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::TextInput
   Sprog::Gear::LowerCase
-  TextGear
+  TextSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 

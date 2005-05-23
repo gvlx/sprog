@@ -30,7 +30,7 @@ my($input, $parser, $perl, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::TextInput
   Sprog::Gear::ApacheLogParse
   Sprog::Gear::PerlCodeHP
-  LineGear
+  LineSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
@@ -45,7 +45,7 @@ like($parser->dialog_xml, qr{<glade-interface>.*</glade-interface>}s,
   'Glade XML looks plausible');
 is($parser->log_format, 'combined', "default log format is 'combined'");
 
-isa_ok($sink, 'LineGear', 'output gear');
+isa_ok($sink, 'LineSink', 'output gear');
 
 isa_ok($perl, 'Sprog::Gear::PerlCodeHP', 'perl gear');
 isa_ok($perl, 'Sprog::Gear');

@@ -1,4 +1,4 @@
-package LineGear;
+package LineSink;
 
 =begin sprog-gear-metadata
 

@@ -1,4 +1,4 @@
-package TextGear;
+package TextSink;
 
 =begin sprog-gear-metadata
 

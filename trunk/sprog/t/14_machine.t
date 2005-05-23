@@ -27,14 +27,14 @@ my($reader, $grep, $case, $text) = $app->make_test_machine(qw(
   Sprog::Gear::ReadFile
   Sprog::Gear::Grep
   Sprog::Gear::UpperCase
-  TextGear
+  TextSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
 isa_ok($reader, 'Sprog::Gear::ReadFile');
 isa_ok($grep,   'Sprog::Gear::Grep');
 isa_ok($case,   'Sprog::Gear::UpperCase');
-isa_ok($text,   'TextGear');
+isa_ok($text,   'TextSink');
 
 like($app->test_run_machine, qr/^You must select an input file\s+<undef>/s,
   'correct alerts generated from unconfigured ReadFile gear');
@@ -83,7 +83,7 @@ ok(-f $test_file, "file was re-written successfully");
 ($grep) = grep $_->isa('Sprog::Gear::Grep'), values %{$machine->parts};
 ok(defined($grep), 'machine contains the grep gear');
 
-($text) = grep $_->isa('TextGear'), values %{$machine->parts};
+($text) = grep $_->isa('TextSink'), values %{$machine->parts};
 ok(defined($text), 'machine contains the text gear');
 
 $grep->pattern('00FF');

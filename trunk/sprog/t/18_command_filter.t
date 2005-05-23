@@ -12,14 +12,14 @@ BEGIN {
 use_ok('TestApp');
 use_ok('Sprog::Gear::TextInput');
 use_ok('Sprog::Gear::CommandFilter');
-use_ok('LineGear');
+use_ok('LineSink');
 
 my $app = TestApp->make_test_app;
 
 my($src, $filter, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::TextInput
   Sprog::Gear::CommandFilter
-  LineGear
+  LineSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 

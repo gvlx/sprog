@@ -21,7 +21,7 @@ my $app = TestApp->make_test_app;
 my($reader, $subst, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::ReadFile
   Sprog::Gear::FindReplace
-  LineGear
+  LineSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
@@ -41,7 +41,7 @@ is($subst->pattern, '', 'default pattern is blank');
 is($subst->replacement, '', 'default replacement is blank');
 
 
-isa_ok($subst->last, 'LineGear', 'output gear');
+isa_ok($subst->last, 'LineSink', 'output gear');
 
 $reader->filename($data_file);
 is($app->test_run_machine, '', 'run completed without timeout or alerts');

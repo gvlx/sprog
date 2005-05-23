@@ -23,11 +23,11 @@ my $app = TestApp->make_test_app;
 
 my($src, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::CommandIn
-  TextGear
+  TextSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
-isa_ok($sink, 'TextGear');
+isa_ok($sink, 'TextSink');
 $sink->text('');
 
 isa_ok($src, 'Sprog::Gear::CommandIn');

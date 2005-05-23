@@ -17,10 +17,10 @@ isa_ok($app, 'TestApp', 'test app object');
 
 my($source, $sink) = $app->make_test_machine(qw(
   MessageSource
-  LineGear
+  LineSink
 ));
 
-isa_ok($sink, 'LineGear');
+isa_ok($sink, 'LineSink');
 isa_ok($sink, 'Sprog::Gear::InputByLine');
 isa_ok($sink, 'Sprog::Gear');
 

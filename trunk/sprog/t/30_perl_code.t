@@ -25,14 +25,14 @@ my @all = $data =~ /(.*?\n)/g;
 
 use_ok('TestApp');
 use_ok('Sprog::Gear::PerlCode');
-use_ok('LineGear');
+use_ok('LineSink');
 
 my $app = TestApp->make_test_app;
 
 my($input, $perl, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::TextInput
   Sprog::Gear::PerlCode
-  LineGear
+  LineSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
@@ -48,7 +48,7 @@ like($perl->dialog_xml, qr{<glade-interface>.*</glade-interface>}s,
   'Glade XML looks plausible');
 is($perl->perl_code, '', 'default Perl code is blank');
 
-isa_ok($perl->last, 'LineGear');
+isa_ok($perl->last, 'LineSink');
 
 
 $input->text($data);

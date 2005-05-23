@@ -22,7 +22,7 @@ my $app = TestApp->make_test_app;
 my($source, $filter, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::TextInput
   Sprog::Gear::UpperCase
-  TextGear
+  TextSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
@@ -122,7 +122,7 @@ $app = TestApp->make_test_app;
 ($source, $filter, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::TextInput
   Sprog::Gear::UpperCase
-  TextGear
+  TextSink
 ));
 $sched = $app->factory->make_class('/app/machine/scheduler', $source);
 isa_ok($sched, 'Sprog::Machine::Scheduler', 'second scheduler object');

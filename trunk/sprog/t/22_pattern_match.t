@@ -22,11 +22,11 @@ my $app = TestApp->make_test_app;
 my($reader, $grep, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::ReadFile
   Sprog::Gear::Grep
-  LineGear
+  LineSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
-isa_ok($sink, 'LineGear');
+isa_ok($sink, 'LineSink');
 isa_ok($grep, 'Sprog::Gear::Grep');
 
 ok($grep->has_input, 'has input');
@@ -36,7 +36,7 @@ like($grep->dialog_xml, qr{<glade-interface>.*</glade-interface>}s,
   'Glade XML looks plausible');
 ok($grep->ignore_case, 'case-insensitive matching defaults on');
 ok(!$grep->invert_match, 'inverted matching defaults off');
-isa_ok($grep->last, 'LineGear');
+isa_ok($grep->last, 'LineSink');
 
 my $ref = $grep->serialise;
 is($ref->{NEXT}, $sink->id, 'successfully got next gear id for serialising');
