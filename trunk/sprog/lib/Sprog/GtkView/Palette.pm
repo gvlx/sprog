@@ -8,6 +8,7 @@ use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw(
   app
+  view
   widget
   input_combo
   output_combo
@@ -38,12 +39,15 @@ sub new {
 
   my $self = bless { @_, filtered_list => [] }, $class;
   weaken($self->{app});
+  weaken($self->{view});
 
   if(!@connector_types) {
     @connector_types = $self->{app}->geardb->connector_types;
   }
 
-  $mini_icons = Sprog::GtkView::Chrome::mini_icons() if !defined($mini_icons);
+  unless(defined($mini_icons)) {
+    $mini_icons = $self->{view}->chrome_class->mini_icons();
+  }
 
   $self->_build_widget;
 
@@ -75,7 +79,7 @@ sub _apply_filter {
       $model->set($iter, COL_GEAR_TITLE, $_->{title});
     }
     $self->gearlist->drag_source_set(
-      ['button1_mask'], ['copy'], Sprog::GtkView::drag_targets()
+      ['button1_mask'], ['copy'], $self->view->drag_targets()
     );
   }
   else {

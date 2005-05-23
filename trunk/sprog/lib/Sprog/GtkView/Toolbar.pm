@@ -11,7 +11,7 @@ __PACKAGE__->mk_accessors(qw(
 
 use Scalar::Util qw(weaken);
 
-use Gtk2 '-init';
+use Gtk2;
 use Glib qw(TRUE FALSE);
 
 use constant APPEND => -1;
