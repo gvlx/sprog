@@ -1,9 +1,15 @@
-* Tests for CSVSplit and PerlCodeAP
+* Document connector APIs
+* Document life-cycle of a gear
+* GtkAutoDialog: add support for validate method
 * SelectColumns: implement gear
 * CSVCombine: implement gear
 * PerlPA: implement gear
 * ReplaceFile: implement gear
+* RetrieveURL: implement gear
+* DBIQuery: implement gear
+* ListToRec: implement gear (first row = field names)
 * CSVSplit: replace with proper implementation
+* CommandFilter: harvest child zombies
 * Save view (and other) preferences, in 'Correct' way for each OS (Glib::Utils?)
 * Fix Drop Coordinates when palette is visible
 * Fix detach resulting from click-without-drag
@@ -12,7 +18,7 @@
 * PerlCode: fixed pitch font in input box(?)
 * TextWindow - bind escape key to hide function
 * Warn about unsaved changes (before load, new or exit)
-* Palette: access help from right-click menu
+* Palette: access help from right-click menu / F1?
 * HelpViewer: hourglass cursor when loading a topic
 * HelpViewer: support links within a page
 * HelpViewer: add image support (eg: pictures of the connector types)
