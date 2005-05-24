@@ -27,8 +27,9 @@ __PACKAGE__->mk_accessors(qw(
 our @ISA;
 use Scalar::Util qw(weaken);
 
-sub has_input     {  return defined shift->input_type;  }
-sub has_output    {  return defined shift->output_type; }
+sub has_input     { return defined shift->input_type;  }
+sub has_output    { return defined shift->output_type; }
+sub alert         { shift->app->alert(@_);             }
 
 sub new {
   my $class = shift;
