@@ -16,3 +16,4 @@ blib
 ^cover_db
 ^runtest
 ^t/output.txt$
+^ptst$
