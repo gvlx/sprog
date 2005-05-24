@@ -9,7 +9,7 @@ use Sprog::GtkAutoDialog;
 use constant gBW  => 300;   # Gear Block Width
 use constant gBH  =>  40;   # Gear Block Height
 use constant gCW  =>  24;   # Gear Connector Width
-use constant gCH  =>  16;   # Gear Connector Height
+use constant gCH  =>  12;   # Gear Connector Height
 use constant gCR  =>   8;   # Gear Corner Radius
 
 use constant gIN  => 0;
@@ -21,13 +21,13 @@ my %offsets_by_type = (
 
   P => [
          [
-           [0,          gCH * 0.75],
-           [gCW,        gCH * 0.75],
+           [0,          gCH],
+           [gCW,        gCH],
            [gCW,        0],
          ],
          [
-           [0,          gCH * 0.75],
-           [gCW * -1,   gCH * 0.75],
+           [0,          gCH],
+           [gCW * -1,   gCH],
            [gCW * -1,   0],
          ],
        ],
@@ -55,15 +55,15 @@ my %offsets_by_type = (
 
   H => [
          [
-           [0,          gCH/2],
-           [gCW/2,      gCH],
-           [gCW,        gCH/2],
+           [0,          gCH * 0.6],
+           [gCW/2,      gCH * 1.3],
+           [gCW,        gCH * 0.6],
            [gCW,        0],
          ],
          [
-           [0,          gCH/2],
-           [gCW/2 * -1, gCH],
-           [gCW * -1,   gCH/2],
+           [0,          gCH * 0.6],
+           [gCW/2 * -1, gCH * 1.3],
+           [gCW * -1,   gCH * 0.6],
            [gCW * -1,   0],
          ],
        ],
