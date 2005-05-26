@@ -36,7 +36,8 @@ sub invoke {
 
   while(my $resp = $dialog->run) {
     if($resp eq 'help') {
-      warn "Looking for help\n";
+      my $topic = $self->gearview->gear_class;
+      $self->app->show_help($topic);
       next;
     }
     $self->save if $resp eq 'ok';

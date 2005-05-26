@@ -303,6 +303,8 @@ sub auto_properties {
 }
 
 
+sub gear_class { return ref shift->gear; }
+
 sub dialog_xml {
   my $self = shift;
 
