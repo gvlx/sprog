@@ -5,6 +5,7 @@ package Sprog::Gear::SelectColumns;
   title: Select Columns
   type_in: A
   type_out: A
+  keywords: reorder fields
 
 =end sprog-gear-metadata
 
