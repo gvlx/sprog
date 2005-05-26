@@ -27,13 +27,10 @@ isa_ok($stripper, 'Sprog::Gear',                  'filter gear also');
 ok($stripper->has_input, 'has input');
 ok($stripper->has_output, 'has output');
 is($stripper->input_type,  'A', 'correct input connector type (list)');
-is($stripper->output_type, 'A', 'correct input connector type (list)');
+is($stripper->output_type, 'A', 'correct output connector type (list)');
 is($stripper->title, 'Strip Whitespace', 'title looks ok');
-TODO: {
-      local $TODO = 'Dialog not defined yet';
 like($stripper->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
   'Glade XML looks plausible');
-}
 is($stripper->strip_leading, 1, 'leading whitespace is stripped by default');
 is($stripper->strip_trailing, 1, 'trailing whitespace is stripped by default');
 is($stripper->collapse_spaces, 0, 'multiple spaces are not collapsed by default');
