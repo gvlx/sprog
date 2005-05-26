@@ -34,8 +34,13 @@ sub invoke {
 
   my $dialog = $self->build_dialog || return;
 
-  if($dialog->run eq 'ok') {
-    $self->save
+  while(my $resp = $dialog->run) {
+    if($resp eq 'help') {
+      warn "Looking for help\n";
+      next;
+    }
+    $self->save if $resp eq 'ok';
+    last;
   }
 
   $dialog->destroy;
