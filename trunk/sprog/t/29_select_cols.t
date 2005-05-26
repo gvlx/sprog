@@ -27,7 +27,7 @@ isa_ok($cols, 'Sprog::Gear',                'filter gear also');
 ok($cols->has_input, 'has input');
 ok($cols->has_output, 'has output');
 is($cols->input_type,  'A', 'correct input connector type (list)');
-is($cols->output_type, 'A', 'correct input connector type (list)');
+is($cols->output_type, 'A', 'correct output connector type (list)');
 is($cols->title, 'Select Columns', 'title looks ok');
 like($cols->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
   'Glade XML looks plausible');
