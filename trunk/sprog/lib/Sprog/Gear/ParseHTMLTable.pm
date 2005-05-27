@@ -42,15 +42,22 @@ sub file_end {
   return unless length $self->{html};
 
   my $doc = eval {
+    local($^W) = 0;
+
     my $parser = XML::LibXML->new();
+    $parser->recover(1);
     $parser->parse_html_string($self->{html});
   };
   return $self->alert('Error parsing HTML', "$@") if $@;
 
-  my($table) = $doc->findnodes('//table');
+  my $path = $self->selector;
+  if($path =~ /^\d+$/) {
+    $path = "//table[$path]";
+  }
+  my($table) = $doc->findnodes($path);
   return unless $table;
 
-  foreach my $tr ($table->findnodes('./tr')) {
+  foreach my $tr ($table->findnodes('./tr|./*/tr')) {
     my @cells;
     foreach my $td ($tr->findnodes('./th|./td')) {
       push @cells, $td->to_literal;
