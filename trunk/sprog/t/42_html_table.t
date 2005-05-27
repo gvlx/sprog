@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More 'no_plan';# tests => 31;
+use Test::More tests => 27;
 
 use File::Spec;
 
@@ -14,24 +14,25 @@ use_ok('Sprog::Gear::ParseHTMLTable');
 
 my $app = TestApp->make_test_app;
 
-my($source, $stripper, $sink) = $app->make_test_machine(qw(
+my($source, $parser, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::TextInput
   Sprog::Gear::ParseHTMLTable
   ListSink
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
-isa_ok($stripper, 'Sprog::Gear::ParseHTMLTable', 'filter gear');
-isa_ok($stripper, 'Sprog::Gear',                 'filter gear also');
+isa_ok($parser, 'Sprog::Gear::ParseHTMLTable', 'filter gear');
+isa_ok($parser, 'Sprog::Gear',                 'filter gear also');
 
-ok($stripper->has_input, 'has input');
-ok($stripper->has_output, 'has output');
-is($stripper->input_type,  'P', 'correct input connector type (pipe)');
-is($stripper->output_type, 'A', 'correct output connector type (list)');
-is($stripper->title, 'Parse HTML Table', 'title looks ok');
-like($stripper->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
+ok($parser->has_input, 'has input');
+ok($parser->has_output, 'has output');
+is($parser->input_type,  'P', 'correct input connector type (pipe)');
+is($parser->output_type, 'A', 'correct output connector type (list)');
+is($parser->title, 'Parse HTML Table', 'title looks ok');
+like($parser->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
   'Glade XML looks plausible');
-is($stripper->selector, '1', "default table selector is '1'");
+ok(!$parser->no_properties, "filter gear has properties");
+is($parser->selector, '1', "default table selector is '1'");
 
 
 $source->text('');
@@ -218,7 +219,7 @@ $html = <<'EOF';
              <tr>
                <td>Marketing</td>
                <td>
-                 Penthouse Suite
+                 Penthouse Suite<br>
                  Strump Tower<br>
                  8650 4th Avenue<br>
                  Big City
@@ -238,12 +239,22 @@ $html = <<'EOF';
 EOF
 
 $source->text($html);
-$stripper->selector(q{//table[./*[1]/*[position() = 1 and contains(text(), 'Division')]]});
+$parser->selector(q{//table[./tr[1]/*[1 and contains(text(), 'Division')]]});
 
 is($app->test_run_machine, '', "successfully parsed some rather unpleasant HTML");
 
 is_deeply([ $sink->rows ], [
-    [ 'x' ],
+    [ 'Division', 'Address', 'Phone' ],
+    [ 'Manufacturing', '
+                 2130 Franklin Drive
+                 Maketon
+               ', '555-1234' ],
+    [ 'Marketing', '
+                 Penthouse Suite
+                 Strump Tower
+                 8650 4th Avenue
+                 Big City
+               ', '555-4321' ],
   ],
-  "successfully extracted second table using a numeric selector");
+  "extracted contents of table selected using a XPath expression");
 

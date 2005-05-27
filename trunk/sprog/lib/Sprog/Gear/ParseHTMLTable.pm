@@ -5,7 +5,6 @@ package Sprog::Gear::ParseHTMLTable;
   title: Parse HTML Table
   type_in: P
   type_out: A
-  no_properties: 1
 
 =end sprog-gear-metadata
 
@@ -65,7 +64,6 @@ sub file_end {
     next unless @cells;
     $self->msg_out(row => \@cells);
   }
-
 
 }
 
@@ -234,7 +232,8 @@ Sprog::Gear::ParseHTMLTable - extract rows of data from an HTML table
 
 =head1 DESCRIPTION
 
-Reads an HTML document from the pipe input connector and 
+Transforms an HTML table into a a series of output 'row' events corresponding
+to the contents of each cell in each row of the table.
 
 =head1 COPYRIGHT 
 
@@ -248,14 +247,80 @@ under the same terms as Perl itself.
 
 =head1 Parse HTML Table Gear
 
-This gear reads an HTML document from its 'pipe' input connector, extracts the
-contents of table cells in the document and sends them out the 'list' connector
-as rows of field values.
+This gear reads an HTML document from its 'pipe' input connector and identifies
+one C<< <table> >> in the document (see below for the table selector property).
+The contents of the table are then sent out the 'list' connector as rows of
+field values.
 
 =head2 Properties
 
-This gear has only one property - an identifier for the table to parse.
+This gear has only one property - the table selector.  The default value is
+'1' which means the first table in the document.  You can use a different
+numeric index or an XPath expression as shown in the examples below.
 
-TODO: explain what this means.
+=head2 Selector Cookbook
+
+The table selector can be either a number, or an XPath expression.  XPath is
+very powerful, but it can be a bit intimidating so here are some examples to
+get you going.
+
+If your HTML document contained a table tag like this:
+
+  <table id='products'>
+
+You could select that table with this XPath expression:
+
+  //table[@id='products']
+
+In English, we'd read that expression as "I<find all C<< <table> >> elements at
+any level of the document, which contain an 'id' attribute with the value
+'products'>".  Although the expression will select all tables which match, this
+gear only reads the first one.
+
+If the table you were interested did not have an 'id' attribute, but was
+contained in a C<< <div> >> that had a 'class' of 'content', you could select
+the table with this expression:
+
+  //div[@class='content']/table
+
+In English, we'd read that as "I<find all C<< <table> >> elements contained
+directly inside C<< <div> >> elements that have a 'class' attribute with the
+value 'content'>".
+
+It is also possible to select elements based on the text contained within them.
+For example, the first cell in the first row of a table might be a C<< <th> >>
+containing the text 'Surname'.  We could identify a C<< <th> >> containing that
+text with this expression:
+
+  //th[contains(text(), 'Surname')]
+
+but we're only interested in the one that's the first in the row:
+
+  //th[position() = 1 and contains(text(), 'Surname')]
+
+or, since the "position() =" bit is optional:
+
+  //th[1 and contains(text(), 'Surname')]
+
+but we're only interested in the one that's in the first row:
+
+  //tr[1]/th[1 and contains(text(), 'Surname')]
+
+but that selects the C<< <th> >> and we actually want the C<< <table> >> that
+contains it.  So the final selector would look like this:
+
+  //table[./tr[1]/th[1 and contains(text(), 'Surname')]]
+
+In English: "I<the table in which the first C<< <th> >> in the first C<< <tr> >>
+contains the text 'Surname'>".
+
+Note: text matches in XPath are case sensitive and current versions of XPath
+don't really support case-insensitive matching.
+
+=head2 See Also:
+
+For an XPath tutorial and workshop: L<http://www.zvon.org/xxl/XPathTutorial/General/examples.html>.
+
+
 
 =end :sprog-help-text
