@@ -430,7 +430,9 @@ sub on_clicked {
   my $link = $self->hovering or return FALSE;
 
   if($link->{link_type} ne 'pod') {
-    $self->status_message("'$link->{link_type}' links not implemented");
+    $self->status_message(
+      "'$link->{link_type}' links not implemented - try copy and paste"
+    );
     return FALSE;
   }
   
