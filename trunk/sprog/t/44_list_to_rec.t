@@ -28,7 +28,7 @@ ok($filter->has_input, 'has input');
 ok($filter->has_output, 'has output');
 is($filter->input_type,  'A', 'correct input connector type (list)');
 is($filter->output_type, 'H', 'correct output connector type (record)');
-is($filter->title, 'List To Record', 'title looks ok');
+is($filter->title, 'List to Record', 'title looks ok');
 ok($filter->no_properties, "filter gear has no properties");
 
 $source->messages(

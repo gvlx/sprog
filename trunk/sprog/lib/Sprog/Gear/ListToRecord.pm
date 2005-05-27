@@ -2,7 +2,7 @@ package Sprog::Gear::ListToRecord;
 
 =begin sprog-gear-metadata
 
-  title: List To Record
+  title: List to Record
   type_in: A
   type_out: H
   no_properties: 1
@@ -62,7 +62,7 @@ under the same terms as Perl itself.
 
 =begin :sprog-help-text
 
-=head1 List To Record Gear
+=head1 List to Record Gear
 
 This gear converts rows of data into records.  It assumes the first row
 contains column headings and uses the values as field names.  Input comes from
