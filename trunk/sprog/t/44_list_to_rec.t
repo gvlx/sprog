@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 17;
 
 use File::Spec;
 
@@ -47,6 +47,25 @@ is_deeply([ $sink->records ], [
     {
       firstname => 'Jane',
       surname   => 'Smith',
+    },
+  ], "got expected output");
+
+$source->messages(
+  [ row => [ 'Surname', 'First Name' ] ],
+  [ row => [ qw(Bloggs Joe) ] ],
+  [ row => [ qw(Smith Jane) ] ],
+);
+
+is($app->test_run_machine, '', 'ran machine without errors');
+
+is_deeply([ $sink->records ], [
+    {
+      first_name => 'Joe',
+      surname    => 'Bloggs',
+    },
+    {
+      first_name => 'Jane',
+      surname    => 'Smith',
     },
   ], "got expected output");
 

@@ -34,7 +34,7 @@ sub row {
     $self->msg_out(record => \%rec);
   }
   else {
-    $self->{_keys} = [ @$row ];
+    $self->{_keys} = [ map { s/\W+/_/gs; lc($_) } @$row ];
   }
 }
 
@@ -67,6 +67,17 @@ under the same terms as Perl itself.
 This gear converts rows of data into records.  It assumes the first row
 contains column headings and uses the values as field names.  Input comes from
 a 'list' connector and output goes to a 'record' connector.
+
+The values in the first row undergo some cleanup before they're used as field
+names.  Firstly, all the letters are converted to lowercase, and then any
+non-alphanumeric characters are converted to a single underscore ('_').  Here
+are some examples to show you what to expect:
+
+  Column Heading     Field Name      Comment
+  ================   =============   ==========================
+  Surname            surname         converted to lower case
+  First Name         first_name      space converted to _
+  House & Street     house_street    ' & ' converted to _
 
 =head2 Properties
 
