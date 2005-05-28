@@ -62,8 +62,8 @@ sub _build_gear_train {
 
   foreach my $id (reverse @$gear_train) {
     my $gear = $gear_by_id->{$id};
-    $msg_queue->{$id} = $gear->msg_queue([]) if $gear->has_input;
-    $redo_queue->{$id} = []                  if $gear->has_input;
+    $msg_queue->{$id}  = [] if $gear->has_input;
+    $redo_queue->{$id} = [] if $gear->has_input;
     $gear->scheduler($self);
     $gear->engage or return;
   }
@@ -171,6 +171,14 @@ sub requeue_message_delayed {
   my $redo_queue = $self->{redo_queue}->{$src_id} or return;
   push @$redo_queue, [ @_ ], @$msg_queue;
   @$msg_queue = ();
+}
+
+
+sub msg_queue {
+  my $self   = shift;
+  my $src_id = shift;
+
+  return $self->{msg_queue}->{$src_id};
 }
 
 

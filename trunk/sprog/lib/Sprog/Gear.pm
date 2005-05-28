@@ -18,7 +18,6 @@ __PACKAGE__->mk_accessors(qw(
   next
   x
   y
-  msg_queue
   work_done
   sleeping
 ));
@@ -138,6 +137,14 @@ sub msg_out {
 
   my $sched = $self->scheduler or return;
   $sched->msg_from($self->id, @_);
+}
+
+
+sub msg_queue {
+  my $self = shift;
+
+  my $sched = $self->scheduler or return;
+  $sched->msg_queue($self->id);
 }
 
 
