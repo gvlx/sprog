@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 29;
 
 use File::Spec;
 
@@ -237,6 +237,20 @@ $html = <<'EOF';
 </body>
 </html>
 EOF
+
+$source->text($html);
+$parser->selector('3');
+
+is($app->test_run_machine, '', "successfully parsed some rather unpleasant HTML");
+
+is_deeply([ $sink->rows ], [
+    [ 'Product Name', 'Part Number', 'Qty' ],
+    [ 'Umbrella', '123-4567-890', '80' ],
+    [ 'Saw Horse', '123-4567-891', '9871' ],
+    [ 'Ballpoint Pen', '123-4567-892', '1' ],
+  ],
+  "extracted contents of nested table using a numeric selector");
+
 
 $source->text($html);
 $parser->selector(q{//table[./tr[1]/*[1 and contains(text(), 'Division')]]});

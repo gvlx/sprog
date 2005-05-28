@@ -49,11 +49,13 @@ sub file_end {
   };
   return $self->alert('Error parsing HTML', "$@") if $@;
 
-  my $path = $self->selector;
+  my $path  = $self->selector;
+  my $index = 0;
   if($path =~ /^\d+$/) {
-    $path = "//table[$path]";
+    $index = $path - 1;
+    $path = '//table';
   }
-  my($table) = $doc->findnodes($path);
+  my $table = ($doc->findnodes($path))[$index];
   return unless $table;
 
   foreach my $tr ($table->findnodes('./tr|./*/tr')) {
