@@ -51,7 +51,7 @@ under the same terms as Perl itself.
 
 =head1 List to CSV Gear
 
-This gears takes rows of input data from the 'list' connector and writes lines
+This gear takes rows of input data from the 'list' connector and writes lines
 of data in CSV (comma-separated values) format out the 'pipe' connector.
 
 =head2 Properties
