@@ -1,7 +1,7 @@
 =head1 The Sprog Scheduler
 
-The L<Sprog::Machine> class implements a simple scheduler based around the Gtk
-event loop.
+The L<Sprog::Machine::Scheduler> class implements a simple scheduler based
+around the Gtk event loop.
 
 The scheduler is used  to handle the messy details of running a machine.  These
 details start with the initialisation, proceed to the passing and processing of
