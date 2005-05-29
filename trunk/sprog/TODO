@@ -1,13 +1,10 @@
-* Document connector APIs
-* Document life-cycle of a gear
+* HelpViewer: remember scroll-point when going 'back'
+* Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
-* SelectColumns: implement gear
-* CSVCombine: implement gear
 * PerlPA: implement gear
 * ReplaceFile: implement gear
-* RetrieveURL: implement gear
+* RetrieveURL: Do a proper implementation
 * DBIQuery: implement gear
-* ListToRec: implement gear (first row = field names)
 * CSVSplit: replace with proper implementation
 * CommandFilter: harvest child zombies
 * Save view (and other) preferences, in 'Correct' way for each OS (Glib::Utils?)
