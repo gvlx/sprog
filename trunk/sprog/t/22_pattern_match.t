@@ -1,14 +1,5 @@
 use strict;
-use warnings;
-
-use Test::More tests => 22;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
-
+use Sprog::TestHelper tests => 22;
 
 my $data_file = File::Spec->catfile('t', 'files.txt');
 open my $fh, '<', $data_file or die "open($data_file): $!";

@@ -1,13 +1,5 @@
 use strict;
-use warnings;
-
-use Test::More tests => 29;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
+use Sprog::TestHelper tests => 29, requires => 'XML::LibXML';
 
 use_ok('TestApp');
 use_ok('Sprog::Gear::ParseHTMLTable');

@@ -1,22 +1,13 @@
 use strict;
-use warnings;
+use Sprog::TestHelper tests => 24;
 
-use Test::More tests => 25;
-
-use File::Spec;
 use YAML;
 
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
-
-
-use_ok('Sprog::ClassFactory');
-
 my $app = make_app(               # Imported from ClassFactory.pm
-  '/app'         => 'TestApp',
-  '/app/machine' => 'TestMachine',
-  '/app/view'    => 'DummyView',
+  '/app'           => 'TestApp',
+  '/app/machine'   => 'TestMachine',
+  '/app/eventloop' => 'Sprog::GlibEventLoop',
+  '/app/view'      => 'DummyView',
 );
 
 isa_ok($app, 'TestApp');

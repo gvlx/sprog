@@ -1,15 +1,7 @@
-use strict;
-use warnings;
-
 # Test some obscurish corner cases not otherwise tested
 
-use Test::More tests => 4;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
+use strict;
+use Sprog::TestHelper tests => 4;
 
 use_ok('Sprog');
 my $app = eval { Sprog->new(); };
@@ -19,9 +11,10 @@ like($@, qr/No class factory/, 'constructor died without class factory object');
 use_ok('Sprog::ClassFactory');
 
 $app = make_app(               # Imported from ClassFactory.pm
-  '/app'         => 'TestApp',
-  '/app/machine' => 'TestMachine',
-  '/app/view'    => 'DummyView',
+  '/app'           => 'TestApp',
+  '/app/machine'   => 'TestMachine',
+  '/app/eventloop' => 'Sprog::GlibEventLoop',
+  '/app/view'      => 'DummyView',
 );
 
 my $test_file = File::Spec->catfile('t', 'ffff.sprog'); # Does not exist yet

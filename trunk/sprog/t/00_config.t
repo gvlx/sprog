@@ -7,11 +7,17 @@ use Test::More tests => 1;
 
 my @mod_list = qw(
   Sprog
+  Glib
   Gtk2
   Gnome2::Canvas
   Gtk2::GladeXML
   Class::Accessor
   YAML
+  MIME::Base64
+  LWP
+  Template
+  Apache::LogRegex
+  XML::LibXML
 );
 
 
@@ -22,7 +28,7 @@ foreach my $module (@mod_list) {
   eval " require $module; ";
   unless($@) {
     no strict 'refs';
-    $version{$module} = ${$module . '::VERSION'} || "Unknown";
+    $version{$module} = $module->VERSION || "Unknown";
   }
 }
 

@@ -1,18 +1,9 @@
 use strict;
-use warnings;
-
-use Test::More tests => 71;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
-
-use_ok('Sprog::ClassFactory');
+use Sprog::TestHelper tests => 70;
 
 my $app = make_app(                 # Imported from ClassFactory.pm
-  '/app/view'    => 'Dummy',
+  '/app/eventloop' => 'Sprog::GlibEventLoop',
+  '/app/view'      => 'Dummy',
 );
 
 isa_ok($app, 'Sprog', 'app object');

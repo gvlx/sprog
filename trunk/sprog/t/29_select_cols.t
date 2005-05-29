@@ -1,13 +1,5 @@
 use strict;
-use warnings;
-
-use Test::More tests => 39;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
+use Sprog::TestHelper tests => 39;
 
 use_ok('TestApp');
 use_ok('Sprog::Gear::SelectColumns');

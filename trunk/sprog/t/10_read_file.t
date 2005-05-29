@@ -1,21 +1,13 @@
 use strict;
-use warnings;
-
-use Test::More tests => 20;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
+use Sprog::TestHelper tests => 19;
 
 use_ok('TextSink');
 use_ok('Sprog::Gear::ReadFile');
-use_ok('Sprog::ClassFactory');
 
 my $app = make_app(               # Imported from ClassFactory.pm
-  '/app'         => 'DummyApp',
-  '/app/machine' => 'DummyMachine',
+  '/app'           => 'DummyApp',
+  '/app/machine'   => 'DummyMachine',
+  '/app/eventloop' => 'Sprog::GlibEventLoop',
 );
 
 isa_ok($app, 'DummyApp');

@@ -3,15 +3,7 @@
 # do that.
 
 use strict;
-use warnings;
-
-use Test::More tests => 47;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
+use Sprog::TestHelper tests => 47;
 
 use_ok('TestApp');
 use_ok('Sprog::Gear::WriteFile');

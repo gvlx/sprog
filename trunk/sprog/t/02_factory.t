@@ -1,15 +1,5 @@
 use strict;
-use warnings;
-
-use Test::More tests => 16;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
-
-use_ok('Sprog::ClassFactory');
+use Sprog::TestHelper tests => 15;
 
 my $app = make_app(               # Imported from ClassFactory.pm
   '/app'         => 'DummyApp',

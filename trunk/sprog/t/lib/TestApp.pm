@@ -22,9 +22,10 @@ sub make_test_app {
   my $class = shift;
 
   return make_app(               # Imported from ClassFactory.pm
-    '/app'         => $class,
-    '/app/machine' => 'TestMachine',
-    '/app/view'    => 'DummyView',
+    '/app'           => $class,
+    '/app/machine'   => 'TestMachine',
+    '/app/eventloop' => 'Sprog::GlibEventLoop',
+    '/app/view'      => 'DummyView',
   );
 }
 

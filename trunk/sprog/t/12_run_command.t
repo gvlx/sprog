@@ -1,6 +1,4 @@
-
 use strict;
-use Test::More;
 use File::Spec;
 
 my $test_command;
@@ -11,11 +9,12 @@ BEGIN {
   $test_command = q{perl -le "print foreach(qw(one two three))"};
   my $out = `$test_command 2>&1`;
   if($out !~ /one\s+two\s+three/s) {
+    use Test::More;
     plan skip_all => 'unable to run external command';
   }
 };
 
-plan tests => 13;
+use Sprog::TestHelper tests => 13;
 
 use_ok('TestApp');
 

@@ -1,13 +1,5 @@
 use strict;
-use warnings;
-
-use Test::More tests => 13;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
+use Sprog::TestHelper tests => 13;
 
 use_ok('TestApp');
 
