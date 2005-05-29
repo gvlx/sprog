@@ -1,0 +1,165 @@
+=head1 Sprog Gear Internals - Notes for Developers
+
+A Sprog machine is an assembly of gears.  When the machine is running, each
+gear can receive messages from an upstream gear and send messages to a
+downstream gear.
+
+B<Filter gears> transform message data in some way before sending it on.
+
+B<Input gears> act as data sources for a machine.  Rather than rely on an
+upstream gear for data, an input gear brings data into the machine from the
+outside world.  For example it might read from a file, retrieve data from a
+network server, query a database etc.
+
+B<Output gears> act as data sinks.  They provide a means for data to get out
+of the machine, back to the outside world.  For example, an output gear might
+write data to a file, display it on screen, upload it over a network etc.
+
+=head2 Messages
+
+A message is really nothing more than a deferred method call.  When a gear
+sends a message, the scheduler is responsible for placing the message in the
+input queue of the next downstream gear and later, calling the method.
+
+The code to send a message might look like this:
+
+  $self->msg_out(data => $string);
+
+In this example, a message of type 'data' with a single string argument will
+be placed in the next gear's message queue.  At some later time, the scheduler
+will deliver the message like this:
+
+  $gear->data($string)
+
+=head2 Connectors
+
+A gear can have an input connector and (or) an output connector.  The shape of
+the connector indicates its type - an input connector can only be fitted onto
+an output connector of the same type.  There are currently three types of
+connectors:
+
+=over 4
+
+=item Pipe
+
+The type 'P' connector is analagous to a Unix pipe.  Data is passed via
+unstructured 'C<data>' messages which each include some bytes of data.
+L<Mixin classes|gear_mixins> provide common routines for piping data in
+and out of filehandles and assembling text into lines of input.
+
+=item List
+
+The type 'A' (for array) connector provides some structure to the data by using
+the 'C<row>' method to pass a list of values in each message.
+
+=item Record
+
+The type 'H' (for hash) connector provides even more structure using the
+'C<record>' method to pass a hash of key => value pairs.
+
+=back
+
+=head2 Gear Metadata
+
+Each gear class begins with a package declaration and a special POD section
+to define metadata about the class.  For example:
+
+  package Sprog::Gear::Grep;
+
+  =begin sprog-gear-metadata
+
+    title: Pattern Match
+    type_in: P
+    type_out: P
+    keywords: grep regex regular expression search
+
+  =end sprog-gear-metadata
+
+  =cut
+
+The metadata fields define what shape connectors and what title text will be
+used to represent the gear on the Sprog workspace.  The keywords are used when
+searching for gears using the palette.
+
+See L<Sprog::GearMetadata> for more information.
+
+=head2 Properties
+
+Some gears have configurable properties.  For example, the 'Read File' gear has
+a 'filename' property and the 'Pattern Match' gear has a 'pattern' property.
+
+Gear classes should inherit from the L<Sprog::Gear> base class and should
+declare their properties like this:
+
+  use base qw(Sprog::Gear);
+
+  __PACKAGE__->declare_properties(
+    filename   =>  '',
+  );
+
+This will create the necessary accessor methods and will allow the gear to be
+serialised properly when the machine is saved.
+
+=head2 Gear View Classes
+
+The L<Sprog::GtkGearView> class handles the user interface for most gear
+classes.  This includes rendering the gear on the workspace, handling the
+right-click menu and invoking the L<properties
+dialog|Sprog::help::prop_auto_dialog>.
+
+It is possible for a gear to declare a custom view subclass in the metadata
+section.  For example the 'Text Window' gear has a custom view class which
+creates a scrolling text window and pours text into it.
+
+=head2 Life Cycle of a Gear
+
+A gear object can be created in two ways:
+
+=over 4
+
+=item * 
+
+when a gear class is dragged from the palette and dropped onto the workspace
+
+=item *
+
+when a machine is restored from a file
+
+=back
+
+The
+object will continue to exist until the gear is deleted from the workspace or
+the program exits.
+
+When the machine is run, the scheduler will deliver messages by calling
+methods.  The special message 'C<engage>' will be sent before the machine
+starts running and the message 'C<no_more_data>' will be sent when the upstream
+gear has no more data to send.  A gear can call its own 'C<disengage>' method
+to advise the scheduler that it has nothing further to contribute.
+
+=head2 Writing Your Own Gear Class
+
+The quickest route to creating a working gear is to start with the existing
+class that is closest to what you want.  Either copy it or inherit from it and
+add the custom code you require.  Bear the following in mind:
+
+The package name for your gear class must be of the form:
+
+  Sprog::Gear::YourClass
+
+Your class must begin with a package declaration and a
+L<metadata|Sprog::GearMetadata> section and it must inherit from
+L<Sprog::Gear>.  Providing it does those three things, it should be
+auto-discovered and displayed in the palette next time you start Sprog.
+
+If your gear has configurable properties, declare them with:
+
+  __PACKAGE__->declare_properties( list )
+
+If you need other accessor methods, declare them with:
+
+  __PACKAGE__->mk_accessors( list )
+
+If you need a L<properties dialog|Sprog::help::prop_auto_dialog>, create it
+with the Glade GUI designer and paste the resulting XML into you gear class
+where it will be returned by the 'C<dialog_xml>' method.
