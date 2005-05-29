@@ -11,6 +11,7 @@ WriteMakefile(
                            'Class::Accessor'    => undef,
                            'Test::Simple'       => 0.41,
                            'YAML'               => undef,
+                           'MIME::Base64'       => undef,
                            'Pod::Simple'        => undef,
                          },
     EXE_FILES         => [ qw(bin/sprog) ],
