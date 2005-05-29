@@ -44,6 +44,10 @@ L<Sprog gear internals|Sprog::help::gear_internals>
 
 =item *
 
+L<Properties dialogs|Sprog::help::prop_auto_dialog>
+
+=item *
+
 L<The Sprog scheduler|Sprog::help::scheduler>
 
 =back
