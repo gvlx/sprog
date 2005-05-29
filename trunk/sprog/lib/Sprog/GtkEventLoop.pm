@@ -2,39 +2,11 @@ package Sprog::GtkEventLoop;
 
 
 use Gtk2 '-init';
-use Glib ();
+
+use base qw(Sprog::GlibEventLoop);
 
 sub run  { Gtk2->main;      }
 sub quit { Gtk2->main_quit; }
-
-
-sub add_timeout {
-  my($class, $delay, $sub) = @_;
-
-  return Glib::Timeout->add($delay, $sub);
-}
-
-
-sub add_idle_handler {
-  my($class, $sub) = @_;
-
-  return Glib::Idle->add($sub);
-}
-
-
-sub add_io_reader {
-  my($class, $fh, $sub) = @_;
-
-  return Glib::IO->add_watch(fileno($fh), ['in', 'err', 'hup'], $sub);
-}
-
-
-sub add_io_writer {
-  my($class, $fh, $sub) = @_;
-
-  return Glib::IO->add_watch(fileno($fh), ['out', 'err', 'hup'], $sub);
-}
-
 
 1;
 
@@ -42,7 +14,7 @@ __END__
 
 =head1 NAME
 
-Sprog::GtkEventLoop - methods used to interface Sprog to the GTK event Loop
+Sprog::GtkEventLoop - methods used to interface Sprog to the Gtk2 event Loop
 
 =head1 SYNOPSIS
 
@@ -69,18 +41,21 @@ Enter the main loop.
 
 Exit the main loop.
 
-=head2 add_timeout ( delay, sub_ref )
+=head INHERITED METHODS
 
-Define a callback that should be called after a specified delay (milliseconds).
+The following methods are inherited from L<Sprog::GlibEventLoop>:
 
-=head2 add_idle_handler ( sub_ref )
+=over 4
 
-Define a callback that should be called when no other events are waiting.
+=item add_timeout ( delay, sub_ref )
 
-=head2 add_io_reader ( fh, sub_ref )
+=item add_idle_handler ( sub_ref )
 
-Define a callback that should be called when the specified file is ready for
-reading.
+=item add_io_reader ( fh, sub_ref )
+
+=item add_io_writer ( fh, sub_ref )
+
+=back
 
 =head1 COPYRIGHT 
 
