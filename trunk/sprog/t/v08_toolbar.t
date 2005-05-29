@@ -1,22 +1,7 @@
 use strict;
-use warnings;
+use Sprog::TestHelper tests => 21, display => 1;
 
-use Test::More;
-use File::Spec;
 use Gtk2::Gdk::Keysyms;
-
-BEGIN {
-  plan 'skip_all' => 'No X'
-    unless(defined($ENV{DISPLAY})  &&  $ENV{DISPLAY} =~ /:\d/);
-}
-
-plan tests => 21;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
 
 use_ok('TestApp');
 

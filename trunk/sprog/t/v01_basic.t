@@ -1,16 +1,5 @@
 use strict;
-use warnings;
-
-use Test::More;
-
-BEGIN {
-  plan 'skip_all' => 'No X'
-    unless(defined($ENV{DISPLAY})  &&  $ENV{DISPLAY} =~ /:\d/);
-}
-
-plan tests => 2;
-
-use File::Spec;
+use Sprog::TestHelper tests => 2, display => 1;
 
 BEGIN {
   unshift @INC, File::Spec->catfile('t', 'lib');

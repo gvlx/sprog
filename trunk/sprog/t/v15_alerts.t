@@ -1,21 +1,7 @@
 use strict;
-use warnings;
+use Sprog::TestHelper tests => 12, display => 1;
 
-use Test::More;
-
-BEGIN {
-  plan 'skip_all' => 'No X'
-    unless(defined($ENV{DISPLAY})  &&  $ENV{DISPLAY} =~ /:\d/);
-}
-
-plan tests => 12;
-
-use File::Spec;
 use Glib qw(TRUE FALSE);
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
 
 use_ok('TestApp');
 
