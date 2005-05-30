@@ -151,7 +151,7 @@ is translated to this output:
   John Smith is 25 years old
 
 I<Note: the elements in a Perl array are numbered from zero, so in the above
-example, the three fields are numbered 0, 1 and 2 respectively).
+example, the three fields are numbered 0, 1 and 2 respectively>.
 
 =end :sprog-help-text
 
