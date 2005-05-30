@@ -30,6 +30,7 @@ lib/Sprog/Gear/TextWindow.pm
 lib/Sprog/Gear/UpperCase.pm
 lib/Sprog/Gear/WriteFile.pm
 lib/Sprog/GearMetadata.pm
+lib/Sprog/GlibEventLoop.pm
 lib/Sprog/GtkAutoDialog.pm
 lib/Sprog/GtkEventLoop.pm
 lib/Sprog/GtkGearView.pm
@@ -47,17 +48,20 @@ lib/Sprog/GtkView/WorkBench.pm
 lib/Sprog/help/build_machine.pod
 lib/Sprog/help/connectors.pod
 lib/Sprog/help/filter_gears.pod
+lib/Sprog/help/gear_internals.pod
 lib/Sprog/help/index.pod
 lib/Sprog/help/input_gears.pod
 lib/Sprog/help/internals.pod
 lib/Sprog/help/output_gears.pod
 lib/Sprog/help/palette.pod
+lib/Sprog/help/prop_auto_dialog.pod
 lib/Sprog/help/regex_intro.pod
 lib/Sprog/help/scheduler.pod
 lib/Sprog/HelpParser.pm
 lib/Sprog/Machine.pm
 lib/Sprog/Machine/Scheduler.pm
 lib/Sprog/PrintProxy.pm
+lib/Sprog/TestHelper.pm
 Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
@@ -90,6 +94,7 @@ t/42_html_table.t
 t/44_list_to_rec.t
 t/46_list_to_csv.t
 t/48_tt2.t
+t/50_clf_parse.t
 t/counter.sprog
 t/files.txt
 t/lib/AcceptNothingGear.pm
