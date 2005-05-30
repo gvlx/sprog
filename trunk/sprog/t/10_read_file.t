@@ -1,5 +1,5 @@
 use strict;
-use Sprog::TestHelper tests => 19;
+use Sprog::TestHelper tests => 26;
 
 use_ok('TextSink');
 use_ok('Sprog::Gear::ReadFile');
@@ -24,6 +24,9 @@ my $reader = Sprog::Gear::ReadFile->new(app => $app, machine => $machine);
 isa_ok($reader, 'Sprog::Gear::ReadFile');
 isa_ok($reader, 'Sprog::Gear::InputFromFH');
 isa_ok($reader, 'Sprog::Gear');
+ok(!$reader->has_input, 'has no input');
+ok($reader->has_output, 'has output');
+is($reader->output_type, 'P', 'correct input connector type (pipe)');
 is($reader->title, 'Read File', 'title looks good');
 like($reader->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 
   'Glade XML looks plausible');
@@ -88,22 +91,31 @@ $sub = shift @$io_queue;
 is(scalar(@$io_queue), 0, "de-queued the io_reader message");
 $sub->();
 
-__END__
-1 while($sink->turn_once);
 
-is(scalar(@$io_queue), 0, "no io_reader messages queued after EOF");
 
-is($reader->fh_in, undef, "file handle has been disposed");
+$reader = undef;
+$app    = undef;
 
-$reader->send_data;
+use_ok('TestApp');
 
-like($sink->text, qr{
-  ^
-    \#FF0000 \s+ Red    \s+
-    \#00FF00 \s+ Green  \s+
-    \#0000FF \s+ Blue   \s+
-    \#FFFF00 \s+ Yellow \s+
-    \#00FFFF \s+ Cyan   \s+
-    \#FF00FF \s+ Purple \s+
-  $
-}xs, "read contents of file");
+$app = TestApp->make_test_app;
+
+($reader, $sink) = $app->make_test_machine(qw(
+  Sprog::Gear::ReadFile
+  LineSink
+));
+is($app->alerts, '', 'created a machine with a ReadFile gear');
+
+$reader->filename(File::Spec->catfile('t', 'rgb.txt'));
+
+is($app->test_run_machine, '', 'running machine produced no alerts');
+
+is_deeply([ $sink->lines ], [
+    "#FF0000 Red\n",
+    "#00FF00 Green\n",
+    "#0000FF Blue\n",
+    "#FFFF00 Yellow\n",
+    "#00FFFF Cyan\n",
+    "#FF00FF Purple\n",
+  ],
+  "successfully read contents of file");
