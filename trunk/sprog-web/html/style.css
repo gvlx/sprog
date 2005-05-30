@@ -119,3 +119,7 @@ dt {
   margin-bottom: 0.4em;
 }
 
+#banner {
+  float: right;
+  padding: 0.2em 0.2em 1.6em 1.0em;
+}
