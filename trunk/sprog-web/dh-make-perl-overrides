@@ -5,9 +5,6 @@
 #
 
 $overrides{'Sprog'} = {
-  pkgname => 'sprog',
-  srcname => 'sprog',
-  section => 'contrib/X11',
   depends => 'libgtk2-perl, libgnome2-canvas-perl, libgtk2-gladexml-perl, '
            . 'libclass-accessor-perl, libyaml-perl, libpod-simple-perl',
   desc => 'GUI with a Perl centre',
@@ -21,4 +18,5 @@ $overrides{'Sprog'} = {
             . "It's relatively straightforward to write your own gears using "
             . "the supplied framework.  This allows you to make reusable "
             . "components for the data transformations you use most often.",
+  section => 'contrib/X11',
 };
