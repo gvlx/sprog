@@ -1,4 +1,3 @@
-* Document gear_mixins.pod, gear properties defaults, example gears
 * HelpViewer: remember scroll-point when going 'back'
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
