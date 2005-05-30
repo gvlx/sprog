@@ -1,0 +1,62 @@
+=head1 Properties Dialogs
+
+If you are developing a gear class that has configurable properties, you will
+need a properties dialog.  You could use a custom gear view subclass and
+put code in it to construct a dialog, but it's easier to use the 'auto dialog'
+facility provided by L<Sprog::GtkGearView> and L<Sprog::GtkAutoDialog>.
+
+To use this facility, define a dialog using the Glade GUI designer and save it
+to a file.  Then in your gear class, define a method called C<dialog_xml>
+which returns the contents of the .glade file.  For example:
+
+  sub dialog_xml {
+    return <<'END_XML';
+  <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
+  <!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
+  <glade-interface>
+    ... lots of XML here ...
+  </glade-interface>
+  END_XML
+  }
+
+There are a few things you need to do when you define your dialog in Glade.
+
+The widget name for the dialog window should be 'properties'.  You can use
+another name but unless you need more than one dialog, it's easier to stick
+with the default.
+
+The widgets which will be connected to properties of your gear should have
+names of the form:
+
+  PAD.property_name
+
+Where I<PAD> stands for Properties Auto Dialog and I<property_name> should
+match one of your gear properties.
+
+That's all you need to do to connect Entry boxes, TextViews and CheckButtons to
+properties.
+
+RadioButtons use a slightly different naming convention since there will be two
+or more widgets feeding different values into the same property.  Use the form:
+
+  PAD.property_name.value
+
+Where all the radio buttons in a group will have the same I<property_name> but
+each will have a different I<value>.
+
+File selectors are implemented using a text entry and a 'Browse' button.  The
+text entry should use the C<PAD.property_name> form, but the browse button
+should have a behaviour associated with it using this form:
+
+  PAD.browse_to_entry(property_name,style)
+
+Where I<property_name> will match the text entry widget and I<style> will be one
+of 'save' or 'open' (save is the default).
+
+=head2 Is that it?
+
+Yes, that really is all that's required to support all the properties dialogs
+of the gears shipped with Sprog.
+
+Support for additional widget types and behaviours will be added as the need
+arises.

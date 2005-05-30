@@ -1,0 +1,8 @@
+/etc/hosts
+/etc/syslog.conf
+/usr/bin/cat
+/usr/bin/grep
+/usr/bin/login
+/usr/bin/ls
+/var/log/syslog
+/var/lib/EtchingsLogo

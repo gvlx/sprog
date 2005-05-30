@@ -1,0 +1,12 @@
+=head1 Output Gears
+
+An output gear is the final part in a machine.  It will typically either save
+the filtered data to a file or display it on the screen.
+
+Output gears don't have output connectors since they mark the point where the
+data leaves the machine.
+
+A machine must have one output gear.
+
+See also: L<input gears|Sprog::help::input_gears>,
+L<filter gears|Sprog::help::filter_gears>
