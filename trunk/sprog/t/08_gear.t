@@ -33,7 +33,7 @@ eval {
 };
 is("$@", '', "gear silently drops bad messages and if no next");
 
-my @defaults = $gear->defaults;
+my @defaults = $gear->_defaults;
 is(scalar(@defaults), 0, 'no default property key/values');
 
 my $ref = $gear->serialise;
