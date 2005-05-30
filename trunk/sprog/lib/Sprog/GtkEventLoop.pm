@@ -41,7 +41,7 @@ Enter the main loop.
 
 Exit the main loop.
 
-=head INHERITED METHODS
+=head1 INHERITED METHODS
 
 The following methods are inherited from L<Sprog::GlibEventLoop>:
 
