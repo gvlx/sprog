@@ -34,6 +34,17 @@ Sprog::Gear::LowerCase - convert text to lowercase
 
 Any text passed through this gear will be converted to lowercase.
 
+=head1 METHODS
+
+=head2 data ( data )
+
+All data received via the C<data> method will be converted to lowercase and
+passed to the C<data> method of the next gear.
+
+=head1 SEE ALSO
+
+All other methods are inherited from L<Sprog::Gear>.
+
 =head1 COPYRIGHT 
 
 Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>

@@ -31,6 +31,10 @@ will deliver the message like this:
 
   $gear->data($string)
 
+If a gear does implement a particular message, the scheduler will propagate the
+message to the next gear.  Message order should not be affected by this
+automatic propagation.
+
 =head2 Connectors
 
 A gear can have an input connector and (or) an output connector.  The shape of
@@ -43,19 +47,19 @@ connectors:
 =item Pipe
 
 The type 'P' connector is analagous to a Unix pipe.  Data is passed via
-unstructured 'C<data>' messages which each include some bytes of data.
-L<Mixin classes|gear_mixins> provide common routines for piping data in
+unstructured C<data> messages which each include some bytes of data.  L<Mixin
+classes|Sprog::help::gear_mixins> provide common routines for piping data in
 and out of filehandles and assembling text into lines of input.
 
 =item List
 
 The type 'A' (for array) connector provides some structure to the data by using
-the 'C<row>' method to pass a list of values in each message.
+the C<row> method to pass a list of values in each message.
 
 =item Record
 
 The type 'H' (for hash) connector provides even more structure using the
-'C<record>' method to pass a hash of key => value pairs.
+C<record> method to pass a hash of key => value pairs.
 
 =back
 
@@ -89,7 +93,7 @@ Some gears have configurable properties.  For example, the 'Read File' gear has
 a 'filename' property and the 'Pattern Match' gear has a 'pattern' property.
 
 Gear classes should inherit from the L<Sprog::Gear> base class and should
-declare their properties like this:
+declare their property names and default values like this:
 
   use base qw(Sprog::Gear);
 
@@ -132,9 +136,9 @@ object will continue to exist until the gear is deleted from the workspace or
 the program exits.
 
 When the machine is run, the scheduler will deliver messages by calling
-methods.  The special message 'C<engage>' will be sent before the machine
-starts running and the message 'C<no_more_data>' will be sent when the upstream
-gear has no more data to send.  A gear can call its own 'C<disengage>' method
+methods.  The special message C<engage> will be sent before the machine
+starts running and the message C<no_more_data> will be sent when the upstream
+gear has no more data to send.  A gear can call its own C<disengage> method
 to advise the scheduler that it has nothing further to contribute.
 
 =head2 Writing Your Own Gear Class
@@ -162,4 +166,20 @@ If you need other accessor methods, declare them with:
 
 If you need a L<properties dialog|Sprog::help::prop_auto_dialog>, create it
 with the Glade GUI designer and paste the resulting XML into you gear class
-where it will be returned by the 'C<dialog_xml>' method.
+where it will be returned by the C<dialog_xml> method.
+
+=head2 Example Gears
+
+The best way to learn how to write gear classes is to study existing ones.  The
+L<Sprog::Gear::UpperCase> class is probably one of the simplest.  It includes
+a package declaration and a metadata POD section; inherits
+basic gear behaviours from L<Sprog::Gear>; and implements a method to handle
+incoming C<data> messages.
+
+The Pattern Match gear class, L<Sprog::Gear::Grep>, is a little more complex.
+It uses the L<Sprog::Gear::InputByLine> mixin; declares a single configurable
+property and implements a C<dialog_xml> method to define a properties dialog
+box.  It also overrides the standard C<engage> method to set up the pattern
+matching regular expression.
+
+The L<Sprog::Gear::ReadFile> class ...

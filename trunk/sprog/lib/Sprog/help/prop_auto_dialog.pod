@@ -6,7 +6,7 @@ put code in it to construct a dialog, but it's easier to use the 'auto dialog'
 facility provided by L<Sprog::GtkGearView> and L<Sprog::GtkAutoDialog>.
 
 To use this facility, define a dialog using the Glade GUI designer and save it
-to a file.  Then in your gear class, define a method called 'C<dialog_xml>'
+to a file.  Then in your gear class, define a method called C<dialog_xml>
 which returns the contents of the .glade file.  For example:
 
   sub dialog_xml {

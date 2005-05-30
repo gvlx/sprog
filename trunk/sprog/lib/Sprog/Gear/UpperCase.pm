@@ -34,6 +34,17 @@ Sprog::Gear::UpperCase - convert text to uppercase
 
 Any text passed through this gear will be converted to uppercase.
 
+=head1 METHODS
+
+=head2 data ( data )
+
+All data received via the C<data> method will be converted to uppercase and
+passed to the C<data> method of the next gear.
+
+=head1 SEE ALSO
+
+All other methods are inherited from L<Sprog::Gear>.
+
 =head1 COPYRIGHT 
 
 Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
@@ -47,7 +58,7 @@ under the same terms as Perl itself.
 =head1 Uppercase Gear
 
 This gear converts all text passed through it, to uppercase.  Both input and
-output use 'pipe' connectors.
+output is through 'pipe' connectors.
 
 =head2 Properties
 

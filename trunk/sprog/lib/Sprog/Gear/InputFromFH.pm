@@ -77,21 +77,16 @@ handle to the next gear as a C<data> message.
 The gear class is responsible for opening the file handle and then passing it
 to this method to make it available to the other methods in this class.
 
-=head2 register ( )
-
-Call this method to have the class register itself with the machine, as a data
-provider.
-
-=head2 unregister ( )
-
-This method will be called automatically when the end of file is reached.  It
-tells the machine that this gear has no more data to provide.
-
 =head2 send_data ( )
 
-The machine will call this method when it needs more data.  When the EOF is
-reached, this method will arrange for the gear to unregister itself as a
-data provider.
+The machine will call this method when it needs more data.  The default 
+implementation will set up an IO watch event waiting for data to arrive on
+the filehandle in C<fh_in>.  When the data arrives, it will be sent as a
+C<data> message using the gear's C<msg_out> method - which you can override
+if you need to mess with the data.
+
+When the EOF is reached, the IO watch event handler will call the gear's
+C<disengage> method to remove it from the geartrain.
 
 =head1 COPYRIGHT 
 

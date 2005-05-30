@@ -267,6 +267,26 @@ next gear depending on whether the line matched a pattern (regex).  The user
 can choose to include or exclude lines which match the pattern and can chose to
 make the matching case sensitive or insensitive.
 
+=head1 METHODS
+
+=head2 line ( data )
+
+If the string in C<data> matches the configured pattern, it will be passed to
+the C<data> method of the next gear.
+
+=head2 dialog_xml ( )
+
+Returns a Glade dialog definition, including one entry box for specifying the
+pattern and checkboxes for enabling case-insensitive matches and reversing the
+sense of the match.
+
+=head1 SEE ALSO
+
+The L<Sprog::Gear::InputByLine> mixin class is used to convert C<data> messages
+to calls to the C<line> method.
+
+All other methods are inherited from L<Sprog::Gear>.
+
 =head1 COPYRIGHT 
 
 Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>

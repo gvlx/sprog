@@ -245,3 +245,32 @@ sub stop {
 
 1;
 
+
+__END__
+
+=head1 NAME
+
+Sprog::Machine - Data model for a Sprog application
+
+=head1 DESCRIPTION
+
+This class implements the data model for a sprog application.  It is a 
+container for L<Sprog::Gear> classes.
+
+When a machine is run, it creates a L<Sprog::Machine::Scheduler> instance to
+handle the passing of messages between gears.
+
+There's a bit more information in L<Sprog::help::internals>.
+
+=head1 SEE ALSO
+
+L<Sprog>
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+

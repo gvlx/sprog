@@ -47,34 +47,37 @@ Sprog::Gear::InputByLine - a 'mixin' class for gears reading input line-by-line
 =head1 DESCRIPTION
 
 This mixin is for use by gears which use a 'pipe' style of input connector but
-want to process the input line-by-line.  If defines a C<data> method which
+want to process the input line-by-line.  It defines a C<data> method which
 passes each line of input to the gear's C<line> method.
 
 =head1 METHODS
 
 =head2 data ( buffer )
 
-Extracts lines from the supplied buffer and passes them to the C<line> method.
-A buffer which ends with some text that has no line terminator, will be 
-handled as follows:
+Extracts lines from the supplied buffer and passes them to the C<line>
+method.  A buffer which ends with some text that has no line terminator, will
+be handled as follows:
 
 =over 4
 
 =item *
 
 if there are no more messages queued, the remaining text is re-queued until
-a following message is available
+a subsequent message is received
 
 =item *
 
-if the next queued message is also a 'data' message, the remaining text will
+if the next queued message is also a C<data> message, the remaining text will
 be prepended to the next buffer
 
 =item *
 
-otherwise the incomplete line will be passed to the gear's <line> method
+otherwise (if the next message is not a C<data> message), the incomplete line
+will be passed to the gear's C<line> method
 
 =back
+
+A class that uses this mixin is expected to implement a C<line> method.
 
 =head1 COPYRIGHT 
 

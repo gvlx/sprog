@@ -259,7 +259,7 @@ required.  For example, the L<Sprog::Gear::TextWindow> gear sets this value to
 
 =head2 gear_class_info( class_name )
 
-Given a full class name (eg: 'C<Sprog::Gear::ReadFile>'), this method returns
+Given a full class name (eg: C<Sprog::Gear::ReadFile>), this method returns
 a metadata object describing the class.  Returns undef if the class does not
 exist or does not define the required metadata POD section.
 
