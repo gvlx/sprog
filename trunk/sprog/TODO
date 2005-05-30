@@ -1,3 +1,4 @@
+* Document gear_mixins.pod, gear properties defaults, example gears
 * HelpViewer: remember scroll-point when going 'back'
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
@@ -6,6 +7,8 @@
 * RetrieveURL: Do a proper implementation
 * DBIQuery: implement gear
 * CSVSplit: replace with proper implementation
+* Add support for gear state (just PerlCode gears?)
+* Add support for machine state
 * CommandFilter: harvest child zombies
 * Save view (and other) preferences, in 'Correct' way for each OS (Glib::Utils?)
 * Fix Drop Coordinates when palette is visible
