@@ -49,6 +49,7 @@ lib/Sprog/help/build_machine.pod
 lib/Sprog/help/connectors.pod
 lib/Sprog/help/filter_gears.pod
 lib/Sprog/help/gear_internals.pod
+lib/Sprog/help/gear_mixins.pod
 lib/Sprog/help/index.pod
 lib/Sprog/help/input_gears.pod
 lib/Sprog/help/internals.pod
