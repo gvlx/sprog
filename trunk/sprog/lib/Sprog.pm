@@ -2,7 +2,7 @@ package Sprog;
 
 use strict;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use base qw(Class::Accessor::Fast);
 
@@ -208,18 +208,20 @@ components for the data transformations you use most often.
 
 =head1 WARNING
 
-The Sprog code is in 'pre-alpha' state.  This means that bugs are not only
-possible, they're expected.
+The Sprog code is in 'alpha' state.  This means that bugs are not only
+possible, they're expected.  It also means that the API is still stablising -
+if you write a component today you might need to tweak it to make it work with
+the next version of Sprog.  
 
-The 'pre-alpha' state also means that the API is not yet stable - if you write
-a component today you might need to tweak it to make it work with the next
-version of Sprog.
+Please don't let the alpha status discourage you - the more people that try it
+out and report their experiences, the sooner the bugs will get shaken out.
 
 =head1 PREREQUISITES
 
 All the classes are built on top of L<Class::Accessor>.
 
-The GUI and event-driven scheduler is built on L<Gtk2>.
+The GUI and event-driven scheduler is built on L<Gtk2> and the
+L<Gnome2::Canvas> (although the GNOME desktop environment is not required).
 
 The properties auto-dialog (PAD) framework uses L<Gtk2::GladeXML>.
 
@@ -236,7 +238,8 @@ run:
 
 =head1 SEE ALSO
 
-L<Sprog::help::internals> contains notes for developers.
+When you run Sprog, you will find information both for users and for developers
+in the help viewer - accessed via the F1 key (or ther help menu).
 
 The Sprog web site is hosted by SourceForge at: L<http://sprog.sourceforge.net/>
 

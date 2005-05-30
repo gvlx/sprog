@@ -1,9 +1,9 @@
 WARNING
 
-This is a 'pre-alpha' release, of 'Sprog', which means:
+This is an 'alpha' release, of 'Sprog', which means:
 
     * the code has bugs
-    * API's are subject to change without notice
+    * API's are subject to change
 
 
 DESCRIPTION
@@ -51,6 +51,7 @@ You'll find some notes for developers in:
 
   lib/Sprog/internals.pod
 
+which you can read from the online help when you launch 'sprog'.
 
 FEEDBACK
 
