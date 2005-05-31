@@ -6,10 +6,9 @@ use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw(
   app
-  parts
-  start_time
-  stalled
-  scheduler
+  _parts
+  _start_time
+  _scheduler
 ));
 
 use Scalar::Util qw(weaken);
@@ -24,7 +23,7 @@ sub new {
   my $class = shift;
   
   my $self = bless {
-    parts => {},
+    _parts => {},
     @_
   }, $class;
   weaken($self->{app});
@@ -39,7 +38,7 @@ sub new {
 
 { # closure for generating unique IDs
   my $unique_id = 1;
-  sub unique_id { $unique_id++ }
+  sub _unique_id { $unique_id++ }
 }
 
 
@@ -47,7 +46,7 @@ sub expunge {
   my($self) = @_;
 
   my $app = $self->app;
-  $app->delete_gear_by_id($_) foreach( keys %{$self->parts} );
+  $app->delete_gear_by_id($_) foreach( keys %{$self->_parts} );
 }
 
 
@@ -55,7 +54,7 @@ sub save_to_file {
   my($self, $filename) = @_;
 
   my @gears = ();
-  foreach my $gear ( values %{$self->parts} ) {
+  foreach my $gear ( values %{$self->_parts} ) {
     push @gears, $gear->serialise;
   }
   open my $out, '>', $filename
@@ -143,7 +142,7 @@ sub add_gear {
   my $self       = shift;
   my $gear_class = shift;
   
-  my $gear_id = $self->unique_id;
+  my $gear_id = $self->_unique_id;
 
   my $gear = eval {
     $self->app->require_class($gear_class);
@@ -155,7 +154,7 @@ sub add_gear {
     return;
   }
 
-  $self->parts->{$gear_id} = $gear;
+  $self->_parts->{$gear_id} = $gear;
 
   return $gear;
 }
@@ -164,7 +163,7 @@ sub add_gear {
 sub delete_gear_by_id {
   my($self, $id) = @_;
 
-  my $gear = delete $self->parts->{$id};
+  my $gear = delete $self->_parts->{$id};
   $self->detach_gear($gear);
 }
 
@@ -173,7 +172,7 @@ sub delete_gear_by_id {
 sub detach_gear {
   my($self, $gear) = @_;
 
-  my $parts = $self->parts;
+  my $parts = $self->_parts;
   return unless keys %$parts;  # reset the iterator
   while(my($i, $target) = each %$parts) {
     my $next = $target->next;
@@ -191,15 +190,15 @@ sub running {
   if(@_) {
     $self->{running} = shift;
     if($self->{running}) {
-      $self->start_time(time());
+      $self->_start_time(time());
       $self->app->status_message("Machine running");
     }
     else {
-      my $run_time = sprintf("%4.2fs", time() - $self->start_time);
+      my $run_time = sprintf("%4.2fs", time() - $self->_start_time);
       $self->app->status_message("Machine stopped (elapsed time: $run_time)");
-      if(my $sched = $self->scheduler) {
+      if(my $sched = $self->_scheduler) {
         $sched->stop;
-        $self->scheduler(undef);
+        $self->_scheduler(undef);
       }
     }
   }
@@ -210,7 +209,7 @@ sub running {
 sub head_gear {
   my $self = shift;
 
-  my $parts = $self->parts;
+  my $parts = $self->_parts;
   return unless keys %$parts;  # reset the iterator
   while(my($i, $gear) = each %$parts) {
     return $gear if(!$gear->has_input);
@@ -226,7 +225,7 @@ sub run {
   return $self->app->alert("You must complete your machine with an output gear")
     if($head->last->has_output);
 
-  my $sched = $self->scheduler(
+  my $sched = $self->_scheduler(
     $self->app->factory->make_class('/app/machine/scheduler', $head)
   ) or return;
 
@@ -254,17 +253,77 @@ Sprog::Machine - Data model for a Sprog application
 
 =head1 DESCRIPTION
 
-This class implements the data model for a sprog application.  It is a 
+This class implements the data model for a Sprog application.  It is a 
 container for L<Sprog::Gear> classes.
 
 When a machine is run, it creates a L<Sprog::Machine::Scheduler> instance to
 handle the passing of messages between gears.
 
-There's a bit more information in L<Sprog::help::internals>.
+=head1 CLASS METHODS
+
+=head2 new ( arguments )
+
+Constructor.  This method is called by the L<Sprog> application class during
+app startup.
+
+=head1 INSTANCE METHODS
+
+=head2 add_gear ( gear_class, arguments )
+
+Adds a gear to the workspace.  Usually called from the application's
+C<add_gear_at_x_y> method.  Returns a reference to the gear on success.  Fires
+an alert message and returns undef on error.
+
+=head2 app
+
+Returns a reference to the Sprog application object.
+
+=head2 delete_gear_by_id ( id )
+
+Removes the specified gear from the machine.
+
+=head2 detach_gear ( gear )
+
+Breaks connection between the supplied gear and the gear feeding into it.
+This is used for example when dragging gears to pull a machine apart.
+
+=head2 expunge ( )
+
+Removes all gears from the machine in such a way that the gui components
+disappear too.
+
+=head2 head_gear ( )
+
+Returns a reference to the first gear that has no input connector.
+
+=head2 load_from_file ( filename )
+
+Reads the specified file, verifies file format and version information in the
+header and then instantiates each of the gears described in the file as well
+as the interconnections between them.
+
+=head2 run ( )
+
+Called by the app object to instantiate a scheduler and set it runnning.
+
+=head2 running ( boolean )
+
+Get/set the flag to indicate the machine is running.
+
+=head2 save_to_file ( filename )
+
+Serialises each of the gears and their interconnections to the named file.
+
+=head2 stop ( )
+
+Called by the app to stop a running machine.
 
 =head1 SEE ALSO
 
 L<Sprog>
+
+L<Sprog::help::internals> has more information about the inner workings of 
+Sprog.
 
 =head1 COPYRIGHT 
 
