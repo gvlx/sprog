@@ -65,7 +65,7 @@ sub gear_id_from_class {
   my($class) = @_;
 
   my $id;
-  while(my($k, $gear) = each %{ $app->machine->parts }) {
+  while(my($k, $gear) = each %{ $app->machine->_parts }) {
     $id = $k if UNIVERSAL::isa($gear, $class);
   }
 

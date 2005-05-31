@@ -58,13 +58,13 @@ is($app->alerts, '', 'no alerts while saving');
 ok(-f $test_file, "successfully wrote $test_file");
 
 $machine->expunge;
-is(scalar(values %{$machine->parts}), 0, 'the machine was successfully expunged');
+is(scalar(values %{$machine->_parts}), 0, 'the machine was successfully expunged');
 ($reader, $grep, $case, $text) = ();
 
 $app->filename(undef);
 $app->load_from_file($test_file);
 
-is(scalar(values %{$machine->parts}), 4, 'loaded machine from file');
+is(scalar(values %{$machine->_parts}), 4, 'loaded machine from file');
 is($app->filename, $test_file, 'filename was remembered');
 unlink($test_file);
 
@@ -72,10 +72,10 @@ ok(!-f $test_file, "removed file");
 $app->file_save;
 ok(-f $test_file, "file was re-written successfully");
 
-($grep) = grep $_->isa('Sprog::Gear::Grep'), values %{$machine->parts};
+($grep) = grep $_->isa('Sprog::Gear::Grep'), values %{$machine->_parts};
 ok(defined($grep), 'machine contains the grep gear');
 
-($text) = grep $_->isa('TextSink'), values %{$machine->parts};
+($text) = grep $_->isa('TextSink'), values %{$machine->_parts};
 ok(defined($text), 'machine contains the text gear');
 
 $grep->pattern('00FF');

@@ -41,7 +41,7 @@ $app->run_sequence(
   sub {
     like($app->alerts, qr/You must add an input gear/, "'Run' button works");
     $app->alerts('');
-    is(scalar(keys %{$app->machine->parts}), 0, 'workspace is empty');
+    is(scalar(keys %{$app->machine->_parts}), 0, 'workspace is empty');
     $app->add_timeout(200, sub { cancel_dialog('Open') });
     $tool_button{'Open'}->clicked;
   },
@@ -51,7 +51,7 @@ $app->run_sequence(
     my $filename = File::Spec->catfile('t', 'counter.sprog');
     $filename = File::Spec->rel2abs($filename);
     $app->load_from_file($filename);
-    is(scalar(keys %{$app->machine->parts}), 2, 'loaded a two gear machine');
+    is(scalar(keys %{$app->machine->_parts}), 2, 'loaded a two gear machine');
     $tool_button{'Run'}->clicked;
   },
 

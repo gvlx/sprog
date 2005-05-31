@@ -153,10 +153,10 @@ $app->alerts('');
 
 $app->detach_gear($last);
 ok(!$reader->next, 'last gear is no longer attached to first');
-ok($app->machine->parts->{$last->id}, 'but still exists');
+ok($app->machine->_parts->{$last->id}, 'but still exists');
 
 $app->machine->delete_gear_by_id($last->id);
-ok(!exists $app->machine->parts->{$last->id}, 'successfully removed last gear');
+ok(!exists $app->machine->_parts->{$last->id}, 'successfully removed last gear');
 
 unlink($test_file);
 
