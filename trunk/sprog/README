@@ -53,6 +53,12 @@ You'll find some notes for developers in:
 
 which you can read from the online help when you launch 'sprog'.
 
+LICENSE
+
+Sprog is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.  (Which means that you can chose either
+the GPL or the Artistic License which comes with Perl).
+
 FEEDBACK
 
 Hit me with your feedback at: grantm@cpan.org
