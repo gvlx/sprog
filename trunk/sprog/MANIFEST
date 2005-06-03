@@ -20,6 +20,7 @@ lib/Sprog/Gear/PerlBase.pm
 lib/Sprog/Gear/PerlCode.pm
 lib/Sprog/Gear/PerlCodeAP.pm
 lib/Sprog/Gear/PerlCodeHP.pm
+lib/Sprog/Gear/PerlCodePA.pm
 lib/Sprog/Gear/ReadFile.pm
 lib/Sprog/Gear/RetrieveURL.pm
 lib/Sprog/Gear/SelectColumns.pm
@@ -89,6 +90,7 @@ t/26_casing.t
 t/28_csv_split.t
 t/29_select_cols.t
 t/30_perl_code.t
+t/31_perl_code_pa.t
 t/32_perl_code_hp.t
 t/34_perl_code_ap.t
 t/40_whitespace.t
