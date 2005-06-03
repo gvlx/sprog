@@ -14,6 +14,7 @@ my @mod_list = qw(
   Class::Accessor
   YAML
   MIME::Base64
+  Pod::Simple
   LWP
   Template
   Apache::LogRegex
