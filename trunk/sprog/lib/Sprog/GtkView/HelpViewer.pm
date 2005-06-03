@@ -214,12 +214,24 @@ sub go_to_topic {
     if($i < $#{$trail}) {
       splice @$trail, $i+1;
     }
+    $self->save_scroll_pos;
   }
 
-  push @$trail, $topic;
+  push @$trail, [ $topic, 0 ];
   $self->trail_index($#{$trail});
 
   $self->load_topic;
+}
+
+
+sub save_scroll_pos {
+  my $self = shift;
+
+  my $trail = $self->trail;
+  return unless @$trail;
+
+  my $pos = $self->textview->parent->get_vadjustment->get_value;
+  $trail->[$self->trail_index]->[1] = $pos;
 }
 
 
@@ -241,6 +253,7 @@ sub go_back {
 
   return unless $self->can_back;
 
+  $self->save_scroll_pos;
   $self->trail_index($self->trail_index - 1);
   $self->load_topic;
 }
@@ -264,6 +277,7 @@ sub go_forward {
 
   return unless $self->can_forward;
 
+  $self->save_scroll_pos;
   $self->trail_index($self->trail_index + 1);
   $self->load_topic;
 }
@@ -277,7 +291,7 @@ sub is_home {
 
   my $i = $self->trail_index;
 
-  return $trail->[$i] eq HOME_TOPIC
+  return $trail->[$i]->[0] eq HOME_TOPIC
 }
 
 
@@ -285,7 +299,7 @@ sub load_topic {
   my $self = shift;
 
   my $i = $self->trail_index;
-  my $topic = $self->trail->[$i];
+  my($topic, $pos) = @{$self->trail->[$i]};
 
   $self->clear;
   $self->status_message('');
@@ -293,7 +307,10 @@ sub load_topic {
 
   my $parser = $self->app->factory->make_class('/app/help_parser', $self);
   $parser->parse_topic($topic);
-  return if $parser->content_seen;
+  if($parser->content_seen) {
+    $self->textview->parent->get_vadjustment->set_value($pos);
+    return;
+  }
 
   $self->add_tagged_text("Unable to find help for topic '$topic'", 0, ['head3']);
 }
