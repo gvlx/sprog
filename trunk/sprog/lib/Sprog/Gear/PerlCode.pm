@@ -123,7 +123,7 @@ of data or skip the line to prevent it being passed on.
 
 =head2 Properties
 
-The Read File gear has only one property - the Perl code to be run.  Type it
+The Perl Code gear has only one property - the Perl code to be run.  Type it
 in or paste it from the clipboard.
 
 =head2 Perl Wrapper
