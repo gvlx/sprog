@@ -225,6 +225,9 @@ sub _build_gearlist {
   $gearlist->signal_connect(
     drag_data_get  => sub { $self->_drag_data_get(@_); }
   );
+  $gearlist->signal_connect(
+    button_press_event => sub { $self->_on_button_press(@_);   }
+  );
 
   my $sw = Gtk2::ScrolledWindow->new;
   $sw->set_policy ('automatic', 'automatic');
@@ -278,6 +281,45 @@ sub _drag_data_get {
   my $class = $self->selected_class or return;
 
   $data->set($data->target, 8, $class);
+}
+
+
+sub _on_button_press {
+  my($self, $gearlist, $event) = @_;
+
+  return FALSE unless $event->button == 3;  # right click handling only
+
+  my($path) = $gearlist->get_path_at_pos ($event->x, $event->y);
+  $gearlist->set_cursor($path);
+
+  my $info = $self->filtered_list->[$path->to_string] or return FALSE;
+
+  $self->_post_context_menu($info);
+
+  return TRUE;
+}
+
+
+sub _post_context_menu {
+  my($self, $info) = @_;
+
+  my $menu = Gtk2::Menu->new;
+
+  my $menu_item = Gtk2::MenuItem->new("Help about '$info->{title}'");
+  $menu_item->signal_connect(
+    activate => sub { $self->app->show_help($info->{class}); }
+  );
+  $menu->append($menu_item);
+  $menu_item->show;
+
+  $menu->popup(undef, undef, \&menu_pos, undef, 3, 0);
+}
+
+
+sub menu_pos {
+  my($menu, $x, $y, $data) = @_;
+
+  return($x-2, $y-2);
 }
 
 
