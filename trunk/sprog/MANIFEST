@@ -74,6 +74,7 @@ t/05_eventloop.t
 t/06_app.t
 t/07_gear_db.t
 t/08_gear.t
+t/09_help_parser.t
 t/10_read_file.t
 t/12_run_command.t
 t/14_machine.t

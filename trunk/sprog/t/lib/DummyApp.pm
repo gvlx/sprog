@@ -52,3 +52,32 @@ sub add_io_reader {
 
 1;
 
+
+=head1 NAME
+
+DummyApp - For testing porpoises
+
+=head1 DESCRIPTION
+
+The POD in this file is for testing L<Sprog::HelpParser>.  It serves no other
+purpose.
+
+Please  I<ignore>  it.
+
+=head2 Options
+
+=over 4
+
+=item *
+
+a B<Bold> word
+
+=item *
+
+a C<Code> word
+
+=back
+
+  Verbatim  Text
+
+=cut
