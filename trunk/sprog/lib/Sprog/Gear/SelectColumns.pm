@@ -327,7 +327,7 @@ under the same terms as Perl itself.
 
 =begin :sprog-help-text
 
-=head1 Select Columns
+=head1 Select Columns Gear
 
 This gear allows you to pass through selected columns from the 'list' input
 connector to the 'list' output connector.
