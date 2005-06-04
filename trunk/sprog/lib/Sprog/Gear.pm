@@ -17,6 +17,7 @@ __PACKAGE__->mk_accessors(qw(
   next
   x
   y
+  has_error
   work_done
   sleeping
 ));
@@ -27,7 +28,6 @@ use Scalar::Util qw(weaken);
 
 sub has_input     { return defined shift->input_type;  }
 sub has_output    { return defined shift->output_type; }
-sub alert         { shift->app->alert(@_);             }
 
 sub new {
   my $class = shift;
@@ -95,6 +95,14 @@ sub _class_lineage {
 }
 
 
+sub alert {
+  my $self = shift;
+  
+  $self->has_error(1);
+  $self->app->alert(@_);
+}
+
+
 sub serialise {
   my($self) = @_;
 
@@ -159,7 +167,12 @@ sub scheduler {
 }
 
 
-sub engage { 1; }
+sub engage {
+  my $self = shift;
+  
+  $self->has_error(0);  # No errors if we got this far
+  return 1;
+}
 
 sub disengage {
   my $self = shift;
