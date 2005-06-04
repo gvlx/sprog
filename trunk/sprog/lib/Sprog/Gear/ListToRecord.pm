@@ -83,4 +83,9 @@ are some examples to show you what to expect:
 
 This gear has no properties.
 
+=head2 See Also
+
+If your data does not have column names in the first row, you can use the
+L<Add Field Names|Sprog::Gear::NameFields> gear to assign field names manually.
+
 =end :sprog-help-text
