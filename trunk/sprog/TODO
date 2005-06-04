@@ -1,7 +1,7 @@
+* Highlight gear which generated alert
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
 * ReplaceFile: implement gear
-* NameFields: implement gear
 * PerlCodePH: implement gear
 * DBIQuery: implement gear
 * CSVSplit: replace with proper implementation
