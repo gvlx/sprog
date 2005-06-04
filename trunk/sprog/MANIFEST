@@ -14,6 +14,7 @@ lib/Sprog/Gear/InputFromFH.pm
 lib/Sprog/Gear/ListToCSV.pm
 lib/Sprog/Gear/ListToRecord.pm
 lib/Sprog/Gear/LowerCase.pm
+lib/Sprog/Gear/NameFields.pm
 lib/Sprog/Gear/OutputToFH.pm
 lib/Sprog/Gear/ParseHTMLTable.pm
 lib/Sprog/Gear/PerlBase.pm
@@ -96,6 +97,7 @@ t/34_perl_code_ap.t
 t/40_whitespace.t
 t/42_html_table.t
 t/44_list_to_rec.t
+t/45_name_fields.t
 t/46_list_to_csv.t
 t/48_tt2.t
 t/50_clf_parse.t
