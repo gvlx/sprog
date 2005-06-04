@@ -29,6 +29,8 @@ sub engage {
   return $self->alert('You must enter some field names') unless(/\S/);
   my @names = map { s/^\s+//; s/\s+$//; $_ } split /,/;
   $self->{_colnames} = \@names;
+
+  return $self->SUPER::engage;
 }
 
 
