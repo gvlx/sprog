@@ -40,5 +40,16 @@ that's associated with the type of gear you're looking for and press the
 B<Search> button (or the Enter key).
 
 I<Note: the palette will only display gears that match your connector type
-selections B<and> your search terms.  Set the connector drop-downs to 'Any' to
-get the most matches in a search>.
+selections B<and> your search terms.  Set both the connector drop-downs to
+'Any' to get the most matches in a search>.
+
+=head2 Gears On the Palette
+
+If you find a gear you want to include in your machine, simply drag it across
+and drop it on the workspace.  You can drop a gear on top of an existing gear
+in you machine.  If the connectors match, the new gear will snap into place 
+below the one you dropped it on.
+
+You can access the help page for a gear before you add it to the machine.
+Either select the gear and press B<Shift-F1> or right-click on the gear and
+select 'Help' from the pop-up menu.

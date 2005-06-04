@@ -3,6 +3,7 @@ package Sprog::GtkView::Palette;
 use strict;
 
 use Glib qw(TRUE FALSE);
+use Gtk2::Gdk::Keysyms;
 
 use base qw(Class::Accessor::Fast);
 
@@ -228,6 +229,9 @@ sub _build_gearlist {
   $gearlist->signal_connect(
     button_press_event => sub { $self->_on_button_press(@_);   }
   );
+  $gearlist->signal_connect(
+    key_press_event => sub { $self->_on_key_press(@_);   }
+  );
 
   my $sw = Gtk2::ScrolledWindow->new;
   $sw->set_policy ('automatic', 'automatic');
@@ -320,6 +324,20 @@ sub menu_pos {
   my($menu, $x, $y, $data) = @_;
 
   return($x-2, $y-2);
+}
+
+
+sub _on_key_press {
+  my($self, $gearlist, $event) = @_;
+
+  return FALSE unless(                          # Was it Shift-F1?
+    $event->keyval == $Gtk2::Gdk::Keysyms{F1}
+    and  $event->state & "shift-mask"
+  );
+
+  $self->app->show_help($self->selected_class);
+
+  return TRUE;
 }
 
 
