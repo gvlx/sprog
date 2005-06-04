@@ -21,7 +21,7 @@ sub engage {
     my $code = $self->_sub_preamble . $perl_code . ';' . $self->_sub_postamble;
     $self->{perl_sub} = eval "sub {\n$code\n}";
     if($@) {
-      $self->app->alert('Error in Perl code', $@);
+      $self->alert('Error in Perl code', $@);
       delete $self->{perl_sub};
     }
   }

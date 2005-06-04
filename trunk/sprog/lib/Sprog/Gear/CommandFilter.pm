@@ -39,7 +39,7 @@ sub _run_command {
 
   my $command = $self->command;
   if(!defined($command) or $command !~ /\S/) {
-    $self->app->alert('You must enter a filter command');
+    $self->alert('You must enter a filter command');
     return;
   }
 
@@ -50,7 +50,7 @@ sub _run_command {
   };
   if($@) {
     exit if $parent != $$;  # exec must have failed in child
-    $self->app->alert(qq(Can't run "$command"), "$@");
+    $self->alert(qq(Can't run "$command"), "$@");
     return;
   }
 

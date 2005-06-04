@@ -37,13 +37,13 @@ sub _open_file {
 
   my $filename = $self->filename;
   if(!defined($filename) or $filename !~ /\S/) {
-    $self->app->alert('You must select an input file');
+    $self->alert('You must select an input file');
     return;
   }
 
   my($fh);
   if(!open $fh, '<', $filename) {
-    $self->app->alert(qq(Can't open "$filename"), "$!");
+    $self->alert(qq(Can't open "$filename"), "$!");
     return;
   }
   $self->msg_out(file_start => $filename);

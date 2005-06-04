@@ -38,7 +38,7 @@ sub _open_output_file {
 
   my $filename = $self->filename;
   if(!defined($filename) or $filename !~ /\S/) {
-    $self->app->alert('You must select an output file');
+    $self->alert('You must select an output file');
     return;
   }
 
@@ -57,7 +57,7 @@ sub _open_output_file {
 
   my($fh);
   if(!open $fh, $mode, $filename) {
-    $self->app->alert(qq(Can't open "$filename"), "$!");
+    $self->alert(qq(Can't open "$filename"), "$!");
     return;
   }
 

@@ -36,13 +36,13 @@ sub _run_command {
 
   my $command = $self->command;
   if(!defined($command) or $command !~ /\S/) {
-    $self->app->alert('You must enter an input command');
+    $self->alert('You must enter an input command');
     return;
   }
 
   my($fh);
   if(!open $fh, '-|', $command) {
-    $self->app->alert(qq(Can't run "$command"), "$!");
+    $self->alert(qq(Can't run "$command"), "$!");
     return;
   }
   $self->msg_out(file_start => undef);

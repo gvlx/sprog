@@ -44,7 +44,7 @@ sub engage {
     local($@);
     $self->{subst} = eval "sub { s/$pattern/$replacement/$flags }";
     if($@) {
-      $self->app->alert("Error setting up find/replace", $@);
+      $self->alert("Error setting up find/replace", $@);
       delete $self->{subst};
       $@ = '';
     }

@@ -30,7 +30,7 @@ sub engage {
     Sprog::Gear::ApacheLogParse::Parser->new($self->format_string) 
   };
   if ($@) {
-    $self->app->alert("Unable to parse log format string", $@);
+    $self->alert("Unable to parse log format string", $@);
     return;
   }
 
