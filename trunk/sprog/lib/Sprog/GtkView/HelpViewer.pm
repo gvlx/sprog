@@ -308,7 +308,14 @@ sub load_topic {
   my $parser = $self->app->factory->make_class('/app/help_parser', $self);
   $parser->parse_topic($topic);
   if($parser->content_seen) {
+    $self->textview->get_visible_rect;
     $self->textview->parent->get_vadjustment->set_value($pos);
+    $self->app->add_idle_handler(
+      sub { # do it again when the widget is drawn
+        $self->textview->parent->get_vadjustment->set_value($pos);
+        return FALSE; 
+      }
+    );
     return;
   }
 
@@ -392,6 +399,7 @@ sub on_close_activated {
 sub on_reload_activated {
   my $self = shift;
 
+  $self->save_scroll_pos;
   $self->load_topic;
 }
 
