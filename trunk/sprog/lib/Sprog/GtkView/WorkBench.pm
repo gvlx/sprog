@@ -145,6 +145,14 @@ sub delete_gear_view_by_id {
 }
 
 
+sub update_gear_view {
+  my($self, $id) = @_;
+
+  my $gearview = $self->{gears}->{$id} or return;
+  $gearview->update_view;
+};
+
+
 sub drop_gear {
   my($self, $gearv, $x, $y) = @_;
 

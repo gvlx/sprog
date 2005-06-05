@@ -57,6 +57,7 @@ sub show_palette      { shift->view->show_palette();             }
 sub hide_palette      { shift->view->hide_palette();             }
 
 sub alert             { shift->view->alert(@_);                  }
+sub update_gear_view  { shift->view->update_gear_view(@_);       }
 sub status_message    { shift->view->status_message(@_);         }
 sub not_implemented   { shift->alert('Not implemented');         }
 

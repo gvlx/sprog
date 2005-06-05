@@ -117,6 +117,8 @@ sub disable_tool_button { $_[0]->toolbar->set_sensitive($_[1], FALSE); }
 sub  enable_menu_item   { $_[0]->menubar->set_sensitive($_[1], TRUE);  }
 sub disable_menu_item   { $_[0]->menubar->set_sensitive($_[1], FALSE); }
 
+sub update_gear_view    { shift->workbench->update_gear_view(@_);      }
+
 
 sub _build_workbench {
   my($self) = @_;
