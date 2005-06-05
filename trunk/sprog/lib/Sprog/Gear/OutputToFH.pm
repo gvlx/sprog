@@ -17,11 +17,11 @@ sub data {
 
   $self->{buffer} .= $data;
 
-  return 1 if $self->{out_tag};  # We're already waiting
+  return unless length $self->{buffer};
+  return if $self->{out_tag};  # We're already waiting
   my $fh = $self->fh_out or return;
   $self->sleeping(1);
   $self->{out_tag} = $self->app->add_io_writer($fh, sub { $self->_can_write });
-  return 1;
 }
 
 
