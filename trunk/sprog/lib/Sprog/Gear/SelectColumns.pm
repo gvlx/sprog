@@ -58,6 +58,8 @@ sub engage {
   }
   $self->{_colspec} = \@ranges;
   $self->{_slices} = {};
+
+  return $self->SUPER::engage;
 }
 
 
