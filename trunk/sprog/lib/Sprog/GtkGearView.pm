@@ -8,6 +8,8 @@ __PACKAGE__->mk_accessors(qw(
   app
   gear
   group
+  block
+  label
   last_mouse_x
   last_mouse_y
   dragging
@@ -20,6 +22,9 @@ use Glib qw(TRUE FALSE);
 use Sprog::GtkGearView::Paths;
 use Sprog::GtkAutoDialog;
 
+use constant BLINK_ON  => 1;
+use constant BLINK_OFF => 2;
+
 *gear_width  = \&Sprog::GtkGearView::Paths::gBW;
 *gear_height = \&Sprog::GtkGearView::Paths::gBH;
 *gCW = \&Sprog::GtkGearView::Paths::gCW;
@@ -29,7 +34,7 @@ sub new {
   my $class = shift;
 
   my $self = bless { @_ }, $class;
-  $self->{app} && weaken($self->{app});
+  weaken($self->{app});
 
   return $self;
 }
@@ -61,6 +66,7 @@ sub add_gear {
     cap_style     => 'round'
   );
   $block->set_path_def($shape);
+  $self->block($block);
 
   $self->add_title($group, $gear);
   $self->init_cog_frames($group);
@@ -120,6 +126,7 @@ sub add_title {
     justification => 'center',
     text          => $text,
   );
+  $self->label($label);
   my $text_w = $label->get('text_width');
   $label->set('x' => $text_x + $text_w / 2);  # Simulate left alignment
 }
@@ -224,6 +231,38 @@ sub event {
 }
 
 
+sub update_view {
+  my $self = shift;
+
+  return if $self->{blinking};
+  return unless $self->gear->has_error;
+  
+  $self->{blinking} = BLINK_OFF;
+  $self->app->add_timeout(500, sub { $self->blink });
+}
+
+
+sub blink {
+  my $self = shift;
+
+  if(!$self->gear or !$self->gear->has_error) {
+    $self->label->set(fill_color => 'black');
+    delete $self->{blinking};
+    return FALSE;
+  }
+
+  if($self->{blinking} == BLINK_ON) {
+    $self->label->set(fill_color => '#ff9933');
+    $self->{blinking} = BLINK_OFF;
+  }
+  else {
+    $self->label->set(fill_color => '#dd0000');
+    $self->{blinking} = BLINK_ON;
+  }
+  return TRUE;
+}
+
+
 sub delete_view {
   my $self = shift;
 
@@ -299,6 +338,7 @@ sub properties {
 sub auto_properties {
   my $self = shift;
 
+  $self->gear->has_error(0);
   return Sprog::GtkAutoDialog->invoke(gearview => $self);
 }
 
