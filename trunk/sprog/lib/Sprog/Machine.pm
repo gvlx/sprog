@@ -222,8 +222,9 @@ sub run {
 
   my $head = $self->head_gear;
   return $self->app->alert("You must add an input gear") unless($head);
-  return $self->app->alert("You must complete your machine with an output gear")
-    if($head->last->has_output);
+  my $last = $head->last;
+  return $last->alert("You must complete your machine with an output gear")
+    if($last->has_output);
 
   my $sched = $self->_scheduler(
     $self->app->factory->make_class('/app/machine/scheduler', $head)
