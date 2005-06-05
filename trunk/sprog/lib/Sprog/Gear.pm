@@ -17,7 +17,6 @@ __PACKAGE__->mk_accessors(qw(
   next
   x
   y
-  has_error
   work_done
   sleeping
 ));
@@ -33,6 +32,7 @@ sub new {
   my $class = shift;
 
   my $self = bless { 
+    has_error => 0,
     $class->_defaults,
     @_,
   }, $class;
@@ -100,6 +100,17 @@ sub alert {
   
   $self->has_error(1);
   $self->app->alert(@_);
+}
+
+
+sub has_error {
+  my $self = shift;
+
+  if(@_) {
+    $self->{has_error} = shift;
+    $self->app->update_gear_view($self->id);
+  }
+  return $self->{has_error};
 }
 
 
