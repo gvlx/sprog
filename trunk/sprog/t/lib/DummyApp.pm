@@ -50,6 +50,8 @@ sub add_io_reader {
   push @{$self->io_readers}, $sub;
 }
 
+sub update_gear_view { return; }
+
 1;
 
 

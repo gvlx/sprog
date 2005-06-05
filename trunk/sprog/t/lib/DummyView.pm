@@ -29,5 +29,7 @@ sub running                { return; }
 sub status_message         { return; }
 sub set_window_title       { return; }
 sub delete_gear_view_by_id { return; }
+sub update_gear_view       { return; }
+
 1;
 
