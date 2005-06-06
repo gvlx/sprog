@@ -32,6 +32,7 @@ use Glib qw(TRUE FALSE);
 use constant TARG_STRING  => 0;
 use constant DEFAULT_WIN_WIDTH  => 750;
 use constant DEFAULT_WIN_HEIGHT => 560;
+use constant DEFAULT_PAL_WIDTH  => 220;
 
 sub new {
   my $class = shift;
@@ -93,9 +94,18 @@ sub build_app_window {
 
   $self->_add_palette;
 
+  my $pwidth = $self->app->get_pref('palette.width')  || DEFAULT_PAL_WIDTH;
+  $hpaned->set_position($pwidth);
+
   $app_win->signal_connect(
     size_allocate => sub { $self->on_size_allocate(@_); }
   );
+
+  if(my $pal_win = $self->palette_win) {
+    $pal_win->signal_connect(
+      size_allocate => sub { $self->on_palette_resize(@_); }
+    );
+  }
 }
 
 
@@ -127,6 +137,24 @@ sub on_size_allocate {
     $self->height($height);
     $self->app->set_pref('app_win.height', $height);
   }
+}
+
+
+sub on_palette_resize {
+  my $self = shift;
+
+  if(my $hpaned = $self->palette_pane) {
+    my $pos = $hpaned->get_position;
+    my $pref = $self->app->get_pref('palette.width');
+    if(
+      (!defined($pref) and $pos != DEFAULT_PAL_WIDTH) or
+      ( defined($pref) and $pos != $pref)
+    ) {
+      $self->app->set_pref('palette.width', $pos);
+    }
+  }
+
+  return TRUE;
 }
 
 
