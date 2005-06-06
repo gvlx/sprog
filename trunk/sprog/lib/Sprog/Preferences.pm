@@ -24,21 +24,5 @@ sub _select_os_subclass {
 }
 
 
-sub _deferred_save {
-  my $self = shift;
-
-  $self->{_last_update} = time();
-
-  return if $self->{_time_tag};
-
-  $self->{_time_tag} = $self->app->add_timeout(3000, sub {
-    return 1 if time() - $self->{_last_update} < 3;
-    $self->save;
-    delete $self->{_time_tag};
-    return 0;
-  });
-}
-
-
 1;
 

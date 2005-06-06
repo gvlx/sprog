@@ -71,7 +71,7 @@ sub set_pref {
   my($self, $key, $value) = @_;
 
   $prefs_data->{$key} = $value;
-  $self->_deferred_save;
+  $self->save;
 }
 
 
