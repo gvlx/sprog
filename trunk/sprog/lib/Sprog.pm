@@ -8,6 +8,7 @@ use base qw(Class::Accessor::Fast);
 
 __PACKAGE__->mk_accessors(qw(
   factory
+  prefs
   geardb
   machine
   view
@@ -22,6 +23,7 @@ sub new {
   my $factory = $self->{factory} or die "No class factory";
 
   $factory->inject(   # set default classes if not already defined
+    '/app/preferences' => 'Sprog::Preferences',
     '/app/geardb'      => 'Sprog::GearMetadata',
     '/app/machine'     => 'Sprog::Machine',
     '/app/view'        => 'Sprog::GtkView',
@@ -30,8 +32,11 @@ sub new {
   );
   $self->geardb    ( $factory->load_class('/app/geardb'   ) );
   $self->event_loop( $factory->load_class('/app/eventloop') );
-  $self->machine   ( $factory->make_class('/app/machine', app => $self) );
-  $self->view      ( $factory->make_class('/app/view',    app => $self) );
+  $self->prefs     ( $factory->make_class('/app/preferences', app => $self) );
+  $self->machine   ( $factory->make_class('/app/machine',     app => $self) );
+  $self->view      ( $factory->make_class('/app/view',        app => $self) );
+
+  $self->view->apply_prefs;
 
   return $self;
 }
@@ -47,6 +52,9 @@ sub run {
 sub inject            { shift->factory->inject(@_);              }
 sub make_class        { shift->factory->make_class(@_);          }
 sub load_class        { shift->factory->load_class(@_);          }
+
+sub get_pref          { shift->prefs->get_pref(@_);              }
+sub set_pref          { shift->prefs->set_pref(@_);              }
 
 sub show_toolbar { my $view = shift->view or return; $view->show_toolbar(); }
 sub hide_toolbar { my $view = shift->view or return; $view->hide_toolbar(); }

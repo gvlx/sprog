@@ -102,7 +102,8 @@ sub build_toolbar {
   );
   $self->set_sensitive('stop' => FALSE);
 
-  $self->set_style('both');
+  my $pref = $self->app->get_pref('toolbar.style') || 'both';
+  $self->set_style($pref);
 }
 
 
@@ -110,6 +111,32 @@ sub set_style {
   my($self, $style) = @_;
 
   $self->widget->set('toolbar-style' => $style);
+  my $pref = $self->app->get_pref('toolbar.style') || 'both';
+  if($pref ne $style) {
+    $self->app->set_pref('toolbar.style', $style)
+  }
+}
+
+
+sub show {
+  my $self = shift;
+
+  $self->widget->show;
+  my $pref = $self->app->get_pref('toolbar.visible');
+  if(defined($pref)  and  !$pref) {
+    $self->app->set_pref('toolbar.visible', 1);
+  }
+}
+
+
+sub hide {
+  my $self = shift;
+
+  $self->widget->hide;
+  my $pref = $self->app->get_pref('toolbar.visible');
+  if(!defined($pref)  or  $pref) {
+    $self->app->set_pref('toolbar.visible', 0)
+  }
 }
 
 

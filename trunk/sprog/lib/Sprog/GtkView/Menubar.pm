@@ -80,7 +80,7 @@ sub _build_menubar {
         'Toolbar _Style' => {
             item_type  => '<Branch>',
             children => [
-                'I_cons and Text' => {
+                'Icons _and Text' => {
                   item_type       => '<RadioItem>',
                   callback        => sub { $app->set_toolbar_style('both'); },
                   callback_action => $action++,
@@ -141,7 +141,11 @@ sub _build_menubar {
   my $menu = Gtk2::SimpleMenu->new(menu_tree => $menu_tree);
   $self->menu($menu);
 
-  $menu->get_widget('/View/Toolbar')->set_active(TRUE);
+
+  my $flag = $self->app->get_pref('toolbar.visible');
+  $flag = (defined($flag) and !$flag) ? FALSE : TRUE;
+  $menu->get_widget('/View/Toolbar')->set_active($flag);
+  
   $menu->get_widget('/Machine/Stop')->set_sensitive(FALSE);
 
   return $menu;
@@ -157,6 +161,25 @@ sub set_palette_active {
 
   my $item = $self->menu->get_widget('/View/Palette') or return;
   $item->set_active($state);
+}
+
+
+sub set_toolbar_style {
+  my $self  = shift;
+
+  my $style = $self->app->get_pref('toolbar.style') || 'both';
+
+  my %map = (
+    'both'       => '/View/Toolbar Style/Icons and Text',
+    'icons'      => '/View/Toolbar Style/Icons Only',
+    'text'       => '/View/Toolbar Style/Text Only',
+    'both-horiz' => '/View/Toolbar Style/Text Beside Icons',
+  );
+
+  my $path = $map{$style} or return;
+
+  my $item = $self->menu->get_widget($path) or return;
+  $item->set_active(TRUE);
 }
 
 

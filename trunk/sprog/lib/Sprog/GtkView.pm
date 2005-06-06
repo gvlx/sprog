@@ -18,9 +18,10 @@ __PACKAGE__->mk_accessors(qw(
   palette_pane
   palette_win
   palette
-  palette_visible
   floating_palette
   app
+  width
+  height
 ));
 
 use Scalar::Util qw(weaken);
@@ -29,11 +30,16 @@ use File::Basename ();
 use Glib qw(TRUE FALSE);
 
 use constant TARG_STRING  => 0;
+use constant DEFAULT_WIN_WIDTH  => 750;
+use constant DEFAULT_WIN_HEIGHT => 560;
 
 sub new {
   my $class = shift;
 
-  my $self = bless { @_, }, $class;
+  my $self = bless { 
+    @_, 
+    palette_visible => 0,
+  }, $class;
   weaken($self->{app});
 
   $self->{floating_palette} = 0;
@@ -51,9 +57,9 @@ sub new {
   );
 
   $self->chrome_class($app->load_class('/app/view/chrome'));
-  $self->alert_class($app->load_class('/app/view/alert_dialog'));
-  $self->help_class($app->load_class('/app/view/help_viewer'));
-  $self->about_class($app->load_class('/app/view/about_dialog'));
+  $self->alert_class ($app->load_class('/app/view/alert_dialog'));
+  $self->about_class ($app->load_class('/app/view/about_dialog'));
+  $self->help_class  ($app->load_class('/app/view/help_viewer'));
 
   $self->build_app_window;
 
@@ -66,7 +72,9 @@ sub build_app_window {
 
   my $app_win = $self->app_win(Gtk2::Window->new);
   $app_win->signal_connect(destroy => sub { $self->app->quit; });
-  $app_win->set_default_size(750, 560);
+  $self->width ($self->app->get_pref('app_win.width')  || DEFAULT_WIN_WIDTH);
+  $self->height($self->app->get_pref('app_win.height') || DEFAULT_WIN_HEIGHT);
+  $app_win->set_default_size($self->width, $self->height);
 
   my $vbox = Gtk2::VBox->new(FALSE, 0);
   $app_win->add($vbox);
@@ -84,6 +92,41 @@ sub build_app_window {
   $app_win->show_all;
 
   $self->_add_palette;
+
+  $app_win->signal_connect(
+    size_allocate => sub { $self->on_size_allocate(@_); }
+  );
+}
+
+
+sub apply_prefs {
+  my $self = shift;
+  
+  my $app = $self->app;
+
+  $self->show_palette if $app->get_pref('palette.visible');
+
+  $self->menubar->set_toolbar_style($app->get_pref('toolbar.style'));
+
+  my $toolbar = $app->get_pref('toolbar.visible');
+  $toolbar = 1 if !defined($toolbar);
+  $self->hide_toolbar unless $toolbar;
+}
+
+
+sub on_size_allocate {
+  my($self, $window, $rect) = @_;
+
+  my($width, $height) = ($rect->width, $rect->height);
+
+  if($self->width != $width) {
+    $self->width($width);
+    $self->app->set_pref('app_win.width', $width);
+  }
+  if($self->height != $height) {
+    $self->height($height);
+    $self->app->set_pref('app_win.height', $height);
+  }
 }
 
 
@@ -107,8 +150,8 @@ sub _build_toolbar {
   )->widget;
 }
 
-sub show_toolbar        { $_[0]->toolbar->widget->show                 }
-sub hide_toolbar        { $_[0]->toolbar->widget->hide                 }
+sub show_toolbar        { $_[0]->toolbar->show;                        }
+sub hide_toolbar        { $_[0]->toolbar->hide;                        }
 
 sub set_toolbar_style   { $_[0]->toolbar->set_style($_[1]);            }
 sub  enable_tool_button { $_[0]->toolbar->set_sensitive($_[1], TRUE);  }
@@ -362,6 +405,17 @@ sub hide_palette {
   $self->toolbar->set_palette_active(FALSE);
   $self->palette_win->hide();
   $self->palette_visible(0);
+}
+
+
+sub palette_visible {
+  my $self = shift;
+  
+  if(@_  and  $self->{palette_visible} ne $_[0]) {
+    $self->{palette_visible} = shift;
+    $self->app->set_pref('palette.visible', $self->{palette_visible});
+  }
+  return $self->{palette_visible};
 }
 
 

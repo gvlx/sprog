@@ -17,5 +17,8 @@ sub new {
 }
 
 
+sub apply_prefs { return; }
+
+
 1;
 
