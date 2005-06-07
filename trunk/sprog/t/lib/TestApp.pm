@@ -22,10 +22,11 @@ sub make_test_app {
   my $class = shift;
 
   return make_app(               # Imported from ClassFactory.pm
-    '/app'           => $class,
-    '/app/machine'   => 'TestMachine',
-    '/app/eventloop' => 'Sprog::GlibEventLoop',
-    '/app/view'      => 'DummyView',
+    '/app'             => $class,
+    '/app/preferences' => 'DummyPrefs',
+    '/app/machine'     => 'TestMachine',
+    '/app/eventloop'   => 'Sprog::GlibEventLoop',
+    '/app/view'        => 'DummyView',
   );
 }
 
@@ -33,9 +34,10 @@ sub make_gtk_app {
   my $class = shift;
 
   return make_app(               # Imported from ClassFactory.pm
-    '/app'         => $class,
-    '/app/machine' => 'TestMachine',
-    '/app/view'    => 'TestView',
+    '/app'             => $class,
+    '/app/preferences' => 'DummyPrefs',
+    '/app/machine'     => 'TestMachine',
+    '/app/view'        => 'TestView',
   );
 
 }
