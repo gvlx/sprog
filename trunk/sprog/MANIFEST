@@ -110,6 +110,7 @@ t/lib/Dummy.pm
 t/lib/DummyApp.pm
 t/lib/DummyGear.pm
 t/lib/DummyMachine.pm
+t/lib/DummyPrefs.pm
 t/lib/DummyView.pm
 t/lib/LineSink.pm
 t/lib/ListSink.pm
