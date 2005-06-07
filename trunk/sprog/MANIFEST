@@ -63,6 +63,8 @@ lib/Sprog/help/scheduler.pod
 lib/Sprog/HelpParser.pm
 lib/Sprog/Machine.pm
 lib/Sprog/Machine/Scheduler.pm
+lib/Sprog/Preferences.pm
+lib/Sprog/Preferences/Unix.pm
 lib/Sprog/PrintProxy.pm
 lib/Sprog/TestHelper.pm
 Makefile.PL
