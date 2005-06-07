@@ -25,6 +25,7 @@ lib/Sprog/Gear/PerlCodePA.pm
 lib/Sprog/Gear/ReadFile.pm
 lib/Sprog/Gear/RetrieveURL.pm
 lib/Sprog/Gear/SelectColumns.pm
+lib/Sprog/Gear/SelectFields.pm
 lib/Sprog/Gear/StripWhitespace.pm
 lib/Sprog/Gear/TemplateTT2.pm
 lib/Sprog/Gear/TextInput.pm
@@ -97,6 +98,7 @@ t/31_perl_code_pa.t
 t/32_perl_code_hp.t
 t/34_perl_code_ap.t
 t/40_whitespace.t
+t/41_select_fields.t
 t/42_html_table.t
 t/44_list_to_rec.t
 t/45_name_fields.t
