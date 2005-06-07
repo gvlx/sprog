@@ -23,6 +23,9 @@ use Scalar::Util qw(weaken);
 
 use constant HOME_TOPIC => 'Sprog::help::index';
 
+use constant DEFAULT_WIDTH  => 600;
+use constant DEFAULT_HEIGHT => 580;
+
 
 my $cursor     = Gtk2::Gdk::Cursor->new('xterm');
 my $url_cursor = Gtk2::Gdk::Cursor->new('hand2');
@@ -54,6 +57,10 @@ sub _init {
   $self->trail_index(undef);
 
   my $glade_src = $self->glade_xml;
+  my $width  = $self->app->get_pref('help_win.width')  || DEFAULT_WIDTH;
+  my $height = $self->app->get_pref('help_win.height') || DEFAULT_HEIGHT;
+  $glade_src =~ s/<% default_width %>/$width/;
+  $glade_src =~ s/<% default_height %>/$height/;
 
   my $gladexml = Gtk2::GladeXML->new_from_buffer($glade_src);
 
@@ -62,7 +69,6 @@ sub _init {
   );
 
   my $window = $self->helpwin($gladexml->get_widget('helpwin'));
-  $window->resize(600, 580);
 
   my $textview = $self->textview($gladexml->get_widget('textview'));
   $textview->set_editable(FALSE);
@@ -106,6 +112,10 @@ sub _init {
   $self->home_menuitem($gladexml->get_widget('home_menuitem'));
 
   $self->_init_tags($buffer, $font_desc->get_size);
+
+  $window->signal_connect(
+    size_allocate => sub { $self->on_size_allocate(@_); }
+  );
 
   return $self;
 }
@@ -389,6 +399,23 @@ sub status_message {
 
 ########################### GUI Event Handlers ###############################
 
+sub on_size_allocate {
+  my($self, $window, $rect) = @_;
+
+  my($width, $height) = ($rect->width, $rect->height);
+
+  my $app = $self->app;
+  my $def_width  = $app->get_pref('help_win.width')  || DEFAULT_WIDTH;
+  my $def_height = $app->get_pref('help_win.height') || DEFAULT_HEIGHT;
+  if($def_width != $width) {
+    $app->set_pref('help_win.width', $width);
+  }
+  if($def_height != $height) {
+    $app->set_pref('help_win.height', $height);
+  }
+}
+
+
 sub on_close_activated {
   my $self = shift;
 
@@ -509,8 +536,8 @@ sub glade_xml {
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
-  <property name="default_width">400</property>
-  <property name="default_height">300</property>
+  <property name="default_width"><% default_width %></property>
+  <property name="default_height"><% default_height %></property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="decorated">True</property>
