@@ -1,0 +1,30 @@
+=head1 NAME
+
+sprog - Scripting for the GUI guys
+
+=head1 SYNOPSIS
+
+  sprog [options] [<filename>.sprog] [<filenames>]
+
+Options:
+
+  -?               detailed help about options
+  --run     (-r)   start the machine running
+  --version (-v)   print version number and exit
+
+Usually you would simply invoke C<sprog> with no arguments or possibly just
+the filename of a <.sprog> file.
+
+=head1 OPTIONS
+
+This is where all the helpful information about options would go.
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+=cut
+

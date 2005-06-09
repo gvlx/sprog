@@ -6,8 +6,13 @@ our $VERSION = '0.09';
 
 use base qw(Class::Accessor::Fast);
 
+use Getopt::Long qw(GetOptions);
+use Pod::Usage   qw(pod2usage);
+use File::Spec   qw();
+
 __PACKAGE__->mk_accessors(qw(
   factory
+  opt
   prefs
   geardb
   machine
@@ -18,7 +23,12 @@ __PACKAGE__->mk_accessors(qw(
 sub new {
   my $class = shift;
 
-  my $self = bless { @_ }, $class;
+  return bless { @_ }, $class;
+}
+
+
+sub _init {
+  my $self = shift;
 
   my $factory = $self->{factory} or die "No class factory";
 
@@ -44,10 +54,53 @@ sub new {
 sub run {
   my $self = shift;
 
-  $self->load_from_file(shift) if(@_);
+  my $opt = $self->_getopt(@_);
+
+  $self->_init;
+
+  $self->load_from_file($opt->{sprog_file}) if $opt->{sprog_file};
+
+  if($opt->{run}) {
+    $self->add_idle_handler(sub { $self->run_machine; return 0 });
+  }
 
   $self->event_loop->run;
 }
+
+
+sub _getopt {
+  my $self = shift;
+
+  my %opt = ();
+
+  local(@ARGV) = @_;
+  pod2usage({ -exitval => 1,  -verbose => 0,  -input   => _pod_file() })
+    unless GetOptions(\%opt, 'help|h|?', 'version|v', 'run|r');
+
+  pod2usage({ -exitval => 0,  -verbose => 2,  -input   => _pod_file() })
+    if($opt{help});
+
+  if($opt{version}) {
+    print "$VERSION\n";
+    exit 0;
+  }
+
+  $opt{sprog_file} = shift @ARGV if(@ARGV  and  $ARGV[0] =~ /\.sprog$/i);
+  $opt{filenames}  = [ @ARGV ]   if @ARGV;
+
+  return $self->opt(\%opt);
+}
+
+
+sub _pod_file {
+  foreach (@INC) {
+    my $path = File::Spec->catfile($_, qw(Sprog help commandline.pod));
+    return $path if -e $path;
+  }
+
+  die "Unable to find Sprog::help::commandline.pod";
+}
+
 
 sub inject            { shift->factory->inject(@_);              }
 sub make_class        { shift->factory->make_class(@_);          }
@@ -199,6 +252,9 @@ Sprog - Scripting for the GUI Guys
 
 =head1 SYNOPSIS
 
+The C<sprog> script (included in the distribution) is a simple wrapper which
+instantiates an object of class C<Sprog> and calls its C<run> method:
+
   use Sprog::ClassFactory;
 
   make_app()->run(@ARGV);
@@ -248,7 +304,7 @@ run:
 =head1 SEE ALSO
 
 When you run Sprog, you will find information both for users and for developers
-in the help viewer - accessed via the F1 key (or ther help menu).
+in the help viewer - accessed via the F1 key (or the help menu).
 
 The Sprog web site is hosted by SourceForge at: L<http://sprog.sourceforge.net/>
 
