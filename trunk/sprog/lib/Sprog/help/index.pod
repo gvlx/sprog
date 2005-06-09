@@ -23,7 +23,11 @@ L<Understanding connectors|Sprog::help::connectors>
 
 =item *
 
-L<Using the Palette|Sprog::help::palette>
+L<Using the palette|Sprog::help::palette>
+
+=item *
+
+L<Command-line options|Sprog::help::commandline>
 
 =back
 
