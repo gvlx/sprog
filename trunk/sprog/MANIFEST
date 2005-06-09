@@ -49,6 +49,7 @@ lib/Sprog/GtkView/Palette.pm
 lib/Sprog/GtkView/Toolbar.pm
 lib/Sprog/GtkView/WorkBench.pm
 lib/Sprog/help/build_machine.pod
+lib/Sprog/help/commandline.pod
 lib/Sprog/help/connectors.pod
 lib/Sprog/help/filter_gears.pod
 lib/Sprog/help/gear_internals.pod
@@ -68,6 +69,9 @@ lib/Sprog/Preferences.pm
 lib/Sprog/Preferences/Unix.pm
 lib/Sprog/PrintProxy.pm
 lib/Sprog/TestHelper.pm
+lib/Sprog/TextGearView.pm
+lib/Sprog/TextGearView/TextWindow.pm
+lib/Sprog/TextView.pm
 Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)

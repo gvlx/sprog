@@ -66,8 +66,8 @@ base but overrides the C<run()> and C<quit()> methods to link into the Gtk
 event loop rather than the lower level Glib event loop.
 
 This class is used during testing by test scripts that don't require a display.
-In theory, it could also be used by Sprog in 'no-display' mode - if such a
-mode was ever implemented.
+It is also used by Sprog in C<--nogui> mode (see
+L<Command-line options|Sprog::help::commandline>).
 
 
 =head1 METHODS

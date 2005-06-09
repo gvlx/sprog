@@ -36,10 +36,22 @@ sub _init {
     '/app/preferences' => 'Sprog::Preferences',
     '/app/geardb'      => 'Sprog::GearMetadata',
     '/app/machine'     => 'Sprog::Machine',
-    '/app/view'        => 'Sprog::GtkView',
-    '/app/eventloop'   => 'Sprog::GtkEventLoop',
     '/app/help_parser' => 'Sprog::HelpParser',
   );
+
+  if($self->opt->{nogui}) {
+    $factory->inject(
+      '/app/view'      => 'Sprog::TextView',
+      '/app/eventloop' => 'Sprog::GlibEventLoop',
+    );
+  }
+  else {
+    $factory->inject(
+      '/app/view'      => 'Sprog::GtkView',
+      '/app/eventloop' => 'Sprog::GtkEventLoop',
+    );
+  }
+
   $self->geardb    ( $factory->load_class('/app/geardb'   ) );
   $self->event_loop( $factory->load_class('/app/eventloop') );
   $self->prefs     ( $factory->make_class('/app/preferences', app => $self) );
@@ -74,11 +86,15 @@ sub _getopt {
   my %opt = ();
 
   local(@ARGV) = @_;
-  pod2usage({ -exitval => 1,  -verbose => 0,  -input   => _pod_file() })
-    unless GetOptions(\%opt, 'help|h|?', 'version|v', 'run|r');
+  if(!GetOptions(\%opt, 
+    'help|h|?', 'version|v', 'run|r', 'nogui|n', 'quit|q',
+  )) {
+    pod2usage({ -exitval => 1,  -verbose => 0,  -input   => _pod_file() });
+  }
 
-  pod2usage({ -exitval => 0,  -verbose => 2,  -input   => _pod_file() })
-    if($opt{help});
+  if($opt{help}) {
+    pod2usage({ -exitval => 0,  -verbose => 2,  -input   => _pod_file() });
+  }
 
   if($opt{version}) {
     print "$VERSION\n";
@@ -87,6 +103,16 @@ sub _getopt {
 
   $opt{sprog_file} = shift @ARGV if(@ARGV  and  $ARGV[0] =~ /\.sprog$/i);
   $opt{filenames}  = [ @ARGV ]   if @ARGV;
+  $opt{run}        = 1           if $opt{nogui};
+  $opt{quit}       = 1           if $opt{nogui};
+  $opt{quit}       = 0           unless $opt{sprog_file};
+
+  if($opt{nogui} and !$opt{sprog_file}) {
+    pod2usage({
+      -message => "<filename.sprog> required in 'nogui' mode.",
+      -exitval => 1,  -verbose => 0,  -input   => _pod_file() 
+    });
+  }
 
   return $self->opt(\%opt);
 }
@@ -211,7 +237,10 @@ sub stop_machine {
 sub machine_running {
   my $self = shift;
 
-  $self->view->running(@_) if(@_);
+  if(@_) {
+    return $self->quit if($self->opt->{quit} and !$_[0]);
+    $self->view->running(@_);
+  }
   return $self->machine->running(@_);
 }
 

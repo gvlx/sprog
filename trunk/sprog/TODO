@@ -1,3 +1,5 @@
+* TextView - document classes
+* User-selectable fonts for text windows (and help viewer)
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
 * ReplaceFile: implement gear
@@ -8,7 +10,6 @@
 * Add support for gear state (just PerlCode gears?)
 * Add support for machine state
 * CommandFilter: harvest child zombies
-* Save view (and other) preferences, in 'Correct' way for each OS (Glib::Utils?)
 * Fix Drop Coordinates when palette is visible
 * Fix detach resulting from click-without-drag
 * Implement a console window (capture warnings, STDERR?, exceptions)
