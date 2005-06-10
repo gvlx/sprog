@@ -106,6 +106,44 @@ user while a machine is running are unlikely to work.
 
 =back
 
+=head1 CLASS METHODS
+
+=head2 new ( key => value, ... )
+
+Constructor.  Called by the L<Sprog> application object.
+
+=head1 INSTANCE METHODS
+
+=head2 alert ( message, detail )
+
+When an alert is raised, this method will print the alert message and details
+to standard error and will then signal the application to quit.
+
+=head2 add_gear_view ( gear )
+
+Creates a view object for the specified gear.  The default class is 
+L<Sprog::TextGearView> which does almost nothing.  The C<view_subclass>
+specified in the gear's metatdata will be used if it is defined.
+
+=head2 gear_view_by_id ( id )
+
+Returns the view object for the gear identified by C<id>.
+
+=head1 NO-OP METHODS
+
+The following methods are defined for compatibility with the API of the
+L<GtkView> class, but don't actually do anything:
+
+=head2 apply_prefs ( )
+
+=head2 set_window_title ( )
+
+=head2 update_gear_view ( )
+
+=head2 status_message ( )
+
+=head2 running ( )
+
 =head1 PREREQUISITES
 
 When Sprog is run in C<--nogui> mode, it does not require the L<Gtk2> classes,
@@ -113,7 +151,7 @@ but it does require C<Glib>.
 
 =head1 COPYRIGHT 
 
-Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+Copyright 2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
 
 This library is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself. 

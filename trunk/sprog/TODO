@@ -1,4 +1,3 @@
-* TextView - document classes
 * User-selectable fonts for text windows (and help viewer)
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
