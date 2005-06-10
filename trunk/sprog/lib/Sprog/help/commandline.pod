@@ -49,6 +49,7 @@ will exit as soon as the machine is finished.
 
 Causes Sprog to exit when the machine stops running.  It probably only makes
 sense to use this option with C<--run> but you can specify it on it's own.
+If no filename was provided, this option has no effect.
 
 =item --version
 
