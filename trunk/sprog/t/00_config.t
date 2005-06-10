@@ -11,7 +11,6 @@ my @mod_list = qw(
   Gtk2
   Gnome2::Canvas
   Gtk2::GladeXML
-  Class::Accessor
   YAML
   MIME::Base64
   Pod::Simple
