@@ -1,6 +1,7 @@
 bin/sprog
 Changes
 lib/Sprog.pm
+lib/Sprog/Accessor.pm
 lib/Sprog/ClassFactory.pm
 lib/Sprog/Gear.pm
 lib/Sprog/Gear/ApacheLogParse.pm
@@ -76,9 +77,11 @@ Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
 README
+Sprog.spec
 t/00_config.t
 t/01_require_all.t
 t/02_factory.t
+t/03_accessor.t
 t/05_eventloop.t
 t/06_app.t
 t/07_gear_db.t
@@ -112,6 +115,7 @@ t/50_clf_parse.t
 t/counter.sprog
 t/files.txt
 t/lib/AcceptNothingGear.pm
+t/lib/AccTest.pm
 t/lib/Dummy.pm
 t/lib/DummyApp.pm
 t/lib/DummyGear.pm
