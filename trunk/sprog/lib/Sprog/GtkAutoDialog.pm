@@ -2,7 +2,7 @@ package Sprog::GtkAutoDialog;
 
 use strict;
 
-use base qw(Class::Accessor::Fast);
+use base qw(Sprog::Accessor);
 
 __PACKAGE__->mk_accessors(qw(
   gearview

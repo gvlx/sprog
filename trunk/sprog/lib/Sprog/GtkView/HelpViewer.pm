@@ -8,7 +8,7 @@ use Gtk2::GladeXML;
 use Gtk2::Pango;
 
 use base qw(
-  Class::Accessor::Fast
+  Sprog::Accessor
 );
 
 __PACKAGE__->mk_accessors(qw(

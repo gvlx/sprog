@@ -5,7 +5,7 @@ use strict;
 use Glib qw(TRUE FALSE);
 use Gtk2::Gdk::Keysyms;
 
-use base qw(Class::Accessor::Fast);
+use base qw(Sprog::Accessor);
 
 __PACKAGE__->mk_accessors(qw(
   app

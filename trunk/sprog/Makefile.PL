@@ -8,7 +8,6 @@ WriteMakefile(
                            'Gtk2'               => undef,
                            'Gnome2::Canvas'     => undef,
                            'Gtk2::GladeXML'     => undef,
-                           'Class::Accessor'    => undef,
                            'Test::Simple'       => 0.41,
                            'YAML'               => undef,
                            'MIME::Base64'       => undef,

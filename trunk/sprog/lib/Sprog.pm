@@ -4,7 +4,7 @@ use strict;
 
 our $VERSION = '0.09';
 
-use base qw(Class::Accessor::Fast);
+use base qw(Sprog::Accessor);
 
 use Getopt::Long qw(GetOptions);
 use Pod::Usage   qw(pod2usage);
@@ -305,8 +305,6 @@ out and report their experiences, the sooner the bugs will get shaken out.
 
 =head1 PREREQUISITES
 
-All the classes are built on top of L<Class::Accessor>.
-
 The GUI and event-driven scheduler is built on L<Gtk2> and the
 L<Gnome2::Canvas> (although the GNOME desktop environment is not required).
 
@@ -321,7 +319,7 @@ hurdle.  Of course if you're running Debian GNU/Linux then you'll just need to
 run:
 
   apt-get install libgtk2-perl libgnome2-canvas-perl libgtk2-gladexml-perl \
-          libclass-accessor-perl libyaml-perl libpod-simple-perl
+          libyaml-perl libpod-simple-perl
 
 =head1 SEE ALSO
 

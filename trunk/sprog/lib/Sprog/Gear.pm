@@ -2,9 +2,8 @@ package Sprog::Gear;
 
 use strict;
 
-use base qw(Class::Accessor::Fast);
+use base qw(Sprog::Accessor);
 
-# TODO: remove msg_queue
 __PACKAGE__->mk_accessors(qw(
   app
   machine

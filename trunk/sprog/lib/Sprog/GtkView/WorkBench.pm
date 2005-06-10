@@ -3,7 +3,7 @@ package Sprog::GtkView::WorkBench;
 use strict;
 use warnings;
 
-use base qw(Class::Accessor::Fast);
+use base qw(Sprog::Accessor);
 
 __PACKAGE__->mk_accessors(qw(
   app
