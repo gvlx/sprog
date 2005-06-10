@@ -34,6 +34,18 @@ sub engage {
 }
 
 
+sub disengage {
+  my($self) = @_;
+
+  my($fh);
+  $fh = $self->fh_out && close($fh);
+  $fh = $self->fh_in  && close($fh);
+  waitpid($self->{_filter_pid}, 0);
+  
+  $self->SUPER::disengage();
+}
+
+
 sub _run_command {
   my($self) = @_;
 
@@ -45,7 +57,7 @@ sub _run_command {
 
   my $parent = $$;
   my($fh_out, $fh_in);
-  my $pid = eval {
+  $self->{_filter_pid} = eval {
     open2($fh_in, $fh_out, $command) or exit;  # in child only?
   };
   if($@) {

@@ -22,15 +22,17 @@ sub _data_ready {
 
   delete $self->{in_tag};
   my $buf;
-  if(sysread($self->fh_in, $buf, BUF_SIZE)) {
+  my $fh = $self->fh_in;
+  if(sysread($fh, $buf, BUF_SIZE)) {
     $self->msg_out(data => $buf);
   }
   else {
+    close($fh) if $fh;
+    $self->fh_in(undef);
     my $filename = undef;
     $filename = $self->filename if($self->can('filename'));
     $self->msg_out(file_end => $filename);
     $self->disengage();
-    $self->fh_in(undef);
   }
   
   $self->work_done(1);

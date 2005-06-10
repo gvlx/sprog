@@ -8,7 +8,6 @@
 * RetrieveURL: Do a proper implementation
 * Add support for gear state (just PerlCode gears?)
 * Add support for machine state
-* CommandFilter: harvest child zombies
 * Fix Drop Coordinates when palette is visible
 * Fix detach resulting from click-without-drag
 * Implement a console window (capture warnings, STDERR?, exceptions)
