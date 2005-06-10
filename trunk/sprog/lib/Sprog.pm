@@ -23,14 +23,11 @@ __PACKAGE__->mk_accessors(qw(
 sub new {
   my $class = shift;
 
-  return bless { @_ }, $class;
-}
-
-
-sub _init {
-  my $self = shift;
+  my $self = bless { @_ }, $class;
 
   my $factory = $self->{factory} or die "No class factory";
+
+  $self->_getopt();
 
   $factory->inject(   # set default classes if not already defined
     '/app/preferences' => 'Sprog::Preferences',
@@ -66,10 +63,7 @@ sub _init {
 sub run {
   my $self = shift;
 
-  my $opt = $self->_getopt(@_);
-
-  $self->_init;
-
+  my $opt = $self->opt;
   $self->load_from_file($opt->{sprog_file}) if $opt->{sprog_file};
 
   if($opt->{run}) {
@@ -85,7 +79,6 @@ sub _getopt {
 
   my %opt = ();
 
-  local(@ARGV) = @_;
   if(!GetOptions(\%opt, 
     'help|h|?', 'version|v', 'run|r', 'nogui|n', 'quit|q',
   )) {

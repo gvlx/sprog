@@ -10,6 +10,12 @@ like($@, qr/No class factory/, 'constructor died without class factory object');
 
 use_ok('Sprog::ClassFactory');
 
+my $test_file = File::Spec->catfile('t', 'ffff.sprog'); # Does not exist yet
+unlink($test_file); # just in case
+
+
+@ARGV = ( $test_file );
+
 $app = make_app(               # Imported from ClassFactory.pm
   '/app'           => 'TestApp',
   '/app/machine'   => 'TestMachine',
@@ -17,11 +23,8 @@ $app = make_app(               # Imported from ClassFactory.pm
   '/app/view'      => 'DummyView',
 );
 
-my $test_file = File::Spec->catfile('t', 'ffff.sprog'); # Does not exist yet
-unlink($test_file); # just in case
-
 $app->add_timeout(100, sub { $app->quit } );
-$app->run($test_file);
+$app->run;
 like($app->alerts, qr/Error reading .*?ffff.sprog/, 
   'correct alert when supplying name of a non-existant file to run method');
 

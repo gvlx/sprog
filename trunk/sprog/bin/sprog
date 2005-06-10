@@ -4,5 +4,5 @@ use strict;
 
 use Sprog::ClassFactory;
 
-make_app()->run(@ARGV);
+make_app()->run();
 
