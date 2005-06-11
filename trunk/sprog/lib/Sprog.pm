@@ -3,12 +3,14 @@ package Sprog;
 use strict;
 
 our $VERSION = '0.09';
+our $DBG     = undef;
 
 use base qw(Sprog::Accessor);
 
 use Getopt::Long qw(GetOptions);
 use Pod::Usage   qw(pod2usage);
 use File::Spec   qw();
+use YAML         qw();
 
 __PACKAGE__->mk_accessors(qw(
   factory
@@ -23,11 +25,13 @@ __PACKAGE__->mk_accessors(qw(
 sub new {
   my $class = shift;
 
-  my $self = bless { @_ }, $class;
+  my $self = bless { debug => 0, @_ }, $class;
 
   my $factory = $self->{factory} or die "No class factory";
 
   $self->_getopt();
+
+  $self->_debug_setup;
 
   $factory->inject(   # set default classes if not already defined
     '/app/preferences' => 'Sprog::Preferences',
@@ -55,6 +59,8 @@ sub new {
   $self->machine   ( $factory->make_class('/app/machine',     app => $self) );
   $self->view      ( $factory->make_class('/app/view',        app => $self) );
 
+  $DBG && $DBG->( 'app->factory' => { %{$self->factory} } );
+
   $self->view->apply_prefs;
 
   return $self;
@@ -80,7 +86,7 @@ sub _getopt {
   my %opt = ();
 
   if(!GetOptions(\%opt, 
-    'help|h|?', 'version|v', 'run|r', 'nogui|n', 'quit|q',
+    'help|h|?', 'version|v', 'run|r', 'nogui|n', 'quit|q', 'debug|d',
   )) {
     pod2usage({ -exitval => 1,  -verbose => 0,  -input   => _pod_file() });
   }
@@ -121,6 +127,42 @@ sub _pod_file {
 }
 
 
+sub _debug_setup {
+  my $self = shift;
+
+  return unless $self->opt->{debug};
+
+  require "IO/Handle.pm";
+  require "POSIX.pm";
+
+  open my $dbg, '>', 'sprog.dbg' or die "open(sprog.dbg): $!";
+  $dbg->autoflush(1);
+
+  $DBG = sub {
+    my $time = POSIX::strftime('%T', localtime);
+    foreach (@_) {
+      my $msg = $_;
+      if(ref($msg)) {
+        local($YAML::UseHeader) = 0;
+        local($YAML::SortKeys)  = 1;
+        $msg = YAML::Dump([$msg]) . "\n";
+      }
+      $msg = "$msg\n" unless $msg =~ /\n\Z/s;
+      $msg =~ s{^}{$time  }mg;
+      print $dbg $msg;
+    }
+  };
+
+  my $date = POSIX::strftime('%F', localtime);
+  $DBG->(
+    "Sprog version $VERSION started on $date\n" .
+    "========================================\n\n",
+    'app->opt', $self->opt
+  );
+
+}
+
+
 sub inject            { shift->factory->inject(@_);              }
 sub make_class        { shift->factory->make_class(@_);          }
 sub load_class        { shift->factory->load_class(@_);          }
@@ -136,7 +178,6 @@ sub toggle_palette    { shift->view->toggle_palette();           }
 sub show_palette      { shift->view->show_palette();             }
 sub hide_palette      { shift->view->hide_palette();             }
 
-sub alert             { shift->view->alert(@_);                  }
 sub update_gear_view  { shift->view->update_gear_view(@_);       }
 sub status_message    { shift->view->status_message(@_);         }
 sub not_implemented   { shift->alert('Not implemented');         }
@@ -157,6 +198,14 @@ sub add_io_writer     { shift->event_loop->add_io_writer(@_);    }
 
 sub show_help         { shift->view->show_help(@_);              }
 sub help_contents     { shift->show_help('Sprog::help::index');  }
+
+
+sub alert {
+  my $self = shift;
+
+  $DBG && $DBG->( 'Alert:' => [ @_ ] );
+  $self->view->alert(@_);                  
+}
 
 
 sub file_open {
