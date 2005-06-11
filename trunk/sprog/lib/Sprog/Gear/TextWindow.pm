@@ -327,5 +327,11 @@ will re-appear as soon as more data is received.
 To copy data from the text window, click and drag to highlight it with the 
 mouse and then press Ctrl-C or right click and select 'Copy'.
 
+=head2 Text Window in C<--nogui> Mode
+
+If you run Sprog in L<--nogui|Sprog::help::commandline> mode, then this gear
+will not be able to create a pop-up window for displaying the output.  Instead,
+all data it receives will be written to STDOUT.
+
 =end :sprog-help-text
 
