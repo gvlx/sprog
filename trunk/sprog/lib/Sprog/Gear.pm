@@ -17,12 +17,15 @@ __PACKAGE__->mk_accessors(qw(
   x
   y
   work_done
-  sleeping
 ));
 
 
-our @ISA;
 use Scalar::Util qw(weaken);
+
+our @ISA;
+our $DBG;
+
+*DBG = \$Sprog::DBG;
 
 sub has_input     { return defined shift->input_type;  }
 sub has_output    { return defined shift->output_type; }
@@ -187,9 +190,34 @@ sub engage {
 sub disengage {
   my $self = shift;
   
+  $DBG && $DBG->(ref($self) . '->disengage');
   my $sched = $self->scheduler or return;
   $sched->disengage($self->id);
 }
+
+
+sub sleeping {
+  my $self = shift;
+
+  if(@_) {
+    $DBG && $DBG->(ref($self) . "->sleeping($_[0])");
+    $self->{sleeping} = shift;
+    if(!$self->{sleeping}) {
+      if(my $sched = $self->scheduler) {   # awaken the scheduler
+        $sched->schedule_main_loop;
+      }
+    }
+  }
+
+  return $self->{sleeping};
+}
+
+
+sub debug {
+  my $self = shift;
+  $DBG && $DBG->(@_);
+}
+
 
 sub no_more_data { shift->disengage; }
 
