@@ -12,6 +12,7 @@ Options:
   --run     (-r)   start the machine running
   --nogui   (-n)   run in text mode without graphical user interface
   --quit    (-q)   quit when machine stops
+  --debug   (-d)   enable debugging modes (for developers)
   --version (-v)   print version number and exit
 
 Usually you would simply invoke C<sprog> with no arguments or possibly just
@@ -50,6 +51,12 @@ will exit as soon as the machine is finished.
 Causes Sprog to exit when the machine stops running.  It probably only makes
 sense to use this option with C<--run> but you can specify it on it's own.
 If no filename was provided, this option has no effect.
+
+=item --debug
+
+Enables Sprog's debug logging.  This is a tool for Sprog developers.  When this
+option is enabled, various debug messages will be written to the file
+F<sprog.dbg> in the current directory.
 
 =item --version
 
