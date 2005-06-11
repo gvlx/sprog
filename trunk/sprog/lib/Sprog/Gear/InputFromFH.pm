@@ -11,22 +11,26 @@ sub fh_in { $_[0]->{fh_in} = $_[1] if(@_ > 1); return $_[0]->{fh_in}; }
 sub send_data {
   my($self) = @_;
 
+  $self->debug(ref($self) . ' ' . ($self->{in_tag} ? 'already waiting' : 'adding IO reader'));
   return if $self->{in_tag};  # We're already waiting
   my $fh = $self->fh_in or return;
-  $self->{in_tag} = $self->app->add_io_reader($fh, sub { $self->_data_ready });
+  $self->{in_tag} = $self->app->add_io_reader($fh, sub { $self->_can_read });
 }
 
 
-sub _data_ready {
+sub _can_read {
   my($self) = @_;
 
+  $self->debug(ref($self) . ' _can_read');
   delete $self->{in_tag};
   my $buf;
   my $fh = $self->fh_in;
   if(sysread($fh, $buf, BUF_SIZE)) {
+    $self->debug(ref($self) . ' read ' . length($buf) . ' bytes');
     $self->msg_out(data => $buf);
   }
   else {
+    $self->debug(ref($self) . ' EOF');
     close($fh) if $fh;
     $self->fh_in(undef);
     my $filename = undef;
