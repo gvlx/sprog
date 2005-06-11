@@ -1,10 +1,21 @@
 package Sprog::Gear::OutputToFH;
 
+use Fcntl qw(F_GETFL F_SETFL O_NONBLOCK);
+
+
+
 sub fh_out {
   my $self = shift;
 
   if(@_) {
-    $self->{fh_out} = shift;
+    my $fh = $self->{fh_out} = shift;
+
+    my $flags = fcntl($fh, F_GETFL, 0)
+                or die "Can't get flags for output fh: $!\n";
+
+    $flags = fcntl($fh, F_SETFL, $flags | O_NONBLOCK)
+                or die "Can't set flags for output fh: $!\n";
+
     $self->{buffer} = '';
     $self->{close_on_flush} = 0;
   }
@@ -40,14 +51,20 @@ sub no_more_data {
 sub _can_write {
   my $self = shift;
 
+  $self->debug(ref($self) . ' _can_write');
+
   my $fh = $self->fh_out;
   my $i  = syswrite $fh, $self->{buffer};
 
   if(!defined $i) {
     warn "Error while writing: $!\n";
+    $self->_close_output_fh;
   }
   else {
     substr $self->{buffer}, 0, $i, '';
+    $self->debug(
+      ref($self) . " wrote $i bytes " . length($self->{buffer}) . " to go"
+    );
   }
 
   return 1 if(length $self->{buffer});
@@ -58,10 +75,7 @@ sub _can_write {
     $self->_close_output_fh;
   }
 
-  $self->sleeping(0);
-  if(my $sched = $self->scheduler) {
-    $sched->schedule_main_loop;
-  }
+  $self->sleeping(0);          # will wake scheduler if necessary
   delete $self->{out_tag};
   return 0;
 }
