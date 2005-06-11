@@ -5,11 +5,15 @@ use warnings;
 
 use Scalar::Util qw(weaken);
 
+our $DBG;
+
 sub new {
   my($class, $gear) = @_;
   
   my $self = bless { app => $gear->app }, $class;
   weaken($self->{app});
+
+  *DBG = \$Sprog::DBG unless $DBG;
 
   return $self->_build_gear_train($gear);
 }
@@ -19,6 +23,7 @@ sub schedule_main_loop {
   my $self = shift;
 
   return if $self->{idle_tag};
+  $DBG && $DBG->("scheduler waking up");
 
   $self->{idle_tag} = $self->{app}->add_idle_handler(
     sub { $self->main_loop; }
@@ -39,6 +44,7 @@ sub stop {
 sub _build_gear_train {
   my($self, $gear) = @_;
 
+  $DBG && $DBG->("Scheduler: building gear train");
   my $gear_train = $self->{gear_train} = [];
   my $gear_by_id = $self->{gear_by_id} = {};
   my $prev_id    = $self->{prev_id}    = {};
@@ -59,12 +65,16 @@ sub _build_gear_train {
     $last_id = $id;
     $gear = $next;
   }
+  $DBG && $DBG->('Gear Train' => [
+    map { $_ . ' = ' . $gear_by_id->{$_}->title } @$gear_train 
+  ]);
 
   foreach my $id (reverse @$gear_train) {
     my $gear = $gear_by_id->{$id};
     $msg_queue->{$id}  = [] if $gear->has_input;
     $redo_queue->{$id} = [] if $gear->has_input;
     $gear->scheduler($self);
+    $DBG && $DBG->(ref($gear) . '->engage' => $gear->serialise->{prop} );
     $gear->engage or return;
   }
 
@@ -75,28 +85,26 @@ sub _build_gear_train {
 sub main_loop {
   my $self = shift;
 
+  $DBG && $DBG->("\n" . ref($self) . '->main_loop');
   my $delivered = 0;
-  my $sleepers  = 0;
   my $train     = $self->{gear_train};
 
 
   # Attempt delivery for each gear from last to first
   
   my $i = $#$train;
-  while($i >= 0) {
+  GEAR: while($i >= 0) {
     my $id   = $train->[$i];
     my $gear = $self->{gear_by_id}->{$id};
-    if($gear->sleeping) {
-      $sleepers++;
-      next;
-    }
-
     # Deliver all messages to this gear
 
     my $queue = $self->{msg_queue}->{$id} or next;
-    while(@$queue) {
+    MSG: while(@$queue) {
+      last MSG if $gear->sleeping;
+
       my $msg = shift @$queue;
       my $method = shift @$msg;
+      $DBG && $DBG->('  deliver: ' . ref($gear) . "->$method");
       if(my $sub = $gear->can($method)) {
         $sub->($gear, @$msg);
       }
@@ -110,11 +118,13 @@ sub main_loop {
   continue {
     $i--;
   }
+  $DBG && $DBG->("end of scheduler loop, $delivered message(s) delivered");
   return 1 if $delivered;
 
 
   # No messages were delivered so the idle handler is no longer required
 
+  $DBG && $DBG->("scheduler going to sleep");
   delete $self->{idle_tag};
 
   # Remove spent gears from head of train
@@ -122,21 +132,35 @@ sub main_loop {
   while(@$train) {
     my $gear = $self->{gear_by_id}->{$train->[0]};
     last if($gear->can('send_data') or $gear->sleeping);
+    $DBG && $DBG->('disengage ' . ref($gear));
     $self->disengage($train->[0]);
   }
 
   # Stop machine if all gears disengaged
 
   if(!@$train) {
-    my $app = $self->{app} or return 0;
-    $app->machine_running(0);
+    $DBG && $DBG->('all gears disengaged');
+    $self->{app} && $self->{app}->machine_running(0);
     return 0;
   }
 
-  # Or, ask providers to send more data
+  # Check if any gears expect to provide data soon
+
+  my $sleepers = 0;
+  if($sleepers) {
+    foreach (@$train) {
+      my $gear = $self->{gear_by_id}->{$train->[0]};
+      next unless $gear->sleeping;
+      $sleepers++;
+      $DBG && $DBG->('  Sleeper: ' . ref($gear));
+    }
+  }
+
+  # If not, ask providers to send more data
 
   if(!$sleepers) {                     # no gears with events pending
     foreach my $id (@{$self->{providers}}) {
+      $DBG && $DBG->(ref($self->{gear_by_id}->{$id}) . "->send_data");
       $self->{gear_by_id}->{$id}->send_data;
     }
   }
