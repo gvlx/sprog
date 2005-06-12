@@ -17,6 +17,11 @@ use Scalar::Util qw(weaken);
 use Glib qw(TRUE FALSE);
 use Gnome2::Canvas;
 
+use Sprog::GtkView::DnD qw(
+  SPROG_GEAR_TARGET TARG_SPROG_GEAR_CLASS DRAG_FILES_TARGET
+);
+
+
 sub new {
   my $class = shift;
 
@@ -56,7 +61,7 @@ sub _build_workbench {
 
   # Set up as target for drag-n-drop
 
-  $canvas->drag_dest_set('all', ['copy'], $self->view->drag_targets);
+  $canvas->drag_dest_set('all', ['copy'], SPROG_GEAR_TARGET, DRAG_FILES_TARGET);
   $canvas->signal_connect(
     drag_data_received => sub { $self->drag_data_received(@_); }
   );
@@ -89,21 +94,52 @@ sub _reset_canvas_scroll_region {
 sub drag_data_received {
   my($self, $canvas, $context, $x, $y, $data, $info, $time) = @_;
 
+  my $msg_type = $data->type->name;
+
   if(($data->length < 1) || ($data->format != 8)) {
     $context->finish (0, 0, $time);
     return
   }
 
-  my $gear_class = $data->data;
+  my $msg_body = $data->data;
   $context->finish (1, 0, $time);
+
+  if($msg_type eq 'application/x-sprog-gear-class') {
+    $self->_drop_gear_class($msg_body, $canvas, $x, $y);
+  }
+  elsif($msg_type eq 'text/plain') {
+    $self->_drop_uris($msg_body);
+  }
+
+  return;
+}
+
+
+sub _drop_gear_class {
+  my($self, $gear_class, $canvas, $x, $y) = @_;
 
   my $gear = $self->app->add_gear_at_x_y($gear_class, $x, $y) or return;
   my $gearview = $self->gear_view_by_id($gear->id);
 
   my($cx, $cy) = $canvas->window_to_world($x, $y);
   $self->app->drop_gear($gearview, $cx, $cy);
+}
 
-  return;
+
+sub _drop_uris {
+  my($self, $data) = @_;
+
+  if($data !~ /^\w+:/) {
+    $self->app->alert(
+      'Drag-and-drop error',
+      "Expected a list of files or URIs, received:\n$data"
+    );
+    return;
+  }
+
+  my @uris = map { /\S/ ? $_ : () } split /[\r\n]/, $data;
+
+  $self->app->dnd_drop_uris(@uris);
 }
 
 
