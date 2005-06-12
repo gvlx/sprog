@@ -23,6 +23,9 @@ __PACKAGE__->mk_accessors(qw(
 
 use Scalar::Util qw(weaken);
 
+use Sprog::GtkView::DnD qw(SPROG_GEAR_TARGET TARG_SPROG_GEAR_CLASS);
+
+
 use constant COL_TYPE => 0;
 
 use constant COL_GEAR_CLASS => 0;
@@ -80,7 +83,7 @@ sub _apply_filter {
       $model->set($iter, COL_GEAR_TITLE, $_->{title});
     }
     $self->gearlist->drag_source_set(
-      ['button1_mask'], ['copy'], $self->view->drag_targets()
+      ['button1_mask'], ['copy'], SPROG_GEAR_TARGET
     );
   }
   else {
