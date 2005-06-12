@@ -31,12 +31,22 @@ sub set_window_title    { return; }
 sub update_gear_view    { return; }
 sub status_message      { return; }
 sub running             { return; }
+sub sync_run_on_drop    { return; }
 
 
 sub alert {
   my($self, $msg, $detail) = @_;
 
-  print STDERR "$msg\n$detail\n";
+  warn "$msg\n$detail\n";
+  $self->app->quit;
+}
+
+
+sub confirm_yes_no {
+  my($self, $msg) = @_;
+
+  warn "Error: Confirmation dialog not available without GUI.\n" .
+       "If it was, you would have seen the following message:\n\n$msg\n";
   $self->app->quit;
 }
 
