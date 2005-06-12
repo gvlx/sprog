@@ -17,3 +17,4 @@ blib
 ^runtest
 ^t/output.txt$
 ^ptst$
+^sprog\.dbg$
