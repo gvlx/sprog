@@ -4,12 +4,16 @@ use strict;
 
 use base qw(Sprog::Accessor);
 
+my @properties = qw(
+  run_on_drop
+);
+
 __PACKAGE__->mk_accessors(qw(
   app
   _parts
   _start_time
   _scheduler
-));
+), @properties);
 
 use Scalar::Util qw(weaken);
 use YAML;
@@ -24,6 +28,7 @@ sub new {
   
   my $self = bless {
     _parts => {},
+    run_on_drop => 0,
     @_
   }, $class;
   weaken($self->{app});
@@ -60,10 +65,17 @@ sub save_to_file {
   open my $out, '>', $filename
     or return $self->app->alert("Error saving file", "open($filename) - $!");
 
+  my $mach_props = {};
+  foreach my $prop (@properties) {
+    $mach_props->{$prop} = $self->$prop;
+  }
+  local($YAML::UseHeader) = 0;
+  local($YAML::SortKeys)  = 1;
+
   print $out YAML::Dump([
     FILE_APPLICATION_ID,
     FILE_FORMAT_CURRENT_VERSION,
-    {},          # Machine-level properties
+    $mach_props, # Machine-level properties
     \@gears      # Gears and their properties
   ]);
 
@@ -75,6 +87,8 @@ sub load_from_file {
   my($self, $filename) = @_;
 
   my($props, $gears) = $self->_read_file($filename) or return;
+
+  $self->app->set_run_on_drop($props->{run_on_drop});
 
   $self->_create_gears_from_file($gears);
   return 1;
@@ -181,6 +195,31 @@ sub detach_gear {
       return;
     }
   }
+}
+
+
+sub dnd_drop_uris {
+  my $self = shift;
+
+  my @targets = $self->_get_dnd_targets;
+  return unless @targets;
+
+  # Ignore other options just now
+  return unless $targets[0]->accept_dropped_uris(@_);
+  return if     $targets[0]->last->has_output;
+
+  $self->app->run_machine if $self->run_on_drop;
+}
+
+
+sub _get_dnd_targets {
+  my $self = shift;
+
+  my @targets = ();
+  foreach my $gear ( values %{$self->_parts} ) {
+    push @targets, $gear if $gear->can('accept_dropped_uris');
+  }
+  return @targets;
 }
 
 
