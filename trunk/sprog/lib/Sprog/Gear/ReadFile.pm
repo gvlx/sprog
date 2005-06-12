@@ -51,6 +51,31 @@ sub _open_file {
   return $fh;
 }
 
+
+sub accept_dropped_uris {
+  my $self = shift;
+
+  if(@_ > 1) {
+    $self->alert('This gear can only accept one filename');
+    return;
+  }
+
+  my $filename = shift;
+  return unless length $filename;
+
+  if(not $filename =~ s{^file://}{}) {
+    $self->alert(
+      "Unsupported file path", "Expected 'file:///...'\nGot '$filename'"
+    );
+    return;
+  }
+
+  $self->filename($filename);
+  $self->has_error(0);
+
+  return 1;
+}
+
 sub dialog_xml {
 #  return 'file:/home/grant/projects/sprog/glade/readfile.glade';
   return <<'END_XML';
@@ -260,7 +285,7 @@ by using the B<Browse> button and selecting a file
 
 =item * 
 
-by dragging a file and dropping into the sprog window (not implemented yet)
+by dragging a file and dropping into the Sprog window
 
 =back
 
