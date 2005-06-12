@@ -1,5 +1,7 @@
 package Sprog::Gear::OutputToFH;
 
+use Sprog::Debug qw($DBG);
+
 use Fcntl qw(F_GETFL F_SETFL O_NONBLOCK);
 
 
@@ -10,11 +12,13 @@ sub fh_out {
   if(@_) {
     my $fh = $self->{fh_out} = shift;
 
-    my $flags = fcntl($fh, F_GETFL, 0)
-                or die "Can't get flags for output fh: $!\n";
+    if($fh) {
+      my $flags = fcntl($fh, F_GETFL, 0)
+                  or die "Can't get flags for output fh: $!\n";
 
-    $flags = fcntl($fh, F_SETFL, $flags | O_NONBLOCK)
-                or die "Can't set flags for output fh: $!\n";
+      $flags = fcntl($fh, F_SETFL, $flags | O_NONBLOCK)
+                  or die "Can't set flags for output fh: $!\n";
+    }
 
     $self->{buffer} = '';
     $self->{close_on_flush} = 0;
@@ -51,7 +55,7 @@ sub no_more_data {
 sub _can_write {
   my $self = shift;
 
-  $self->debug(ref($self) . ' _can_write');
+  $DBG && $DBG->(ref($self) . ' _can_write');
 
   my $fh = $self->fh_out;
   my $i  = syswrite $fh, $self->{buffer};
@@ -62,7 +66,7 @@ sub _can_write {
   }
   else {
     substr $self->{buffer}, 0, $i, '';
-    $self->debug(
+    $DBG && $DBG->(
       ref($self) . " wrote $i bytes " . length($self->{buffer}) . " to go"
     );
   }
@@ -85,7 +89,7 @@ sub _close_output_fh {
   my $self = shift;
 
   my $fh = delete $self->{fh_out};
-  close $fh;
+  close $fh if $fh;
 }
 
 

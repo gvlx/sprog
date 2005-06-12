@@ -21,11 +21,9 @@ __PACKAGE__->mk_accessors(qw(
 
 
 use Scalar::Util qw(weaken);
+use Sprog::Debug qw($DBG);
 
 our @ISA;
-our $DBG;
-
-*DBG = \$Sprog::DBG;
 
 sub has_input     { return defined shift->input_type;  }
 sub has_output    { return defined shift->output_type; }
@@ -210,12 +208,6 @@ sub sleeping {
   }
 
   return $self->{sleeping};
-}
-
-
-sub debug {
-  my $self = shift;
-  $DBG && $DBG->(@_);
 }
 
 

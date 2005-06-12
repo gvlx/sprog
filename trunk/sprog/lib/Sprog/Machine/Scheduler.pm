@@ -5,7 +5,7 @@ use warnings;
 
 use Scalar::Util qw(weaken);
 
-our $DBG;
+use Sprog::Debug qw($DBG);
 
 sub new {
   my($class, $gear) = @_;

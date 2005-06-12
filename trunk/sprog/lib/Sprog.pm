@@ -3,7 +3,6 @@ package Sprog;
 use strict;
 
 our $VERSION = '0.09';
-our $DBG     = undef;
 
 use base qw(Sprog::Accessor);
 
@@ -11,6 +10,8 @@ use Getopt::Long qw(GetOptions);
 use Pod::Usage   qw(pod2usage);
 use File::Spec   qw();
 use YAML         qw();
+
+use Sprog::Debug qw($DBG);
 
 __PACKAGE__->mk_accessors(qw(
   factory
@@ -29,9 +30,9 @@ sub new {
 
   my $factory = $self->{factory} or die "No class factory";
 
-  $self->_getopt();
+  my $opt = $self->_getopt();
 
-  $self->_debug_setup;
+  Sprog::Debug::_init($opt);
 
   $factory->inject(   # set default classes if not already defined
     '/app/preferences' => 'Sprog::Preferences',
@@ -40,7 +41,7 @@ sub new {
     '/app/help_parser' => 'Sprog::HelpParser',
   );
 
-  if($self->opt->{nogui}) {
+  if($opt->{nogui}) {
     $factory->inject(
       '/app/view'      => 'Sprog::TextView',
       '/app/eventloop' => 'Sprog::GlibEventLoop',
@@ -124,42 +125,6 @@ sub _pod_file {
   }
 
   die "Unable to find Sprog::help::commandline.pod";
-}
-
-
-sub _debug_setup {
-  my $self = shift;
-
-  return unless $self->opt->{debug};
-
-  require "IO/Handle.pm";
-  require "POSIX.pm";
-
-  open my $dbg, '>', 'sprog.dbg' or die "open(sprog.dbg): $!";
-  $dbg->autoflush(1);
-
-  $DBG = sub {
-    my $time = POSIX::strftime('%T', localtime);
-    foreach (@_) {
-      my $msg = $_;
-      if(ref($msg)) {
-        local($YAML::UseHeader) = 0;
-        local($YAML::SortKeys)  = 1;
-        $msg = YAML::Dump([$msg]) . "\n";
-      }
-      $msg = "$msg\n" unless $msg =~ /\n\Z/s;
-      $msg =~ s{^}{$time  }mg;
-      print $dbg $msg;
-    }
-  };
-
-  my $date = POSIX::strftime('%F', localtime);
-  $DBG->(
-    "Sprog version $VERSION started on $date\n" .
-    "========================================\n\n",
-    'app->opt', $self->opt
-  );
-
 }
 
 
