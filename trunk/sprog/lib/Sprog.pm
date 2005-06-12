@@ -151,6 +151,7 @@ sub confirm_yes_no    { shift->view->confirm_yes_no(@_);         }
 
 sub drop_gear         { shift->view->drop_gear(@_);              }
 sub detach_gear       { shift->machine->detach_gear(@_);         }
+sub dnd_drop_uris     { shift->machine->dnd_drop_uris(@_);       }
 
 sub file_new          { shift->not_implemented();                }
 
@@ -163,6 +164,14 @@ sub add_io_writer     { shift->event_loop->add_io_writer(@_);    }
 
 sub show_help         { shift->view->show_help(@_);              }
 sub help_contents     { shift->show_help('Sprog::help::index');  }
+
+
+sub set_run_on_drop {
+  my($self, $flag) = @_;
+
+  $self->machine->run_on_drop($flag);
+  $self->view->sync_run_on_drop($flag);
+}
 
 
 sub alert {
