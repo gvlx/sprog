@@ -120,6 +120,11 @@ sub _build_menubar {
           callback        => sub { $app->stop_machine; },
           callback_action => $action++,
         },
+        'Run when files _dropped' => {
+          item_type       => '<CheckItem>',
+          callback        => sub { $self->_toggle_run_on_drop(@_); },
+          callback_action => $action++,
+        },
       ],
     },
     _Help  => {
@@ -200,6 +205,23 @@ sub _toggle_toolbar {
   else {
     $self->app->hide_toolbar;
   }
+}
+
+
+sub _toggle_run_on_drop {
+  my($self, $data, $action, $item) = @_;
+
+  $self->app->set_run_on_drop($item->get_active);
+}
+
+
+sub sync_run_on_drop {
+  my($self, $flag) = @_;
+
+  my $path = '/Machine/Run when files dropped';
+  my $item = $self->menu->get_widget($path) or return;
+  return unless($item->get_active xor $flag);
+  $item->set_active($flag);
 }
 
 1;
