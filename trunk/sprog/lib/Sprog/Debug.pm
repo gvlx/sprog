@@ -32,14 +32,6 @@ sub _init {
       print $dbg $msg;
     }
   };
-
-  my $date = POSIX::strftime('%F', localtime);
-  $DBG->(
-    "Sprog version $Sprog::VERSION started on $date\n" .
-    "========================================\n\n",
-    'app->opt', $opt
-  );
-
 }
 
 1;

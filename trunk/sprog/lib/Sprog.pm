@@ -33,6 +33,14 @@ sub new {
   my $opt = $self->_getopt();
 
   Sprog::Debug::_init($opt);
+  if($DBG) {
+    my $date = POSIX::strftime('%F', localtime);
+    $DBG->(
+      "Sprog version $VERSION started on $date\n" .
+      "========================================\n\n",
+      'app->opt', $opt
+    );
+  }
 
   $factory->inject(   # set default classes if not already defined
     '/app/preferences' => 'Sprog::Preferences',
