@@ -29,7 +29,6 @@ use File::Basename ();
 
 use Glib qw(TRUE FALSE);
 
-use constant TARG_STRING  => 0;
 use constant DEFAULT_WIN_WIDTH  => 750;
 use constant DEFAULT_WIN_HEIGHT => 560;
 use constant DEFAULT_PAL_WIDTH  => 220;
@@ -188,6 +187,8 @@ sub disable_tool_button { $_[0]->toolbar->set_sensitive($_[1], FALSE); }
 sub  enable_menu_item   { $_[0]->menubar->set_sensitive($_[1], TRUE);  }
 sub disable_menu_item   { $_[0]->menubar->set_sensitive($_[1], FALSE); }
 
+sub sync_run_on_drop    { $_[0]->menubar->sync_run_on_drop($_[1]);     }
+
 sub update_gear_view    { shift->workbench->update_gear_view(@_);      }
 
 
@@ -226,11 +227,6 @@ sub set_window_title {
   }
   $self->app_win->set_title("$title - Sprog");
 }
-
-
-sub drag_targets {
-  return {'target' => "STRING", 'flags' => ['same-app'], 'info' => TARG_STRING};
-};
 
 
 sub running {
