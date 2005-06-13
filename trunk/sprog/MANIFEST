@@ -11,6 +11,7 @@ lib/Sprog/Gear/CommandIn.pm
 lib/Sprog/Gear/CSVSplit.pm
 lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
+lib/Sprog/Gear/ImageBorder.pm
 lib/Sprog/Gear/InputByLine.pm
 lib/Sprog/Gear/InputFromFH.pm
 lib/Sprog/Gear/ListToCSV.pm
@@ -24,6 +25,7 @@ lib/Sprog/Gear/PerlCode.pm
 lib/Sprog/Gear/PerlCodeAP.pm
 lib/Sprog/Gear/PerlCodeHP.pm
 lib/Sprog/Gear/PerlCodePA.pm
+lib/Sprog/Gear/PerlCodePH.pm
 lib/Sprog/Gear/ReadFile.pm
 lib/Sprog/Gear/ReplaceFile.pm
 lib/Sprog/Gear/RetrieveURL.pm
@@ -46,6 +48,7 @@ lib/Sprog/GtkView.pm
 lib/Sprog/GtkView/AboutDialog.pm
 lib/Sprog/GtkView/AlertDialog.pm
 lib/Sprog/GtkView/Chrome.pm
+lib/Sprog/GtkView/DnD.pm
 lib/Sprog/GtkView/HelpViewer.pm
 lib/Sprog/GtkView/Menubar.pm
 lib/Sprog/GtkView/Palette.pm
@@ -106,6 +109,7 @@ t/29_select_cols.t
 t/30_perl_code.t
 t/31_perl_code_pa.t
 t/32_perl_code_hp.t
+t/33_perl_code_ph.t
 t/34_perl_code_ap.t
 t/40_whitespace.t
 t/41_select_fields.t
