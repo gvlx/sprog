@@ -16,6 +16,8 @@ my %widget_class_map = (
   'Gtk2::CheckButton' => 'Sprog::GtkAutoDialog::CheckButton',
   'Gtk2::RadioButton' => 'Sprog::GtkAutoDialog::RadioButton',
   'Gtk2::TextView'    => 'Sprog::GtkAutoDialog::TextView',
+  'Gtk2::SpinButton'  => 'Sprog::GtkAutoDialog::SpinButton',
+  'Gtk2::ColorButton' => 'Sprog::GtkAutoDialog::ColorButton',
 );
 
 
@@ -267,6 +269,52 @@ sub save {
   my $e      = $buffer->get_end_iter;
   my $text   = $buffer->get_text($s, $e, 0);
   $self->{gear}->$name($text);
+};
+
+
+package Sprog::GtkAutoDialog::SpinButton;
+
+
+sub new {
+  my $class = shift;
+
+  my $self = bless { @_ }, $class;
+  my $name = $self->{name};
+  $self->{widget}->set_value($self->{gear}->$name || '1');
+  return $self;
+}
+
+
+sub save {
+  my $self = shift;
+  my $name = $self->{name};
+  my $value = $self->{widget}->get_value;
+  $self->{gear}->$name($value);
+};
+
+
+package Sprog::GtkAutoDialog::ColorButton;
+
+
+sub new {
+  my $class = shift;
+
+  my $self = bless { @_ }, $class;
+  my $name = $self->{name};
+  my $value = $self->{gear}->$name || '#000000000000';
+  my @rgb = map { hex $_ } $value =~ /#(....)(....)(....)/;
+  my $colour = Gtk2::Gdk::Color->new(@rgb);
+  $self->{widget}->set_color($colour);
+  return $self;
+}
+
+
+sub save {
+  my $self = shift;
+  my $name = $self->{name};
+  my $colour = $self->{widget}->get_color;
+  my @rgb = map { $colour->$_ } qw(red green blue);
+  $self->{gear}->$name(sprintf("#%04X%04X%04X", @rgb));
 };
 
 
