@@ -1,0 +1,57 @@
+=head1 Welcome to Sprog
+
+I<Sprog> is a tool for working with data.  It allows you to do all the things
+those clever Unix geeks can do with their cryptic command lines but you can now
+do it all with point-n-click and drag-n-drop.
+
+A Sprog I<machine> has many similarities to a shell script.  It is built from
+small reusable parts (called I<gears>) that are connected together to filter
+and massage your data.  Once you have built a machine, you can save it and run
+it again and again to automatically perform repetitive tasks.
+
+Here are some more help topics to get you started:
+
+=over 4
+
+=item *
+
+L<Building a machine|Sprog::help::build_machine>
+
+=item *
+
+L<Understanding connectors|Sprog::help::connectors>
+
+=item *
+
+L<Using the palette|Sprog::help::palette>
+
+=item *
+
+L<Command-line options|Sprog::help::commandline>
+
+=back
+
+=head2 Help for Developers
+
+Here's some information which may be useful to people wanting to create their
+own gear classes or to extend Sprog in other ways:
+
+=over 4
+
+=item *
+
+L<Sprog internals|Sprog::help::internals>
+
+=item *
+
+L<Sprog gear internals|Sprog::help::gear_internals>
+
+=item *
+
+L<Properties dialogs|Sprog::help::prop_auto_dialog>
+
+=item *
+
+L<The Sprog scheduler|Sprog::help::scheduler>
+
+=back

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+DIR=`dirname $0`
+export PERL5LIB=$DIR/lib 
+exec $DIR/bin/sprog "$@"
