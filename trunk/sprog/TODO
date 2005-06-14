@@ -1,9 +1,12 @@
+* Add a save button to the TextWindow
+* WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
+* ReadFiles: implement gear
+* FindFiles: implement gear
+* DBIQuery: implement gear
+* Image connector formalise API
 * User-selectable fonts for text windows (and help viewer)
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
-* ReplaceFile: implement gear
-* PerlCodePH: implement gear
-* DBIQuery: implement gear
 * CSVSplit: replace with proper implementation
 * RetrieveURL: Do a proper implementation
 * Add support for gear state (just PerlCode gears?)
@@ -16,16 +19,15 @@
 * TextWindow - bind escape key to hide function
 * Warn about unsaved changes (before load, new or exit)
 * HelpViewer: hourglass cursor when loading a topic
+* HelpViewer: support URL links
 * HelpViewer: support links within a page
 * HelpViewer: add image support (eg: pictures of the connector types)
 * Make floating palette an option
-* Clean up show/hide palette code to reduce coupling
 * Allow output window to 'swallow' properties dialogs for other gears (eg: text in, pattern match etc)
 * Cancel waiting (io) events on stop
 * File browse - remember last directory
 * Implement ApacheCustomLogParse
 * Highlight selected gear
-* Drag and drop handling for file top gear
 * Track 'Head' gear on add/delete
 * Work out why replacement syntax error causes exit
 * HelpViewer: Implement Edit menu (copy/paste)
