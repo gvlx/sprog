@@ -1,6 +1,6 @@
 Name:		Sprog
 Version:	0.10
-Release:	1
+Release:	2
 Epoch:		0
 Summary:	A graphical tool which anyone can use to build programs by plugging parts together.
 Group:		Applications/System
@@ -35,7 +35,7 @@ again to automatically perform repetitive tasks.
 
 %install
 %{__rm} -rf %{buildroot}
-%makeinstall
+%makeinstall INSTALLVENDORLIB="%{buildroot}%{_prefix}/lib/perl5/site_perl"
 %{__rm} -rf %{buildroot}%{perl_archlib}/perllocal.pod %{buildroot}%{perl_vendorarch}/auto/Alias/.packlist
 
 %clean
@@ -48,10 +48,14 @@ again to automatically perform repetitive tasks.
 %{_libdir}/*
 
 %changelog
+*Tue Jul 14 2005 Gavin Brown <gavin.brown@uk.com> - 0.10-2
+- Hard-coded where .pm files go for when building on Debian
+
 *Tue Jul 14 2005 Grant McLean <grant@mclean.net.nz> - 0.10-1
 - New upstream version
 - Removed perl-Class-Accessor dependency
 - Bumped up Perl version dependency
 - Tweaked Gavin's configs for vendor/packager
+
 *Wed Jun 01 2005 Gavin Brown <gavin.brown@uk.com> - 0.09-1
 - Initial package.
