@@ -79,7 +79,14 @@ sub run {
   my $self = shift;
 
   my $opt = $self->opt;
-  $self->load_from_file($opt->{sprog_file}) if $opt->{sprog_file};
+
+  if($opt->{sprog_file}) {
+    $self->load_from_file($opt->{sprog_file});
+    my $uris = $opt->{uris};
+    if($uris and @$uris) {
+      $self->dnd_drop_uris(@$uris);
+    }
+  }
 
   if($opt->{run}) {
     $self->add_idle_handler(sub { $self->run_machine; return 0 });
@@ -110,10 +117,20 @@ sub _getopt {
   }
 
   $opt{sprog_file} = shift @ARGV if(@ARGV  and  $ARGV[0] =~ /\.sprog$/i);
-  $opt{filenames}  = [ @ARGV ]   if @ARGV;
-  $opt{run}        = 1           if $opt{nogui};
-  $opt{quit}       = 1           if $opt{nogui};
-  $opt{quit}       = 0           unless $opt{sprog_file};
+
+  if(@ARGV) {
+    my @uris = map {
+      if(!/^\w\w+:/) {
+        $_ = 'file://' . File::Spec->rel2abs($_);
+      }
+      $_;
+    } @ARGV;
+    $opt{uris} = \@ARGV if @ARGV;
+  }
+
+  $opt{run}    = 1   if $opt{nogui};
+  $opt{quit}   = 1   if $opt{nogui};
+  $opt{quit}   = 0   unless $opt{sprog_file};
 
   if($opt{nogui} and !$opt{sprog_file}) {
     pod2usage({
