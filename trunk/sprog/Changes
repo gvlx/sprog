@@ -1,5 +1,18 @@
 Revision history for Perl extension Sprog.
 
+0.10  Jun 14 2005
+        - bug fix: scheduler race condition causing machine hangs
+        - added --nogui mode (run machines from command line or cron etc)
+        - save user preferences (*nix platforms only right now)
+        - allow drag-n-drop of filenames and URLs into machine
+        - new gears:
+            NameFields, SelectFields, PerlCodePA, PerlCodePH, ReplaceFile,
+            ImageBorder (experimental)
+        - add Shift-F1 or right click for gear help in palette
+        - highlight gear that raised alert message
+        - help viewer user interface fixes
+        - switched from Class::Accessor to Sprog::Accessor, removed dependency
+
 0.09  May 30 2005
         - added a help viewer and help text for all gears (via Pod::Simple)
         - implemented auto-discovery of gear classes
