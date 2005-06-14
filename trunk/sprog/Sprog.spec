@@ -1,20 +1,20 @@
 Name:		Sprog
-Version:	0.09
+Version:	0.10
 Release:	1
 Epoch:		0
 Summary:	A graphical tool which anyone can use to build programs by plugging parts together.
 Group:		Applications/System
 License:	Artistic
 URL:		http://sprog.sourceforge.net/
-Packager:	Gavin Brown (http://jodrell.net/)
-Vendor:		Gavin Brown (http://jodrell.net/)
+Packager:	Grant McLean (grantm@cpan.org)
+Vendor:		Grant McLean (grantm@cpan.org)
 Source:		http://osdn.dl.sourceforge.net/sprog/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/root-%{name}-%{version}
 Prefix:		%{_prefix}
 AutoReq:	no
 BuildArch:	noarch
-BuildRequires:	perl >= 0:5.00503
-Requires:	perl >= 0:5.00503, perl-Gtk2, perl-Gtk2-GladeXML, perl-Gnome2-Canvas, perl-Class-Accessor, perl-YAML, perl-Pod-Simple
+BuildRequires:	perl >= 0:5.6
+Requires:	perl >= 0:5.6, perl-Gtk2, perl-Gtk2-GladeXML, perl-Gnome2-Canvas, perl-YAML, perl-Pod-Simple
 
 %description
 Sprog is a tool for working with data. It allows you to do all the things those
@@ -48,5 +48,10 @@ again to automatically perform repetitive tasks.
 %{_libdir}/*
 
 %changelog
-*Wed Jun 1 2005 Gavin Brown <gavin.brown@uk.com> - 0.09-1
+*Tue Jul 14 2005 Grant McLean <grant@mclean.net.nz> - 0.10-1
+- New upstream version
+- Removed perl-Class-Accessor dependency
+- Bumped up Perl version dependency
+- Tweaked Gavin's configs for vendor/packager
+*Wed Jun 01 2005 Gavin Brown <gavin.brown@uk.com> - 0.09-1
 - Initial package.
