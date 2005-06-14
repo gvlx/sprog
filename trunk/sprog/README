@@ -48,9 +48,10 @@ DEVELOPER NOTES
 
 You'll find some notes for developers in:
 
-  lib/Sprog/internals.pod
+  lib/Sprog/help/internals.pod
 
-which you can read from the online help when you launch 'sprog'.
+which you can read from the online help by pressing F1 after you have 
+launched 'sprog'.
 
 LICENSE
 
