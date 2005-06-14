@@ -31,6 +31,24 @@ sub engage {
 }
 
 
+sub accept_dropped_uris {
+  my $self = shift;
+
+  if(@_ > 1) {
+    $self->alert('This gear can only accept one URL');
+    return;
+  }
+
+  my $url = shift;
+  return unless length $url;
+
+  $self->url($url);
+  $self->has_error(0);
+
+  return 1;
+}
+
+
 sub command {
   my $self = shift;
 
@@ -225,7 +243,8 @@ with a more robust version with proxy support and proper error handling soon>.
 
 =head2 Properties
 
-The Retrieve URL gear has only one property - the URL of the file to retrieve.  Simply type or paste in the URL.
+The Retrieve URL gear has only one property - the URL of the file to retrieve.  Simply type or paste in the URL.  Or, if you prefer, you can drag a URL from
+your browser and drop it on the 'Retrieve URL' gear.
 
 =end :sprog-help-text
 
