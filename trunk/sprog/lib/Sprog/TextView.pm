@@ -37,6 +37,7 @@ sub sync_run_on_drop    { return; }
 sub alert {
   my($self, $msg, $detail) = @_;
 
+  $detail = '' unless defined $detail;
   warn "$msg\n$detail\n";
   $self->app->quit;
 }
