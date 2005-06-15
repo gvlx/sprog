@@ -1,3 +1,4 @@
+* Testing cvs ci
 * Tidy up .spec file / wrapper situation
 * Add a save button to the TextWindow
 * WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
