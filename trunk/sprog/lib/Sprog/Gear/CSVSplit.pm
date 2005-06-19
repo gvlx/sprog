@@ -14,19 +14,87 @@ package Sprog::Gear::CSVSplit;
 use strict;
 use warnings;
 
-use base qw(
-  Sprog::Gear::InputByLine
-  Sprog::Gear
-);
+use base qw(Sprog::Gear);
 
 
-sub line {
-  my($self, $line) = @_;
+my $field = qr/
+  (?:
+      [^,"\r\n][^,\r\n]*         # an unquoted non zero length string
+    | (")(?:""|[^"])*"[^,\r\n]*  # a quoted string with optional trailing junk
+    |                            # a zero length string
+  )
+/x;
 
-  chomp $line;
-  my @a = split /,/, $line;
 
-  $self->msg_out(row => \@a);
+sub file_start {
+  my $self = shift;
+
+  $self->{_buf} = '';
+  $self->{_row} = [];
+}
+
+
+sub data {
+  my $self  = shift;
+
+  local($_) = shift;
+
+  CHUNK: while(1) {
+    FIELD_CHECK: while(1) {
+      if(s/^($field)(?=(?:,|\n))//os) {
+        push @{$self->{_row}}, $1;
+        if($2 and $2 eq '"') {
+          $self->{_row}->[-1] =~ s/^"((?:""|[^"])*)"/$1/; # strip outer quotes
+          $self->{_row}->[-1] =~ s/""/"/g;                # unescape inner ones
+        }
+        s/\A,// && next FIELD_CHECK;
+      }
+      else {
+        last FIELD_CHECK;
+      }
+      if(/\A\n/) {                                    # at the end of the line?
+        $self->_send_row;
+        s/\A\n//s;
+        next FIELD_CHECK;
+      }
+    }
+
+    my $queue = $self->msg_queue;
+    if(@$queue) {
+      if($queue->[0]->[0] eq 'data') {
+        my $msg = shift @$queue;
+        $_ .= $msg->[1];
+        redo CHUNK;
+      }
+      else {  # a non 'data' message follows
+        $self->_send_row($_) if length $_;
+        return;
+      }
+    }
+    else {
+      $self->requeue_message_delayed(data => $_) if length $_;
+    }
+    last CHUNK;
+  };
+
+}
+
+
+sub _send_row {
+  my $self = shift;
+
+  my $row = delete $self->{_row};
+  push @$row, shift if @_;
+  $self->msg_out(row => $row) if @$row;
+
+  $self->{_row} = [];
+}
+
+
+sub file_end {
+  my $self = shift;
+
+  $self->_send_row;
 }
 
 1;
