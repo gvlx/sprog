@@ -1,5 +1,5 @@
 use strict;
-use Sprog::TestHelper tests => -1;
+use Sprog::TestHelper tests => 31;
 
 use_ok('TestApp');
 use_ok('Sprog::Gear::CSVSplit');
