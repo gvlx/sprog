@@ -104,14 +104,14 @@ __END__
 
 =head1 NAME
 
-Sprog::Gear::CSVSplit - a naive CSV parser
+Sprog::Gear::CSVSplit - Parse CSV data into rows of field values
 
 =head1 DESCRIPTION
 
-This is a I<very> naive CSV parser that takes each line from the input
-connector and generates a 'row' event on the list output connector.  It doesn't
-handle quoting, escaping or embedded newlines.  It will be replaced with a more
-capable version soon.
+This gear parses data from a CSV (comma-separated value) format into rows of
+field values.  Fields enclosed in double quotes may include commas, newlines
+and double quotes.  Each embedded double quote character must be preceded by
+another double quote 'escape' character.
 
 =head1 COPYRIGHT 
 
@@ -125,15 +125,12 @@ under the same terms as Perl itself.
 
 =head1 CSV Split Gear
 
-I<Warning: this is just a proof-of-concept implementation.>
+This gear reads text data in comma-separated value (CSV) format from the 'pipe'
+input connector and sends rows of field values out the 'list' output connector.
 
-This gear takes lines of comma separated fields from the 'pipe' input
-connector, splits them and sends rows of field values out the 'list' output
-connector.
-
-Unfortunately, the current implementation is not industrial strength.  It
-can't handle the quoting, escaping and embedded newlines that occur in many
-real CSV files.  A more robust implementation will replace this one soon.
+The particular dialect of CSV recognised by this gear uses double quotes around
+fields that contain commas, newlines or double quotes.  Within a quoted field,
+each double quote character must be preceded by another double quote character.
 
 =head2 Properties
 
