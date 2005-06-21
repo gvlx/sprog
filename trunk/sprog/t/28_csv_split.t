@@ -146,9 +146,9 @@ is_deeply([ $sink->rows ], [
 
 $source->messages(
   [ file_start => "data.csv" ],
-  [ data => qq(one"two,three\n"1"first) ],
+  [ data => qq(one"two,three\r"1"first) ],
   [ data => qq(-second,third) ],
-  [ data => qq(\nfields,with,no newline) ],
+  [ data => qq(\r\nfields,with,no newline) ],
   [ file_end => "data.csv" ],
 );
 

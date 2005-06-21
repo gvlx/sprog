@@ -17,6 +17,7 @@ use warnings;
 use base qw(Sprog::Gear);
 
 
+my $nl    = qr/(?:\n|\r\n|\r)/;
 my $field = qr/
   (?:
       [^,"\r\n][^,\r\n]*         # an unquoted non zero length string
@@ -41,7 +42,7 @@ sub data {
 
   CHUNK: while(1) {
     FIELD_CHECK: while(1) {
-      if(s/^($field)(?=(?:,|\n))//os) {
+      if(s/^($field)(?=(?:,|$nl))//os) {
         push @{$self->{_row}}, $1;
         if($2 and $2 eq '"') {
           $self->{_row}->[-1] =~ s/^"((?:""|[^"])*)"/$1/; # strip outer quotes
@@ -52,9 +53,9 @@ sub data {
       else {
         last FIELD_CHECK;
       }
-      if(/\A\n/) {                                    # at the end of the line?
+      if(/\A$nl/) {                                   # at the end of the line?
         $self->_send_row;
-        s/\A\n//s;
+        s/\A$nl//s;
         next FIELD_CHECK;
       }
     }
