@@ -33,8 +33,11 @@ names of the form:
 Where I<PAD> stands for Properties Auto Dialog and I<property_name> should
 match one of your gear properties.
 
-That's all you need to do to connect Entry boxes, TextViews and CheckButtons to
-properties.
+That's all you need to do to connect Entry boxes, TextViews, CheckButtons,
+SpinButtons and ColorButtons to properties.  The framework will automatically
+take care of pre-populating the widgets from the properties when the dialog
+is displayed and saving the widget values back into the properties when OK
+is clicked.
 
 RadioButtons use a slightly different naming convention since there will be two
 or more widgets feeding different values into the same property.  Use the form:
