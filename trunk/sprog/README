@@ -44,6 +44,16 @@ This distribution uses the standard Perl build/install commands:
   make install
 
 
+LAUNCHING
+
+After you've installed the Sprog distribution, a wrapper script called 'sprog'
+should be installed in your bin directory.  Just run:
+
+  sprog
+
+For help on command line options, add the '-?' option.
+
+
 DEVELOPER NOTES
 
 You'll find some notes for developers in:
