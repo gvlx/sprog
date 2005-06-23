@@ -74,6 +74,8 @@ sub create_window {
   $hide_button->signal_connect( "clicked" => sub { $dialog->hide; } );
   $dialog->add_action_widget($hide_button, 'none');
 
+  $dialog->signal_connect( "key_press_event" => sub { $self->on_key_press(@_); } );
+
   $dialog->show_all;
 }
 
@@ -113,6 +115,16 @@ sub toggle_window_visibility {
   else {
     $self->create_window;
   }
+}
+
+
+sub on_key_press {
+  my($self, $dialog, $event) = @_;
+
+  return FALSE unless($event->keyval == $Gtk2::Gdk::Keysyms{Escape});
+
+  $dialog->hide;
+  return TRUE;
 }
 
 

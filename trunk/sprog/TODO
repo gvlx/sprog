@@ -1,15 +1,14 @@
-* Testing cvs ci
-* Tidy up .spec file / wrapper situation
+* Preferences: private gear directory
 * Add a save button to the TextWindow
 * WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
 * ReadFiles: implement gear
 * FindFiles: implement gear
 * DBIQuery: implement gear
+* CommandOut: implement gear (eg: gnuplot?)
 * Image connector formalise API
 * User-selectable fonts for text windows (and help viewer)
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
-* CSVSplit: replace with proper implementation
 * RetrieveURL: Do a proper implementation
 * Add support for gear state (just PerlCode gears?)
 * Add support for machine state
@@ -18,7 +17,6 @@
 * Implement a console window (capture warnings, STDERR?, exceptions)
 * PerlCode: unbind escape key from cancel (for vi users)
 * PerlCode: fixed pitch font in input box(?)
-* TextWindow - bind escape key to hide function
 * Warn about unsaved changes (before load, new or exit)
 * HelpViewer: hourglass cursor when loading a topic
 * HelpViewer: support URL links
@@ -36,7 +34,6 @@
 * Implement keyboard alternatives to mouse actions
 * File top gear: option to strip newlines
 * File top gear: newline: LF CRLF CR Auto
-* Command output gear (eg: gnuplot?)
 * Shrink the alert dialog after hiding details
 * Determine if calling ->destroy on a Gnome2::Canvas::Group is kocher
 * Cache the GearView paths

@@ -321,8 +321,8 @@ You can manually pop-up the window at any time by right-clicking on the gear
 and selecting 'Show text window'.
 
 When the window is visible, you can use the 'Clear' button to discard the text
-already displayed.  Or you can use the 'Hide' button to hide the window.  It 
-will re-appear as soon as more data is received.
+already displayed.  Or you can use the 'Hide' button or press the 'Esc' key to
+hide the window.  It will re-appear as soon as more data is received.
 
 To copy data from the text window, click and drag to highlight it with the 
 mouse and then press Ctrl-C or right click and select 'Copy'.
