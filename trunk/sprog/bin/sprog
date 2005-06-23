@@ -2,6 +2,11 @@
 
 use strict;
 
+BEGIN {  # Workaround for RPMs built on Debian
+  my $deb_lib = '/usr/share/perl5';
+  push @INC, $deb_lib if(-d $deb_lib  and  !grep($_ eq $deb_lib, @INC));
+}
+
 use Sprog::ClassFactory;
 
 make_app()->run();
