@@ -15,6 +15,7 @@ blib
 ^misc
 ^cover_db
 ^runtest
+^t/01_require_all.t$
 ^t/output.txt$
 ^ptst$
 ^sprog\.dbg$

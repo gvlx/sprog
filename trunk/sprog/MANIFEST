@@ -84,7 +84,6 @@ META.yml			Module meta-data (added by MakeMaker)
 README
 Sprog.spec
 t/00_config.t
-t/01_require_all.t
 t/02_factory.t
 t/03_accessor.t
 t/05_eventloop.t
