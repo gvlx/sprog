@@ -245,7 +245,9 @@ sub update_view {
 sub blink {
   my $self = shift;
 
-  if(!$self->gear or !$self->gear->has_error) {
+  my $gear = $self->gear or return FALSE;  # it's been deleted
+
+  if(!$gear->has_error) {
     $self->label->set(fill_color => 'black');
     delete $self->{blinking};
     return FALSE;
