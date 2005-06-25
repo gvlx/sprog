@@ -22,8 +22,6 @@ __PACKAGE__->mk_accessors(qw(
   gear_view
 ));
 
-use Scalar::Util qw(weaken);
-
 
 sub send_data {
   my($self, $data) = @_;
