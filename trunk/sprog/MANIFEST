@@ -31,6 +31,7 @@ lib/Sprog/Gear/ReplaceFile.pm
 lib/Sprog/Gear/RetrieveURL.pm
 lib/Sprog/Gear/SelectColumns.pm
 lib/Sprog/Gear/SelectFields.pm
+lib/Sprog/Gear/SlurpFile.pm
 lib/Sprog/Gear/StripWhitespace.pm
 lib/Sprog/Gear/TemplateTT2.pm
 lib/Sprog/Gear/TextInput.pm
@@ -130,6 +131,7 @@ t/lib/DummyPrefs.pm
 t/lib/DummyView.pm
 t/lib/LineSink.pm
 t/lib/ListSink.pm
+t/lib/MessageSink.pm
 t/lib/MessageSource.pm
 t/lib/RecordSink.pm
 t/lib/TestApp.pm
