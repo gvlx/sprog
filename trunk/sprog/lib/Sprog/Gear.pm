@@ -99,6 +99,7 @@ sub alert {
   my $self = shift;
   
   $self->has_error(1);
+  $self->app->stop_machine;
   $self->app->alert(@_);
 }
 
@@ -256,6 +257,9 @@ as shown in the synopsis above.
 
 Requests the main application window to pop up a message dialog to display
 the alert message and optional extra detail.
+
+An alert is a 'fatal' error - it will terminate the machine startup or stop the
+machine if it's already running.
 
 =head2 app ( )
 
