@@ -20,6 +20,12 @@ The L<Sprog::Gear::InputByLine> mixin class implements a 'data' method that
 buffers up partial lines and passes each complete one to a C<line> method
 that you implement.
 
+=head2 File-at-a-Time Input
+
+The L<Sprog::Gear::SlurpFile> mixin class implements a 'data' method that
+buffers up a whole file and passes all the data to a C<file_data> method that
+you implement.
+
 =head2 Input From Filehandle
 
 Any class that reads from a file, pipe or socket will need to use non-blocking
