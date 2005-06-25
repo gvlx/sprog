@@ -21,7 +21,7 @@ sub file_end {
   
   my $data = delete $self->{_data} || [];
 
-  $self->file_data(join('', @$data));
+  $self->file_data(join('', @$data), $filename);
 
   $self->msg_out(file_end => $filename);
 }
@@ -62,7 +62,8 @@ Adds the chunk of input into a buffer.
 Passes the accumulated data from the buffer to the C<file_data> method and then
 propagates the C<file_start> event.
 
-A class that uses this mixin is expected to implement a C<file_data> method.
+A class that uses this mixin is expected to implement a C<file_data> method. 
+It should accept two arguments: the data and the filename.
 
 =head1 COPYRIGHT 
 
