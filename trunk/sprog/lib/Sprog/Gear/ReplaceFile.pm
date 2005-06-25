@@ -60,6 +60,13 @@ sub file_end {
 }
 
 
+sub stop {
+  my $self = shift;
+
+  unlink $self->{_tempfile} if $self->{_tempfile}
+}
+
+
 sub dialog_xml {
 #  return 'file:/home/grant/projects/sf/sprog/glade/replacefile.glade';
   return <<'END_XML';
