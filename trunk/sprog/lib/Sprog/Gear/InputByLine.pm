@@ -40,8 +40,8 @@ Sprog::Gear::InputByLine - a 'mixin' class for gears reading input line-by-line
 =head1 SYNOPSIS
 
   use base qw(
-    Sprog::Gear
     Sprog::Gear::InputByLine
+    Sprog::Gear
   );
 
 =head1 DESCRIPTION
