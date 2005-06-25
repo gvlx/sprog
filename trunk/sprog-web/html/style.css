@@ -123,3 +123,13 @@ dt {
   float: right;
   padding: 0.2em 0.2em 1.6em 1.0em;
 }
+
+.gear-list {
+  border-collapse: collapse;
+}
+
+.gear-list td,th {
+  border: 1px solid #666666;
+  padding: 2px 1em 2px 1em;
+}
+
