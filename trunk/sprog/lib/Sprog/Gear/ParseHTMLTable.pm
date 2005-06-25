@@ -12,7 +12,10 @@ package Sprog::Gear::ParseHTMLTable;
 
 use strict;
 
-use base qw(Sprog::Gear);
+use base qw(
+  Sprog::Gear::SlurpFile
+  Sprog::Gear
+);
 
 use XML::LibXML;
 
@@ -21,31 +24,17 @@ __PACKAGE__->declare_properties(
 );
 
 
-sub file_start {
-  my $self = shift;
-
-  $self->{html} = '';
-}
-
-
-sub data {
+sub file_data {
   my($self, $data) = @_;
 
-  $self->{html} .= $data;
-}
-
-
-sub file_end {
-  my $self = shift;
-
-  return unless length $self->{html};
+  return unless length $data;
 
   my $doc = eval {
     local($^W) = 0;
 
     my $parser = XML::LibXML->new();
     $parser->recover(1);
-    $parser->parse_html_string($self->{html});
+    $parser->parse_html_string($data);
   };
   return $self->alert('Error parsing HTML', "$@") if $@;
 

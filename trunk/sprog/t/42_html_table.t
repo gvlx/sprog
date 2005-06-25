@@ -1,5 +1,5 @@
 use strict;
-use Sprog::TestHelper tests => 29, requires => 'XML::LibXML';
+use Sprog::TestHelper tests => 32, requires => 'XML::LibXML';
 
 use_ok('TestApp');
 use_ok('Sprog::Gear::ParseHTMLTable');
@@ -262,5 +262,45 @@ is_deeply([ $sink->rows ], [
                  Big City
                ', '555-4321' ],
   ],
-  "extracted contents of table selected using a XPath expression");
+  "extracted contents of table selected using an XPath expression");
 
+
+my($filter);
+($source, $parser, $filter, $sink) = $app->make_test_machine(qw(
+  MessageSource
+  Sprog::Gear::ParseHTMLTable
+  Sprog::Gear::ListToCSV
+  MessageSink
+));
+is($app->alerts, '', 'no alerts while creating new machine');
+
+
+# Confirm file start/end events are passed in correct sequence
+
+$html = <<'EOF';
+<html>
+<body>
+  <table>
+    <tr><td>one</td><td>two</td></tr>
+    <tr><td>three</td><td>four</td></tr>
+  </table>
+</body>
+</html>
+EOF
+
+$source->messages(
+  [ file_start => 'table.html' ],
+  [ data       => $html        ],
+  [ file_end   => 'table.html' ],
+);
+
+is($app->test_run_machine, '', 'processed message stream without errors');
+
+is_deeply([ $sink->messages ], [
+    [ file_start => 'table.html'   ],
+    [ data       => "one,two\n"    ],
+    [ data       => "three,four\n" ],
+    [ file_end   => 'table.html'   ],
+  ], 
+  "got expected messages"
+);
