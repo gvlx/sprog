@@ -12,7 +12,10 @@ package Sprog::Gear::ImageBorder;
 
 use strict;
 
-use base qw(Sprog::Gear);
+use base qw(
+  Sprog::Gear::SlurpFile
+  Sprog::Gear
+);
 
 __PACKAGE__->declare_properties(
   colour   => '#000000000000',
@@ -22,40 +25,23 @@ __PACKAGE__->declare_properties(
 use Imager;
 
 
-sub file_start {
-  my($self, $filename) = @_;
+sub file_data {
+  my($self, $data, $filename) = @_;
 
-  $self->{_buf} = '';
-  $self->msg_out(file_start => $filename);
-}
-
-
-sub data {
-  my($self, $data) = @_;
-
-  $self->{_buf} .= $data;
-}
-
-
-sub file_end {
-  my($self, $filename) = @_;
-
-  eval { $self->_add_border($filename) };
+  eval { $self->_add_border($data, $filename) };
   return $self->alert("Error in image transformation", "$@") if $@;
-
-  $self->msg_out(file_end => $filename);
 }
 
 
 sub _add_border {
-  my($self, $filename) = @_;
+  my($self, $data, $filename) = @_;
 
   my($type) = ($filename =~ /\.(\w+)$/);
-  die "Can't get image type from file suffix" unless $type;
+  return $self->alert("Can't get image type from file suffix") unless $type;
 
   my $src = Imager->new();
 
-  $src->open(data => $self->{_buf}) or die $src->errstr();
+  $src->open(data => $data) or die $src->errstr();
 
   my $bw = $self->width;
   my $sw = $src->getwidth;
