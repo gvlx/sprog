@@ -40,12 +40,18 @@ Sprog::Gear::SlurpFile - a 'mixin' class for gears reading a file at a time
     Sprog::Gear
   );
 
+  sub file_data {
+    my($self, $data, $filename) = @_;
+
+    # do stuff with $data and call $self->msg_out
+  }
+
 =head1 DESCRIPTION
 
 This mixin is for use by gears which use a 'pipe' style of input connector but
 only want to process a whole file at a time.  It defines a C<data> method which
-buffers input until the C<file_end> event, at which point the C<file_data>
-method is called and passed all the accumulated data.
+buffers input until the C<file_end> event, at which point it calls your
+module's C<file_data> method and passes all the accumulated data.
 
 =head1 METHODS
 
