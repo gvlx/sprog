@@ -39,6 +39,12 @@ sub add_io_writer {
 }
 
 
+sub cancel_event {
+  my($class, $tag) = @_;
+
+  Glib::Source->remove ($tag);
+}
+
 1;
 
 __END__
