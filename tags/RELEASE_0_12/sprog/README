@@ -1,0 +1,75 @@
+WARNING
+
+This is an 'alpha' release, of 'Sprog', which means:
+
+    * the code has bugs
+    * API's are subject to change
+
+
+DESCRIPTION
+
+Sprog is a GUI tool for building pipelines to process data. It allows you to
+select a data source; hook up some filter components and an output component;
+then feed your data through - all by pointing and clicking.
+
+In Sprog jargon, the components are called 'gears' and the assembled result is
+called a 'machine'. Sprog ships with a number of pre-written gears - most of
+which are configurable. It's relatively straightforward to write your own gears
+using the supplied framework. This allows you to make reusable components for
+the data transformations you use most often.
+
+
+PREREQUISITES
+
+  Gtk2 - I have version 2.4 so best to use that or later
+  Gnome2::Canvas
+  Gtk2::GladeXML
+  YAML
+  Pod::Simple
+
+On my Debian 'Sarge' system, this is all that's required to install the
+prerequisites:
+
+  apt-get install libgtk2-perl libgnome2-canvas-perl libgtk2-gladexml-perl \
+          libyaml-perl libpod-simple-perl
+
+
+INSTALLING
+
+This distribution uses the standard Perl build/install commands:
+
+  perl Makefile.PL
+  make
+  make test
+  make install
+
+
+LAUNCHING
+
+After you've installed the Sprog distribution, a wrapper script called 'sprog'
+should be installed in your bin directory.  Just run:
+
+  sprog
+
+For help on command line options, add the '-?' option.
+
+
+DEVELOPER NOTES
+
+You'll find some notes for developers in:
+
+  lib/Sprog/help/internals.pod
+
+which you can read from the online help by pressing F1 after you have 
+launched 'sprog'.
+
+LICENSE
+
+Sprog is free software; you can redistribute it and/or modify it under
+the same terms as Perl itself.  (Which means that you can chose either
+the GPL or the Artistic License which comes with Perl).
+
+FEEDBACK
+
+Hit me with your feedback at: grantm@cpan.org
+

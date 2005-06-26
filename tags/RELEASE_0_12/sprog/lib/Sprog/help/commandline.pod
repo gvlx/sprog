@@ -1,0 +1,76 @@
+=head1 NAME
+
+sprog - options for invoking Sprog from the command line
+
+=head1 SYNOPSIS
+
+  sprog [options] [<filename.sprog>] [<filenames>]
+
+Options:
+
+  -?               detailed help about options
+  --run     (-r)   start the machine running
+  --nogui   (-n)   run in text mode without graphical user interface
+  --quit    (-q)   quit when machine stops
+  --debug   (-d)   enable debugging modes (for developers)
+  --version (-v)   print version number and exit
+
+Usually you would simply invoke C<sprog> with no arguments or possibly just
+the filename of a <.sprog> file.
+
+=head1 OPTIONS
+
+Most options can be used in the long form shown below (with two leading dashes)
+or the short form shown in the synopsis above (one leading dash).
+
+=over 4
+
+=item -?
+
+Display this detailed documentation about command-line options.  For more
+detailed help about Sprog, see: L<Sprog::help::index>
+
+=item --run
+
+If the name of a Sprog machine file is provided, this option tells Sprog to
+run the machine after loading it from the file.  If no filename was provided,
+this option has no effect.
+
+=item --nogui
+
+If this option is specified, Sprog will run without a graphical user interface
+(possibly useful for 'cron' jobs etc).
+
+If you select 'nogui' mode, you must also specify the name of a C<.sprog> file
+to load.  Enabling this mode will implicitly enable both C<--run> and
+C<--quit>, so the machine will start running as soon as it is loaded and Sprog
+will exit as soon as the machine is finished.
+
+=item --quit
+
+Causes Sprog to exit when the machine stops running.  It probably only makes
+sense to use this option with C<--run> but you can specify it on it's own.
+If no filename was provided, this option has no effect.
+
+=item --debug
+
+Enables Sprog's debug logging.  This is a tool for Sprog developers.  When this
+option is enabled, various debug messages will be written to the file
+F<sprog.dbg> in the current directory.
+
+=item --version
+
+If this option is specified, Sprog will print its version number to STDOUT and
+then exit.
+
+=back
+
+=head1 COPYRIGHT 
+
+Copyright 2004-2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
+
+This library is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself. 
+
+=cut
+

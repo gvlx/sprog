@@ -1,0 +1,23 @@
+--- #YAML:1.0
+- Sprog
+- 1
+- {}
+-
+  - CLASS: Sprog::Gear::CommandIn
+    ID: 1
+    NEXT: 2
+    X: 93
+    Y: 69
+    prop:
+      command: |-
+        perl -l -e "$|++; foreach (qw(one two three four five)) { print; sleep 1 }"
+  - CLASS: Sprog::Gear::TextWindow
+    ID: 2
+    NEXT: ~
+    X: 93
+    Y: 109
+    prop:
+      auto_scroll: 0
+      clear_on_run: 1
+      show_end_events: 0
+      show_start_events: 0

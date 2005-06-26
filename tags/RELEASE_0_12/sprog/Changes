@@ -1,0 +1,78 @@
+Revision history for Perl extension Sprog.
+
+0.12  Jun 26 2005
+        - fix bug which caused a crash when deleting a flashing gear
+        - removed t/01_require_all.t from tarball - it's for developers only
+        - added a preferences dialog with initial support for:
+          - a personal gear folder
+          - changing the workspace background colour
+        - changed Gear.pm to stop machine on an alert
+        - new SlurpFile mixin class
+
+0.11  Jun 23 2005
+        - fix CSVSplit gear to support quoting and escaping
+        - bind Escape key to hide text window
+        - more tweaks to spec file for creating RPMs and wrapper script
+
+0.10  Jun 14 2005
+        - bug fix: scheduler race condition causing machine hangs
+        - added --nogui mode (run machines from command line or cron etc)
+        - save user preferences (*nix platforms only right now)
+        - allow drag-n-drop of filenames and URLs into machine
+        - new gears:
+            NameFields, SelectFields, PerlCodePA, PerlCodePH, ReplaceFile,
+            ImageBorder (experimental)
+        - add Shift-F1 or right click for gear help in palette
+        - highlight gear that raised alert message
+        - help viewer user interface fixes
+        - switched from Class::Accessor to Sprog::Accessor, removed dependency
+
+0.09  May 30 2005
+        - added a help viewer and help text for all gears (via Pod::Simple)
+        - implemented auto-discovery of gear classes
+        - new scheduler implementation with some API changes
+        - new gears:
+            WriteFile, CommandFilter, CSVSplit, ParseHTMLTable,
+            SelectColumns, StripWhitespace, ListToCSV, ListToRecord,
+            TemplateTT2, PerlCodeAP, RetrieveURL
+        - API changes for PerlCode gear(s) to use overridden 'print'
+
+0.08  Mar 22 2005
+        - speed improvements
+        - added a new 'Text Input' gear and removed vapourware gears
+        - added many regression tests
+        - fixed numerous bugs identified by tests
+        - overhaul of code base to improve modularity and test-ability
+        - machine now reports elapsed time when finished
+
+0.07  Feb 24 2005
+        - fixed drop position when dragging from palette
+        - added 'View' menu
+        - show/hide palette via menu, toolbar and hot key
+        - show/hide toolbar via menu
+        - enable text labels on toolbar but configurable via View menu
+
+0.06  Feb 19 2005
+        - initial implementation of gear palette with drag-n-drop
+        - removed the 'Test' menu
+        - implemented Help About with version, copyright and contact details
+
+0.05  Feb 09 2005
+        - implemented file save support for ApacheLogParse, CommandIn,
+          FindReplace and PerlCode gears
+        - allow derived gear classes to inherit default properties
+        - fixed broken properties dialog for ApacheLogParse gear
+        - fixed gear positioning bug when restoring from file
+
+0.04  Feb 08 2005
+        - implemented File Save and File Open
+
+0.03  Jan 03 2005
+        - renamed modules from Pstax* to Sprog*
+        - added missing libgnome2-canvas-perl to Debian dependencies
+        - set up directory layout for CPAN, using h2xs 1.23 with options
+              -AX -b 5.6.0 -n Sprog
+
+Prehistory (~August 2004)
+        - implemented initial application framework under the name 'Pstax' 
+          using Gtk for GUI and event loop
