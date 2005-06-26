@@ -3,14 +3,14 @@ package Sprog::GearMetadata;
 use strict;
 
 use File::Spec ();
-use File::Find ();
 use YAML       ();
 
 
 # Package globals
 
-my $geardb  = {};      # metadata cache
-my $scanned = 0;       # flag to prevent re-scanning
+my $private_path = undef;   # where user's private gears are stored
+my $geardb       = {};      # metadata cache
+my $scanned      = 0;       # flag to prevent re-scanning
 
 my %_connector_sort_key = (
   '_' => 1,
@@ -42,6 +42,15 @@ sub connector_types {
     'List'   => 'A',
     'Record' => 'H',
   );
+}
+
+
+sub set_private_path {
+  my($class, $new_path) = @_;
+
+  $geardb       = {};
+  $scanned      = 0;
+  $private_path = $new_path;
 }
 
 
@@ -86,10 +95,17 @@ sub search {
 sub _get_gear_attributes {
   my($class, $gear_class) = @_;
 
-  # Search for class .pm file in @INC
-
   my @parts = split /::/, $gear_class;
   $parts[-1] .= '.pm';
+
+  # Look in private gear folder first
+
+  if($private_path) {
+    my $path = File::Spec->catfile($private_path, $parts[-1]);
+    return $class->_extract_metadata($path) if -r $path;
+  }
+
+  # Then search through @INC
 
   foreach my $dir (@INC) {
     my $path = File::Spec->catfile($dir, @parts);
@@ -160,21 +176,20 @@ sub _sort_key {
 sub _find_all_classes {
   my($class) = @_;
 
-  my @gear_dirs = 
-    grep(-d, map { File::Spec->catdir($_, 'Sprog', 'Gear'); } @INC);
+  my @gear_dirs = grep(-d, map {
+    (
+      File::Spec->catdir($_, 'Sprog',   'Gear'),
+      File::Spec->catdir($_, 'SprogEx', 'Gear'),
+    )
+  } @INC);
+  unshift @gear_dirs, $private_path if $private_path;
 
-  File::Find::find(
-    {
-      no_chdir    => 1,
-      follow_skip => 2,
-      wanted      => sub {
-                       return if -d $_;
-                       return unless /\.pm$/;
-                       $class->_extract_metadata($_);
-                     },
-    },
-    @gear_dirs
-  );
+  foreach my $dir (@gear_dirs) {
+    opendir my $d, $dir or next;
+    foreach (grep /\.pm$/, readdir($d)) {
+      $class->_extract_metadata(File::Spec->catfile($dir, $_));
+    }
+  }
 
   $scanned = 1;
 }
@@ -190,7 +205,7 @@ Sprog::GearMetaData - Information about installed Sprog::Gear classes
 =head1 DESCRIPTION
 
 This class is responsible for auto-discovering installed gear classes and
-determining the attributes of each gear class.
+determining their attributes.
 
 Querying the attributes of a class does not cause the class file to be
 compiled.  Instead, each gear class is expected to start with a special
