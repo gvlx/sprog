@@ -147,9 +147,19 @@ The quickest route to creating a working gear is to start with the existing
 class that is closest to what you want.  Either copy it or inherit from it and
 add the custom code you require.  Bear the following in mind:
 
-The package name for your gear class must be of the form:
+The package name for gears included in the Sprog distribution will look like 
+this:
 
-  Sprog::Gear::YourClass
+  Sprog::Gear::ClassName
+
+The package name for 'third party' extension gears should look like this:
+
+  SprogEx::Gear::YourClass
+
+If you put your C<.pm> file in the Personal Gear Folder (see:
+L<preferences|Sprog::help::preferences>) then it should I<not> be in a
+C<SprogEx/Gear> subdirectory.  Don't put other support classes in the private
+gear folder they must be in a directory that is in C<@INC>.
 
 Your class must begin with a package declaration and a
 L<metadata|Sprog::GearMetadata> section and it must inherit from
