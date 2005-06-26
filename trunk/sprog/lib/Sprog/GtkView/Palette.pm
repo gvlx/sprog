@@ -55,13 +55,13 @@ sub new {
 
   $self->_build_widget;
 
-  $self->_apply_filter;
+  $self->apply_filter;
 
   return $self;
 }
 
 
-sub _apply_filter {
+sub apply_filter {
   my $self = shift;
 
   $self->selected_class(undef);
@@ -97,7 +97,7 @@ sub _reset_filter {
   my $self = shift;
 
   $self->search_entry->set_text('');
-  $self->_apply_filter;
+  $self->apply_filter;
 }
 
 
@@ -148,7 +148,7 @@ sub _build_combos {
     $combo_in->append_text($connector_types[$i]);
   }
   $combo_in->set_active(0);
-  $combo_in->signal_connect(changed => sub { $self->_apply_filter(); });
+  $combo_in->signal_connect(changed => sub { $self->apply_filter(); });
   $table->attach($combo_in, 0, 1, 1, 2, ['expand', 'fill'], ['fill'], 4, 2);
 
   my $combo_out = Gtk2::ComboBox->new_text;
@@ -157,7 +157,7 @@ sub _build_combos {
     $combo_out->append_text($connector_types[$i]);
   }
   $combo_out->set_active(0);
-  $combo_out->signal_connect(changed => sub { $self->_apply_filter(); });
+  $combo_out->signal_connect(changed => sub { $self->apply_filter(); });
   $table->attach($combo_out, 1, 2, 1, 2, ['expand', 'fill'], ['fill'], 4, 2);
 
   return $table;
@@ -177,7 +177,7 @@ sub _build_searchbox {
   
   my $search_btn = Gtk2::Button->new('Search');
   $search_btn->can_default(TRUE);
-  $search_btn->signal_connect(clicked => sub { $self->_apply_filter; });
+  $search_btn->signal_connect(clicked => sub { $self->apply_filter; });
   $self->search_button($search_btn);
   $table->attach($search_btn, 1, 2, 0, 1, ['fill'], ['fill'], 0, 2);
 
