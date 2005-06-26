@@ -127,6 +127,15 @@ sub _build_menubar {
         },
       ],
     },
+    _Tools  => {
+      item_type  => '<Branch>',
+      children => [
+        _Preferences => {
+          callback        => sub { $app->prefs_dialog },
+          callback_action => $action++,
+        },
+      ],
+    },
     _Help  => {
       item_type  => '<Branch>',
       children => [
