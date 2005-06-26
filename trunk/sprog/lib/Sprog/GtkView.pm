@@ -11,6 +11,7 @@ __PACKAGE__->mk_accessors(qw(
   alert_class
   help_class
   about_class
+  prefs_class
   menubar
   toolbar
   workbench
@@ -52,6 +53,7 @@ sub new {
     '/app/view/workbench'    => 'Sprog::GtkView::WorkBench',
     '/app/view/alert_dialog' => 'Sprog::GtkView::AlertDialog',
     '/app/view/about_dialog' => 'Sprog::GtkView::AboutDialog',
+    '/app/view/prefs_dialog' => 'Sprog::GtkView::PrefsDialog',
     '/app/view/palette'      => 'Sprog::GtkView::Palette',
     '/app/view/help_viewer'  => 'Sprog::GtkView::HelpViewer',
   );
@@ -60,6 +62,7 @@ sub new {
   $self->alert_class ($app->load_class('/app/view/alert_dialog'));
   $self->about_class ($app->load_class('/app/view/about_dialog'));
   $self->help_class  ($app->load_class('/app/view/help_viewer'));
+  $self->prefs_class ($app->load_class('/app/view/prefs_dialog'));
 
   $self->build_app_window;
 
@@ -195,11 +198,18 @@ sub update_gear_view    { shift->workbench->update_gear_view(@_);      }
 sub _build_workbench {
   my($self) = @_;
 
-  return $self->workbench(
-    $self->app->make_class(
-      '/app/view/workbench', app => $self->app, view => $self
-    )
-  )->widget;
+  my $frame = Gtk2::Frame->new;
+  $frame->set_shadow_type('in');
+
+  $frame->add(
+    $self->workbench(
+      $self->app->make_class(
+        '/app/view/workbench', app => $self->app, view => $self
+      )
+    )->widget
+  );
+
+  return $frame;
 }
 
 sub gear_view_by_id        { shift->workbench->gear_view_by_id(@_);        }
@@ -434,12 +444,20 @@ sub hide_palette {
 
 sub palette_visible {
   my $self = shift;
-  
+
   if(@_  and  $self->{palette_visible} ne $_[0]) {
     $self->{palette_visible} = shift;
     $self->app->set_pref('palette.visible', $self->{palette_visible});
   }
   return $self->{palette_visible};
+}
+
+
+sub refresh_palette {
+  my $self = shift;
+
+  my $palette = $self->palette or return;
+  $palette->apply_filter;
 }
 
 
@@ -454,6 +472,13 @@ sub help_about {
   my($self, $data) = @_;
 
   $self->about_class->invoke($self->app_win, $data, $self->chrome_class);
+}
+
+
+sub prefs_dialog {
+  my($self, $data) = @_;
+
+  $self->prefs_class->invoke($self->app);
 }
 
 
