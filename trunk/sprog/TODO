@@ -1,4 +1,3 @@
-* Preferences: private gear directory
 * Add a save button to the TextWindow
 * WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
 * ReadFiles: implement gear
@@ -9,6 +8,8 @@
 * User-selectable fonts for text windows (and help viewer)
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
+* Input Encoding: implement gear (xlate line endings too?)
+* Output Encoding: implement gear
 * RetrieveURL: Do a proper implementation
 * Add support for gear state (just PerlCode gears?)
 * Add support for machine state
@@ -24,7 +25,6 @@
 * HelpViewer: add image support (eg: pictures of the connector types)
 * Make floating palette an option
 * Allow output window to 'swallow' properties dialogs for other gears (eg: text in, pattern match etc)
-* Cancel waiting (io) events on stop
 * File browse - remember last directory
 * Implement ApacheCustomLogParse
 * Highlight selected gear
@@ -32,8 +32,6 @@
 * Work out why replacement syntax error causes exit
 * HelpViewer: Implement Edit menu (copy/paste)
 * Implement keyboard alternatives to mouse actions
-* File top gear: option to strip newlines
-* File top gear: newline: LF CRLF CR Auto
 * Shrink the alert dialog after hiding details
 * Determine if calling ->destroy on a Gnome2::Canvas::Group is kocher
 * Cache the GearView paths
