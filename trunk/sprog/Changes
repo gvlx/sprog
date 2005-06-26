@@ -1,5 +1,14 @@
 Revision history for Perl extension Sprog.
 
+0.12  Jun 26 2005
+        - fix bug which caused a crash when deleting a flashing gear
+        - removed t/01_require_all.t from tarball - it's for developers only
+        - added a preferences dialog with initial support for:
+          - a personal gear folder
+          - changing the workspace background colour
+        - changed Gear.pm to stop machine on an alert
+        - new SlurpFile mixin class
+
 0.11  Jun 23 2005
         - fix CSVSplit gear to support quoting and escaping
         - bind Escape key to hide text window
