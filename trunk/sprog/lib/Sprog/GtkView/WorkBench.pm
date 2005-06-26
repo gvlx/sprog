@@ -22,6 +22,9 @@ use Sprog::GtkView::DnD qw(
 );
 
 
+sub default_bg_colour { '#00007F7F0000'; }
+
+
 sub new {
   my $class = shift;
 
@@ -54,8 +57,7 @@ sub _build_workbench {
 
   $sw->add($canvas);
 
-  my $color = Gtk2::Gdk::Color->parse("#007f00");
-  $canvas->modify_bg('normal', $color);
+  $self->set_bg_colour;
 
   $canvas->set_scroll_region(0, 0, 400, 300);
 
@@ -66,6 +68,15 @@ sub _build_workbench {
     drag_data_received => sub { $self->drag_data_received(@_); }
   );
 
+}
+
+
+sub set_bg_colour {
+  my $self = shift;
+
+  my $bg_rgb = $self->app->get_pref('workbench.bg_colour') || default_bg_colour;
+  my $colour = Gtk2::Gdk::Color->parse($bg_rgb);
+  $self->canvas->modify_bg('normal', $colour);
 }
 
 
