@@ -53,6 +53,7 @@ lib/Sprog/GtkView/DnD.pm
 lib/Sprog/GtkView/HelpViewer.pm
 lib/Sprog/GtkView/Menubar.pm
 lib/Sprog/GtkView/Palette.pm
+lib/Sprog/GtkView/PrefsDialog.pm
 lib/Sprog/GtkView/Toolbar.pm
 lib/Sprog/GtkView/WorkBench.pm
 lib/Sprog/help/build_machine.pod
@@ -66,6 +67,7 @@ lib/Sprog/help/input_gears.pod
 lib/Sprog/help/internals.pod
 lib/Sprog/help/output_gears.pod
 lib/Sprog/help/palette.pod
+lib/Sprog/help/preferences.pod
 lib/Sprog/help/prop_auto_dialog.pod
 lib/Sprog/help/regex_intro.pod
 lib/Sprog/help/scheduler.pod
