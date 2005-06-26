@@ -27,6 +27,10 @@ L<Using the palette|Sprog::help::palette>
 
 =item *
 
+L<Preferences|Sprog::help::preferences>
+
+=item *
+
 L<Command-line options|Sprog::help::commandline>
 
 =back
