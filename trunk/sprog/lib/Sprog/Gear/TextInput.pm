@@ -24,7 +24,7 @@ __PACKAGE__->mk_accessors(qw(
 
 
 sub send_data {
-  my($self, $data) = @_;
+  my $self = shift;
 
   $self->msg_out(file_start => undef);
   $self->msg_out(data       => $self->text);
