@@ -1,6 +1,4 @@
 package Sprog::Gear::InputFromFH;
-#TODO: cancel event on stop
-
 
 use Sprog::Debug qw($DBG);
 
@@ -44,6 +42,15 @@ sub _can_read {
   $self->work_done(1);
   
   return 0;               # don't immediately re-queue the file event
+}
+
+
+sub stop {
+  my $self = shift;
+
+  if(my $tag = delete $self->{in_tag}) {
+    $self->app->cancel_event($tag);
+  }
 }
 
 

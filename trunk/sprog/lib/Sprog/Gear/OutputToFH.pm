@@ -5,7 +5,6 @@ use Sprog::Debug qw($DBG);
 use Fcntl qw(F_GETFL F_SETFL O_NONBLOCK);
 
 
-
 sub fh_out {
   my $self = shift;
 
@@ -90,6 +89,15 @@ sub _close_output_fh {
 
   my $fh = delete $self->{fh_out};
   close $fh if $fh;
+}
+
+
+sub stop {
+  my $self = shift;
+
+  if(my $tag = delete $self->{out_tag}) {
+    $self->app->cancel_event($tag);
+  }
 }
 
 
