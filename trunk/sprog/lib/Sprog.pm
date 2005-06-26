@@ -2,7 +2,7 @@ package Sprog;
 
 use strict;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 use base qw(Sprog::Accessor);
 
@@ -65,6 +65,8 @@ sub new {
   $self->geardb    ( $factory->load_class('/app/geardb'   ) );
   $self->event_loop( $factory->load_class('/app/eventloop') );
   $self->prefs     ( $factory->make_class('/app/preferences', app => $self) );
+  $self->init_private_path;
+
   $self->machine   ( $factory->make_class('/app/machine',     app => $self) );
   $self->view      ( $factory->make_class('/app/view',        app => $self) );
 
@@ -189,6 +191,18 @@ sub add_io_writer     { shift->event_loop->add_io_writer(@_);    }
 
 sub show_help         { shift->view->show_help(@_);              }
 sub help_contents     { shift->show_help('Sprog::help::index');  }
+
+sub prefs_dialog      { shift->view->prefs_dialog;               }
+
+
+sub init_private_path {
+  my $self = shift;
+
+  my $path = $self->prefs->get_pref('private_gear_folder');
+  $self->geardb->set_private_path($path);
+  my $view = $self->view or return;
+  $view->refresh_palette;
+}
 
 
 sub set_run_on_drop {
