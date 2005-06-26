@@ -144,7 +144,7 @@ sub _create_gears_from_file {
 
   foreach my $g (@$gears) {
     if($g->{NEXT}) {
-      my $gear = $map{$g->{ID}};
+      my $gear = $map{$g->{ID}} or last;
       $gear->next($map{$g->{NEXT}});
     }
   }
@@ -159,7 +159,14 @@ sub add_gear {
   my $gear_id = $self->_unique_id;
 
   my $gear = eval {
-    $self->app->require_class($gear_class);
+    my $info = $self->app->geardb->gear_class_info($gear_class)
+      or die "Can't find $gear_class in (@INC)\n";
+    my $inc_key = $gear_class . '.pm';
+    $inc_key =~ s{::}{/}g;
+    if(!$INC{$inc_key}) {
+      require $info->{file};
+      $INC{$inc_key} = $info->{file};
+    }
     $gear_class->new( app => $self->app, machine => $self, id => $gear_id, @_ );
   };
   if($@) {
@@ -233,8 +240,10 @@ sub running {
       $self->app->status_message("Machine running");
     }
     else {
-      my $run_time = sprintf("%4.2fs", time() - $self->_start_time);
-      $self->app->status_message("Machine stopped (elapsed time: $run_time)");
+      if(defined($self->_start_time)) {
+        my $run_time = sprintf("%4.2fs", time() - $self->_start_time);
+        $self->app->status_message("Machine stopped (elapsed time: $run_time)");
+      }
       if(my $sched = $self->_scheduler) {
         $sched->stop;
         $self->_scheduler(undef);
