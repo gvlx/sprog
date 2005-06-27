@@ -63,7 +63,9 @@ sub declare_properties {
   @{"${class}::GearDefaultProps"} = @_;
 
   while(@_) {
-    $class->mk_accessors(shift);
+    my $prop = shift;
+    shift, next if $prop =~ /^-/;
+    $class->mk_accessors($prop);
     shift;
   }
 }
@@ -79,7 +81,14 @@ sub _defaults {
     push @defaults, @{$c .'::GearDefaultProps'};
   }
 
-  return @defaults;
+  my %defs = @defaults;
+  foreach (keys %defs) {
+    /^-(.*)/ or next;
+    delete $defs{$_};
+    delete $defs{$1};
+  }
+
+  return %defs;
 }
 
 
@@ -125,10 +134,12 @@ sub serialise {
     NEXT  => ($next ? $next->id : undef),
     X     => $self->x,
     Y     => $self->y,
-    prop  => { $self->_defaults },
+    prop  => { },
   );
+  
+  my %defs = $self->_defaults;
 
-  foreach my $property ( keys %{$data{prop}} ) {
+  foreach my $property ( keys %defs ) {
     $data{prop}->{$property} = $self->$property;
   }
 
