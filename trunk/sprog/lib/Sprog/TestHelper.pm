@@ -22,6 +22,11 @@ sub import {
   if(my $req = $opt{requires}) {
     $req = [ $req ] unless ref $req;
     foreach my $pkg (@$req) {
+      if(my($capability) = $pkg =~ /^\{(.*?)\}/) {
+        plan 'skip_all' => "SPROG_TEST_ALL not set" unless $ENV{SPROG_TEST_ALL};
+        next if $class->$capability;
+        plan 'skip_all' => "Missing capability '$capability'";
+      }
       eval "use $pkg";
       plan 'skip_all' => "$pkg not installed" if $@;
     }
@@ -37,6 +42,17 @@ sub import {
 
 }
 
+
+sub local_apache {
+  require 'LWP/Simple.pm';
+
+  my $html = LWP::Simple::get('http://localhost/sprogtest/index.html')
+    or return;
+
+  return unless $html =~ /Test Document/;
+
+  return 1;
+}
 
 ##############################################################################
 # Switch back to the test script's namespace
