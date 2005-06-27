@@ -76,6 +76,7 @@ lib/Sprog/Machine.pm
 lib/Sprog/Machine/Scheduler.pm
 lib/Sprog/Preferences.pm
 lib/Sprog/Preferences/Unix.pm
+lib/Sprog/Preferences/Win32.pm
 lib/Sprog/PrintProxy.pm
 lib/Sprog/TestHelper.pm
 lib/Sprog/TextGearView.pm
