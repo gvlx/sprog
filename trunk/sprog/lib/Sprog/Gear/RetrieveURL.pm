@@ -18,7 +18,8 @@ use base qw(
 );
 
 __PACKAGE__->declare_properties(
-  url   =>  '',
+  url      => '',
+  -command => undef,
 );
 
 
