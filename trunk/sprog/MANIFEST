@@ -122,6 +122,7 @@ t/45_name_fields.t
 t/46_list_to_csv.t
 t/48_tt2.t
 t/50_clf_parse.t
+t/52_retrieve_url.t
 t/counter.sprog
 t/files.txt
 t/lib/AcceptNothingGear.pm
@@ -141,6 +142,8 @@ t/lib/TestApp.pm
 t/lib/TestMachine.pm
 t/lib/TestView.pm
 t/lib/TextSink.pm
+t/local_apache/index.html
+t/local_apache/sprogtest.conf
 t/rgb.txt
 t/v01_basic.t
 t/v05_menubar.t
