@@ -4,7 +4,7 @@ use strict;
 
 use Carp;
 
-use Exporter qw(import);
+use base qw(Exporter);
 
 our @EXPORT_OK = qw(make_app);
 our @EXPORT    = qw(make_app);
