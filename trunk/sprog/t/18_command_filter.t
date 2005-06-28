@@ -1,18 +1,8 @@
 use strict;
-use warnings;
-
-use Test::More tests => 21;
-
-use File::Spec;
-
-BEGIN {
-  unshift @INC, File::Spec->catfile('t', 'lib');
-}
+use Sprog::TestHelper tests => 19;
 
 use_ok('TestApp');
-use_ok('Sprog::Gear::TextInput');
 use_ok('Sprog::Gear::CommandFilter');
-use_ok('LineSink');
 
 my $app = TestApp->make_test_app;
 
