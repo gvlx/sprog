@@ -6,8 +6,10 @@ lib/Sprog/ClassFactory.pm
 lib/Sprog/Debug.pm
 lib/Sprog/Gear.pm
 lib/Sprog/Gear/ApacheLogParse.pm
+lib/Sprog/Gear/CommandDialog.pm
 lib/Sprog/Gear/CommandFilter.pm
 lib/Sprog/Gear/CommandIn.pm
+lib/Sprog/Gear/CommandOut.pm
 lib/Sprog/Gear/CSVSplit.pm
 lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
@@ -85,6 +87,7 @@ lib/Sprog/TextView.pm
 Makefile.PL
 MANIFEST
 META.yml			Module meta-data (added by MakeMaker)
+Packaging
 README
 Sprog.spec
 t/00_config.t
@@ -102,6 +105,7 @@ t/15_bad_data.t
 t/16_scheduler.t
 t/17_write_file.t
 t/18_command_filter.t
+t/18_command_out.t
 t/19_replace_file.t
 t/20_line_input.t
 t/22_pattern_match.t
