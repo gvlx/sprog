@@ -36,6 +36,14 @@ sub parse_topic {
 sub _find_file {
   my($self, $topic) = @_;
 
+  # Check for gear classes (including private gear dir) first
+
+  my $app = $self->{_view_}->app;
+  my $info = $app->geardb->gear_class_info($topic);
+  return $info->{file} if($info and $info->{file});
+
+  # Otherwise, scan @INC
+
   my @parts = split /::/, $topic;
 
   foreach my $dir (@INC) {
