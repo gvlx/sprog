@@ -104,6 +104,20 @@ declare their property names and default values like this:
 This will create the necessary accessor methods and will allow the gear to be
 serialised properly when the machine is saved.
 
+A derived gear class can also 'uninherit' properties.  For example, you might
+want to derive a class from L<Sprog::Gear::CommandIn> and hard-code a specific
+command by defining your own 'command' method:
+
+  sub command { return '/usr/games/fortune'; }
+
+Since the command is hard-coded, there's not much point serialising the value
+out when the machine is saved, so the 'command property should be undeclared:
+
+  __PACKAGE__->declare_properties(
+    -command   =>  undef,
+  );
+
+
 =head2 Gear View Classes
 
 The L<Sprog::GtkGearView> class handles the user interface for most gear
