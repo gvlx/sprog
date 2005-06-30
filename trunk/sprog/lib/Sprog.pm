@@ -194,6 +194,7 @@ sub show_help         { shift->view->show_help(@_);              }
 sub help_contents     { shift->show_help('Sprog::help::index');  }
 
 sub prefs_dialog      { shift->view->prefs_dialog;               }
+sub make_command_gear { shift->view->make_command_gear(@_);      }
 
 
 sub init_private_path {
