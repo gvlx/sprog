@@ -44,7 +44,7 @@ my $result = read_file($output_file);
 is($result, $data, 'file contents look good');
 
 my $prompt = '';
-$app->confirm_yes_no_handler(sub { $prompt = shift; return 0 });
+$app->confirm_yes_no_handler(sub { shift; $prompt = shift; return 0 });
 
 $input->text("Test output two\n");
 is($app->test_run_machine, '', 'run completed without timeout or alerts');
@@ -54,7 +54,7 @@ $result = read_file($output_file);
 is($result, $data, 'file was not overwritten');
 
 $prompt = '';
-$app->confirm_yes_no_handler(sub { $prompt = shift; return 1 });
+$app->confirm_yes_no_handler(sub { shift; $prompt = shift; return 1 });
 
 $input->text("Test output three\n");
 is($app->test_run_machine, '', 'run completed without timeout or alerts');
@@ -65,7 +65,7 @@ is($result, "Test output three\n", 'file was overwritten');
 
 
 $prompt = '';
-$app->confirm_yes_no_handler(sub { $prompt = shift; return 0 });
+$app->confirm_yes_no_handler(sub { shift; $prompt = shift; return 0 });
 
 $writer->if_exists('overwrite');
 $input->text("Test output four\n");

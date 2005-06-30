@@ -47,7 +47,7 @@ sub _open_output_file {
     my $action = $self->if_exists || 'confirm';
     if($action eq 'confirm') {
       return unless $self->app->confirm_yes_no(
-        "File already exists!\n\nOverwrite $filename?"
+        'Write File', "File already exists!\n\nOverwrite $filename?"
       );
     }
     elsif($action eq 'append') {
