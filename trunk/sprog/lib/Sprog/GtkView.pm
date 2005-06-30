@@ -12,6 +12,7 @@ __PACKAGE__->mk_accessors(qw(
   help_class
   about_class
   prefs_class
+  make_cmd_class
   menubar
   toolbar
   workbench
@@ -54,15 +55,17 @@ sub new {
     '/app/view/alert_dialog' => 'Sprog::GtkView::AlertDialog',
     '/app/view/about_dialog' => 'Sprog::GtkView::AboutDialog',
     '/app/view/prefs_dialog' => 'Sprog::GtkView::PrefsDialog',
+    '/app/view/make_command' => 'Sprog::GtkView::MakeCommand',
     '/app/view/palette'      => 'Sprog::GtkView::Palette',
     '/app/view/help_viewer'  => 'Sprog::GtkView::HelpViewer',
   );
 
-  $self->chrome_class($app->load_class('/app/view/chrome'));
-  $self->alert_class ($app->load_class('/app/view/alert_dialog'));
-  $self->about_class ($app->load_class('/app/view/about_dialog'));
-  $self->help_class  ($app->load_class('/app/view/help_viewer'));
-  $self->prefs_class ($app->load_class('/app/view/prefs_dialog'));
+  $self->chrome_class  ($app->load_class('/app/view/chrome'));
+  $self->alert_class   ($app->load_class('/app/view/alert_dialog'));
+  $self->about_class   ($app->load_class('/app/view/about_dialog'));
+  $self->help_class    ($app->load_class('/app/view/help_viewer'));
+  $self->prefs_class   ($app->load_class('/app/view/prefs_dialog'));
+  $self->make_cmd_class($app->load_class('/app/view/make_command'));
 
   $self->build_app_window;
 
@@ -274,6 +277,7 @@ sub file_open_filename {
     'gtk-ok'     => 'ok'
   );
   $self->_add_sprog_file_filter($file_chooser);
+  $file_chooser->set_default_response('ok');
 
   my $filename = undef;
   if($file_chooser->run eq 'ok') {
@@ -296,6 +300,7 @@ sub file_save_as_filename {
     'gtk-ok'     => 'ok'
   );
   $self->_add_sprog_file_filter($file_chooser);
+  #$file_chooser->set_default_response('ok');
   my $default = $self->app->filename;
   $file_chooser->set_filename($default) if $default;
 
@@ -303,7 +308,8 @@ sub file_save_as_filename {
   while($file_chooser->run ne 'cancel') {
     $filename = $file_chooser->get_filename;
     $filename .= '.sprog' if $filename !~ /\.sprog$/;
-    last if ! -f $filename || $self->confirm("File exists.  Overwrite?");
+    last if ! -f $filename ||
+            $self->confirm_yes_no('Save As', 'File exists.  Overwrite?');
     $filename = undef;
   };
   $file_chooser->destroy;
@@ -312,17 +318,18 @@ sub file_save_as_filename {
 }
 
 
-sub confirm {
-  my($self, $message, $parent) = @_;
+sub confirm_yes_no {
+  my($self, $title, $message, $parent) = @_;
 
   $parent ||= $self->app_win;
   my $dialog = Gtk2::MessageDialog->new(
     $parent, 
     'destroy-with-parent',
-    'question', 
+    'question',
     'yes-no',
     $message,
   );
+  $dialog->set_title($title);
 
   my $result = $dialog->run;
   $dialog->destroy;
@@ -356,23 +363,6 @@ sub alert {
   $self->alert_class->invoke($self->app_win, $message, $detail);
 
   return;
-}
-
-
-sub confirm_yes_no {
-  my($self, $message) = @_;
-
-  my $dialog = Gtk2::MessageDialog->new(
-    $self->app_win,
-    [qw/modal destroy-with-parent/],
-    'question',
-    'yes-no',
-    $message
-  );
-  my $response = $dialog->run;
-  $dialog->destroy;
-
-  return $response eq 'yes';
 }
 
 
@@ -476,9 +466,21 @@ sub help_about {
 
 
 sub prefs_dialog {
-  my($self, $data) = @_;
+  my $self = shift;
 
   $self->prefs_class->invoke($self->app);
+}
+
+
+sub make_command_gear {
+  my $self = shift;
+
+  my $app = $self->app;
+  my $gear_dir = $app->get_pref('private_gear_folder')
+    or return $app->alert(
+      "You must first define your Personal Gear Folder in preferences"
+    );
+  $self->make_cmd_class->invoke($app, $gear_dir, @_);
 }
 
 
