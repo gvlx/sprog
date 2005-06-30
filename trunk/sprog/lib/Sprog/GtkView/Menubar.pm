@@ -134,6 +134,10 @@ sub _build_menubar {
           callback        => sub { $app->prefs_dialog },
           callback_action => $action++,
         },
+        'Make _Command Gear' => {
+          callback        => sub { $app->make_command_gear },
+          callback_action => $action++,
+        },
       ],
     },
     _Help  => {
