@@ -10,6 +10,7 @@ use base qw(Sprog::Accessor);
 __PACKAGE__->mk_accessors(qw(
   app
   view
+  chrome
   widget
   input_combo
   output_combo
@@ -33,8 +34,6 @@ use constant COL_GEAR_TITLE => 1;
 
 use constant ALPHA_THRESHOLD => 127;
 
-my $mini_icons;
-
 my @connector_types;
 
 
@@ -44,13 +43,10 @@ sub new {
   my $self = bless { @_, filtered_list => [] }, $class;
   weaken($self->{app});
   weaken($self->{view});
+  $self->{chrome} = $self->{view}->chrome_class;
 
   if(!@connector_types) {
     @connector_types = $self->{app}->geardb->connector_types;
-  }
-
-  unless(defined($mini_icons)) {
-    $mini_icons = $self->{view}->chrome_class->mini_icons();
   }
 
   $self->_build_widget;
@@ -250,8 +246,7 @@ sub _set_item_pixbuf {
   my($class) = $model->get($iter, COL_GEAR_CLASS);
   my $info = $self->app->geardb->gear_class_info($class);
 
-  my $icon_type = $info->{type_in} . $info->{type_out};
-  my $pixbuf = $mini_icons->{$icon_type} || $mini_icons->{__};
+  my $pixbuf = $self->_gear_icon($info->{type_in}, $info->{type_out});
   $cell->set(pixbuf => $pixbuf);
 }
 
@@ -272,13 +267,19 @@ sub _drag_begin {
   my $class = $self->selected_class or return;
   my $info  = $self->app->geardb->gear_class_info($class);
 
-  my $icon_type = $info->{type_in} . $info->{type_out};
-  my $pixbuf = $mini_icons->{$icon_type} || $mini_icons->{PP};
+  my $pixbuf = $self->_gear_icon($info->{type_in}, $info->{type_out});
   my($drag_icon, $drag_mask) = $pixbuf->render_pixmap_and_mask(ALPHA_THRESHOLD);
 
   my $colormap = $self->widget->get_colormap;
 
   $gearlist->drag_source_set_icon($colormap,  $drag_icon, $drag_mask);
+}
+
+
+sub _gear_icon {
+  my $self = shift;
+
+  return $self->chrome->mini_gear_icon(@_);
 }
 
 
