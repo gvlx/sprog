@@ -3,7 +3,10 @@ use Sprog::TestHelper tests => 13;
 
 use_ok('Sprog::HelpParser');
 
-my $view = TestHelpSink->new;
+use TestApp;
+my $app = TestApp->make_test_app;
+
+my $view = TestHelpSink->new(app => $app);
 
 isa_ok($view, 'TestHelpSink', 'view object');
 
@@ -187,8 +190,11 @@ exit;
 package TestHelpSink;
 
 sub new {
-  return bless { content => [ ] }, shift;
+  my $class = shift;
+  return bless { @_, content => [ ] }, $class;
 }
+
+sub app { shift->{app} };
 
 sub content { shift->{content} };
 
