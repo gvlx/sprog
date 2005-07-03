@@ -12,7 +12,6 @@ __PACKAGE__->mk_accessors(qw(
   help_class
   about_class
   prefs_class
-  make_cmd_class
   menubar
   toolbar
   workbench
@@ -48,16 +47,16 @@ sub new {
 
   my $app = $self->app;
   $app->inject(
-    '/app/view/chrome'       => 'Sprog::GtkView::Chrome',
-    '/app/view/menubar'      => 'Sprog::GtkView::Menubar',
-    '/app/view/toolbar'      => 'Sprog::GtkView::Toolbar',
-    '/app/view/workbench'    => 'Sprog::GtkView::WorkBench',
-    '/app/view/alert_dialog' => 'Sprog::GtkView::AlertDialog',
-    '/app/view/about_dialog' => 'Sprog::GtkView::AboutDialog',
-    '/app/view/prefs_dialog' => 'Sprog::GtkView::PrefsDialog',
-    '/app/view/make_command' => 'Sprog::GtkView::MakeCommand',
-    '/app/view/palette'      => 'Sprog::GtkView::Palette',
-    '/app/view/help_viewer'  => 'Sprog::GtkView::HelpViewer',
+    '/app/view/chrome'         => 'Sprog::GtkView::Chrome',
+    '/app/view/menubar'        => 'Sprog::GtkView::Menubar',
+    '/app/view/toolbar'        => 'Sprog::GtkView::Toolbar',
+    '/app/view/workbench'      => 'Sprog::GtkView::WorkBench',
+    '/app/view/alert_dialog'   => 'Sprog::GtkView::AlertDialog',
+    '/app/view/about_dialog'   => 'Sprog::GtkView::AboutDialog',
+    '/app/view/prefs_dialog'   => 'Sprog::GtkView::PrefsDialog',
+    '/app/view/command_dialog' => 'Sprog::GtkView::CommandDialog',
+    '/app/view/palette'        => 'Sprog::GtkView::Palette',
+    '/app/view/help_viewer'    => 'Sprog::GtkView::HelpViewer',
   );
 
   $self->chrome_class  ($app->load_class('/app/view/chrome'));
@@ -65,7 +64,6 @@ sub new {
   $self->about_class   ($app->load_class('/app/view/about_dialog'));
   $self->help_class    ($app->load_class('/app/view/help_viewer'));
   $self->prefs_class   ($app->load_class('/app/view/prefs_dialog'));
-  $self->make_cmd_class($app->load_class('/app/view/make_command'));
 
   $self->build_app_window;
 
@@ -473,14 +471,10 @@ sub prefs_dialog {
 
 
 sub make_command_gear {
-  my $self = shift;
+  my($self, $builder) = @_;
 
-  my $app = $self->app;
-  my $gear_dir = $app->get_pref('private_gear_folder')
-    or return $app->alert(
-      "You must first define your Personal Gear Folder in preferences"
-    );
-  $self->make_cmd_class->invoke($app, $gear_dir, @_);
+  my $chrome = $self->chrome_class;
+  $self->app->make_class('/app/view/command_dialog', $builder, $chrome)->invoke;
 }
 
 
