@@ -159,14 +159,7 @@ sub add_gear {
   my $gear_id = $self->_unique_id;
 
   my $gear = eval {
-    my $info = $self->app->geardb->gear_class_info($gear_class)
-      or die "Can't find $gear_class in (@INC)\n";
-    my $inc_key = $gear_class . '.pm';
-    $inc_key =~ s{::}{/}g;
-    if(!$INC{$inc_key}) {
-      require $info->{file};
-      $INC{$inc_key} = $info->{file};
-    }
+    $self->require_gear_class($gear_class);
     $gear_class->new( app => $self->app, machine => $self, id => $gear_id, @_ );
   };
   if($@) {
@@ -178,6 +171,20 @@ sub add_gear {
   $self->_parts->{$gear_id} = $gear;
 
   return $gear;
+}
+
+
+sub require_gear_class {
+  my($self, $gear_class) = @_;
+
+  my $info = $self->app->geardb->gear_class_info($gear_class)
+    or die "Can't find $gear_class in (@INC)\n";
+  my $inc_key = $gear_class . '.pm';
+  $inc_key =~ s{::}{/}g;
+  if(!$INC{$inc_key}) {
+    require $info->{file};
+    $INC{$inc_key} = $info->{file};
+  }
 }
 
 
