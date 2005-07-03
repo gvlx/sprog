@@ -43,22 +43,23 @@ sub new {
   }
 
   $factory->inject(   # set default classes if not already defined
-    '/app/preferences' => 'Sprog::Preferences',
-    '/app/geardb'      => 'Sprog::GearMetadata',
-    '/app/machine'     => 'Sprog::Machine',
-    '/app/help_parser' => 'Sprog::HelpParser',
+    '/app/preferences'    => 'Sprog::Preferences',
+    '/app/geardb'         => 'Sprog::GearMetadata',
+    '/app/machine'        => 'Sprog::Machine',
+    '/app/help_parser'    => 'Sprog::HelpParser',
+    '/app/make_cmnd_gear' => 'Sprog::MakeCmndGear',
   );
 
   if($opt->{nogui}) {
     $factory->inject(
-      '/app/view'      => 'Sprog::TextView',
-      '/app/eventloop' => 'Sprog::GlibEventLoop',
+      '/app/view'         => 'Sprog::TextView',
+      '/app/eventloop'    => 'Sprog::GlibEventLoop',
     );
   }
   else {
     $factory->inject(
-      '/app/view'      => 'Sprog::GtkView',
-      '/app/eventloop' => 'Sprog::GtkEventLoop',
+      '/app/view'         => 'Sprog::GtkView',
+      '/app/eventloop'    => 'Sprog::GtkEventLoop',
     );
   }
 
@@ -162,6 +163,8 @@ sub load_class        { shift->factory->load_class(@_);          }
 sub get_pref          { shift->prefs->get_pref(@_);              }
 sub set_pref          { shift->prefs->set_pref(@_);              }
 
+sub gear_class_info   { shift->geardb->gear_class_info(@_);      }
+
 sub show_toolbar { my $view = shift->view or return; $view->show_toolbar(); }
 sub hide_toolbar { my $view = shift->view or return; $view->hide_toolbar(); }
 
@@ -194,7 +197,22 @@ sub show_help         { shift->view->show_help(@_);              }
 sub help_contents     { shift->show_help('Sprog::help::index');  }
 
 sub prefs_dialog      { shift->view->prefs_dialog;               }
-sub make_command_gear { shift->view->make_command_gear(@_);      }
+
+sub make_command_gear { 
+  my($self, $gear) = @_;
+
+  my $gear_builder = $self->make_class('/app/make_cmnd_gear', $self, $gear)
+    or return;
+  $self->view->make_command_gear($gear_builder);
+}
+
+sub delete_command_gear { 
+  my($self, $class) = @_;
+
+  my $gear_builder = $self->make_class('/app/make_cmnd_gear', $self, $class)
+    or return;
+  $gear_builder->delete;
+}
 
 
 sub init_private_path {
