@@ -22,14 +22,15 @@ my %_connector_sort_key = (
 
 # Accessor methods - all read-only
 
-sub class         { return shift->{class};         }
-sub file          { return shift->{file};          }
-sub title         { return shift->{title};         }
-sub type_in       { return shift->{type_in};       }
-sub type_out      { return shift->{type_out};      }
-sub keywords      { return shift->{keywords};      }
-sub no_properties { return shift->{no_properties}; }
-sub view_subclass { return shift->{view_subclass}; }
+sub class               { return shift->{class};               }
+sub file                { return shift->{file};                }
+sub title               { return shift->{title};               }
+sub type_in             { return shift->{type_in};             }
+sub type_out            { return shift->{type_out};            }
+sub keywords            { return shift->{keywords};            }
+sub no_properties       { return shift->{no_properties};       }
+sub view_subclass       { return shift->{view_subclass};       }
+sub custom_command_gear { return shift->{custom_command_gear}; }
 
 
 # Public class methods
@@ -267,6 +268,11 @@ An optional attribute for defining a view (user interface) class for the gear.
 Rather than defining the whole class name, only the final component is
 required.  For example, the L<Sprog::Gear::TextWindow> gear sets this value to
 'TextWindow' which gets translated to L<Sprog::GtkGearView::TextWindow>.
+
+=item custom_command_gear
+
+This flag should be true for a gear created via the 'Make Command Gear' dialog
+and false otherwise.
 
 =back
 
