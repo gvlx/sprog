@@ -34,8 +34,8 @@ menu:
 
 =item Personal Gear Folder
 
-The personal gear folder is a to store Sprog gear files - possibly ones you've
-written yourself, or ones you've downloaded.
+The personal gear folder is used to store Sprog gear files - possibly ones
+you've written yourself, or ones you've downloaded.
 
 =item Workspace Background Colour
 
