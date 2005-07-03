@@ -1,0 +1,106 @@
+=head1 The Sprog Scheduler
+
+The L<Sprog::Machine::Scheduler> class implements a simple scheduler based
+around the Gtk event loop.
+
+The scheduler is used  to handle the messy details of running a machine.  These
+details start with the initialisation, proceed to the passing and processing of
+messages (which is the real work) and finish with the cleanup.
+
+=head2 Initialisation
+
+Before a machine can be run, the scheduler builds a data structure called a
+'gear train'.  Each of the gears is 'engaged' into the train.  When the
+machine is running, a gear that has no more work to do will disengage from
+the train.  When there are no gears left in the train the scheduler is done
+and the machine will stop.
+
+Gears are added to the train in reverse order.  This is so that a gear can
+start sending messages as soon as it is engaged.  Any downstream gears will
+already exist and will be ready to receive messages.
+
+As the gear train is assembled, the scheduler also builds a list of which gears
+are data providers.  These are the gears that can get data from some place
+other than their incoming message queue.  The scheduler identifies data 
+providers by checking which gears implement the C<send_data> method.
+
+=head2 Processing
+
+The main work of the scheduler is passing messages between the gears.  The
+message passing is done inside an 'idle' handler called by the GTK event loop.
+This ensures that the application's GUI remains responsive while the machine is
+running, so that important functions like the 'Stop' button continue to work.
+
+Message passing is a two step process:
+
+=over 4
+
+=item *
+
+when a gear calls its C<msg_out> method, the scheduler places the message in
+the incoming message queue of the next gear in the train
+
+=item *
+
+at some later time, the scheduler will arrange for queued messages to be
+'delivered'
+
+=back
+
+A message is really synonymous with a method call.  The scheduler 'delivers' a
+message by calling the named method and passing it the supplied arguments.  
+
+Gears should avoid doing time-consuming operations (particularly blocking IO)
+directly in a message handler.  If message handlers take too long to process
+messages, responsiveness will suffer.  If an IO operation is allowed to block,
+the scheduler may become deadlocked.  IO event handlers and idle handlers 
+should be used to avoid blocking.
+
+A gear can temporarily block the delivery of incoming messages by declaring
+that it is sleeping.  One example might be a gear that is waiting for an output
+file handle to become writable.
+
+A gear can also defer processing a message until the next message arrives.
+This is useful for example, while reassembling data from fragments (eg: partial
+lines).  The gear would use its C<requeue_message_delayed> to 'put back' a
+message and ask the scheduler to deliver it again when the next message
+arrives.  The ordering of messages is not affected by this process.
+
+If there are no deliverable messages, the scheduler will unregister its idle
+handler from the GTK event loop and then call each data provider's C<send_data>
+method.  The next time a gear (presumably one of the data providers) asks the
+scheduler to deliver a message, the scheduler will re-register the idle handler
+message delivery will begin again.
+
+Priority is given to delivering messages at the 'bottom end' of the machine.
+This is so that data is pulled out of the machine at least as fast as it is
+being provided and should ensure that no gear's input queue grows unduly large.
+
+If a data provider is exhausted (for example, a file reader which reaches the
+end of file), then it calls its C<disengage> method.  This method signals to
+the scheduler that the gear should be removed from the gear train.  The
+scheduler will also queue a C<no_more_data> message to the next gear.  The
+default handler for the C<no_more_data> message simply calls C<disengage>, so
+each gear removes itself from the gear train as it gets to the end of the
+incoming data.
+
+If a gear finds itself at the head of the gear train and is not sleeping,
+(waiting on an IO event etc), then it has no hope of ever receiving messages,
+so the scheduler will disengage it.  This typically only happens to gears that
+have scheduled some action in the C<no_more_data> handler, but then failed to
+disengage themselves when that action is complete.
+
+It is also possible for a gear at any point in the gear train to disengage at
+any time.  If this happens, the scheduler will arrange for the immediate
+upstream gear to be disengaged as well, since there is nowhere for the data to
+go.  This will ripple through until all gears back to the start of the train
+have been disengaged.
+
+=head2 Clean-Up
+
+As you can see from the description above, gears disengage themselves from the
+gear train when they run out of data.  So, by definition, the scheduler won't
+reach the clean-up phase until all gears have disengaged and cleaned themselves
+up.  The scheduler will then tidy itself up and signal to the L<Sprog::Machine>
+that execution is complete.
+

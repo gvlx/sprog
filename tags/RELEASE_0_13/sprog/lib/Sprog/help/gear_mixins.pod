@@ -1,0 +1,46 @@
+=head1 Gear Mixin Classes
+
+If you're writing your own gear classes, you may wish to use some of the
+available 'mixin' classes to add capabilities to you gear.  You use them by
+setting up your class to inherit from them.  For example:
+
+  use base qw(
+    Sprog::Gear::InputByLine
+    Sprog::Gear
+  );
+
+=head2 Line-by-Line Input
+
+Gear classes with a 'pipe' style input connector receive their input as a
+series of C<data> messages.  The data in these messages is in arbitrarily
+sized chunks.  There's no guarantee that a chunk won't end part-way through a
+line.
+
+The L<Sprog::Gear::InputByLine> mixin class implements a 'data' method that
+buffers up partial lines and passes each complete one to a C<line> method
+that you implement.
+
+=head2 File-at-a-Time Input
+
+The L<Sprog::Gear::SlurpFile> mixin class implements a 'data' method that
+buffers up a whole file and passes all the data to a C<file_data> method that
+you implement.
+
+=head2 Input From Filehandle
+
+Any class that reads from a file, pipe or socket will need to use non-blocking
+IO.  The L<Sprog::Gear::InputFromFH> mixin class interfaces to the Gtk event
+loop and adds an IO watch on the filehandle you provide.  When data becomes
+available, an outgoing C<data> message will be generated, but you can
+intercept that and massage the data by overriding the C<msg_out> method.
+
+=head2 Output To Filehandle
+
+Any class that writes to a file, pipe or socket will need to use non-blocking
+IO.  The L<Sprog::Gear::OutputToFH> mixin class interfaces to the Gtk event
+loop and adds an IO watch on the filehandle you provide.  Incoming C<data>
+messages are buffered.  When the filehandle becomes writeable, data is written
+out from the buffer.  When no more data is available and the buffer has been
+drained, the gear will disengage itself.
+
+
