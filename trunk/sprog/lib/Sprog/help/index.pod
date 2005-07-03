@@ -31,6 +31,10 @@ L<Preferences|Sprog::help::preferences>
 
 =item *
 
+L<Making Command Gears|Sprog::help::make_command>
+
+=item *
+
 L<Command-line options|Sprog::help::commandline>
 
 =back
