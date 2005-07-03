@@ -34,8 +34,9 @@ sub invoke {
 #      $self->app->show_help(HELP_TOPIC);
 #      next;
 #    }
-    $self->save if $resp eq 'ok';
-    last;
+    if($resp eq 'ok') {
+      last if $self->save
+    }
   }
 
   $dialog->destroy;
@@ -119,6 +120,15 @@ sub save {
 
   my $entry  = $self->priv_gear_entry;
   my $folder = $entry->get_text;
+
+  if(!-d $folder) {
+    $app->confirm_yes_no(
+      'Make folder?',
+      "Folder $folder does not exist.\nDo you wish to create it?"
+    ) or return;
+    mkdir($folder) or
+      return $app->alert("Error creating folder", "mkdir($folder): $!");
+  }
   $app->set_pref('private_gear_folder', $folder);
   $app->init_private_path;  # refresh palette view
 
@@ -127,6 +137,8 @@ sub save {
   my $bg_rgb = sprintf("#%04X%04X%04X", map { $bg_clr->$_ } qw(red green blue));
   $app->set_pref('workbench.bg_colour', $bg_rgb);
   $app->view->workbench->set_bg_colour;
+
+  return 1;
 }
 
 
