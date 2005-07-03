@@ -1,15 +1,21 @@
+* Tests for InputByPara
 * Add a save button to the TextWindow
 * WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
 * ReadFiles: implement gear
 * FindFiles: implement gear
+* TextBefore + TextAfter: implement gears
+* TmplMasonLite: implement gear
+* BasicStatistics: implement gear
 * DBIQuery: implement gear
-* CommandOut: implement gear (eg: gnuplot?)
-* Image connector formalise API
+* Rename gears function
+* Tools: create desktop shortcut
+* HTML2PDF: implement gear using htmldoc?
 * User-selectable fonts for text windows (and help viewer)
 * Properties dialogs: add help buttons
 * GtkAutoDialog: add support for validate method
 * Input Encoding: implement gear (xlate line endings too?)
 * Output Encoding: implement gear
+* Image connector formalise API
 * RetrieveURL: Do a proper implementation
 * Add support for gear state (just PerlCode gears?)
 * Add support for machine state

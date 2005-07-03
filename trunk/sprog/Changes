@@ -1,4 +1,14 @@
-Revision history for Perl extension Sprog.
+0.13  Jul 03 2005
+        - exporter fix for 5.8.1 (reported by Christian Renz)
+        - fix for help viewer not finding POD in personal gear folder
+        - user can now add 'Custom Command Gears' to the palette
+        - new gears: CommandOut
+        - new mixin: InputByPara
+        - personal gear folder can now be created if it doesn't exist
+        - allow derived gears to 'uninherit' properties
+        - fix missing palette icons
+        - over-long gear titles are now truncated
+        - documented packaging guidelines
 
 0.12  Jun 26 2005
         - fix bug which caused a crash when deleting a flashing gear
