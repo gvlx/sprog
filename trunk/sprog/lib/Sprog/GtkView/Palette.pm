@@ -313,7 +313,26 @@ sub _post_context_menu {
 
   my $menu = Gtk2::Menu->new;
 
-  my $menu_item = Gtk2::MenuItem->new("Help about '$info->{title}'");
+  my($menu_item);
+  if($info->{custom_command_gear}) {
+
+    $menu_item = Gtk2::MenuItem->new("Edit Command Gear");
+    $menu_item->signal_connect(
+      activate => sub { $self->app->make_command_gear($info->{class}); }
+    );
+    $menu->append($menu_item);
+    $menu_item->show;
+
+    $menu_item = Gtk2::MenuItem->new("Delete Command Gear");
+    $menu_item->signal_connect(
+      activate => sub { $self->app->delete_command_gear($info->{class}); }
+    );
+    $menu->append($menu_item);
+    $menu_item->show;
+
+  }
+
+  $menu_item = Gtk2::MenuItem->new("Help about '$info->{title}'");
   $menu_item->signal_connect(
     activate => sub { $self->app->show_help($info->{class}); }
   );
