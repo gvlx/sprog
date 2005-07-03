@@ -1,4 +1,4 @@
-package TenRandomNumbers;
+package SprogEx::Gear::TenRandomNumbers;
 
 =begin sprog-gear-metadata
 
