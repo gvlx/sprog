@@ -299,26 +299,40 @@ sub post_context_menu {
 sub context_menu_entries {
   my $self = shift;
 
-  return [
+  my $gear = $self->gear;
+
+  my @items = (
     {
       title    => 'Delete',
-      callback => sub { $self->app->delete_gear_by_id($self->gear->id); },
+      callback => sub { $self->app->delete_gear_by_id($gear->id); },
       disabled => FALSE,
     },
     {
       title    => 'Properties',
       callback => sub { $self->properties; },
-      disabled => $self->gear->no_properties,
-    },
+      disabled => $gear->no_properties,
+    }
+  );
+
+  if($gear->is_command_gear) {
+    push @items, 
+      {
+        title    => 'Make Command Gear',
+        callback => sub { $self->app->make_command_gear($gear); },
+      }
+  }
+  
+  push @items, 
     {
       title    => '---'
     },
     {
       title    => 'Help',
-      callback => sub { $self->app->show_help(ref $self->gear); },
+      callback => sub { $self->app->show_help(ref $gear); },
       disabled => FALSE,
-    },
-  ];
+    };
+
+  return \@items;
 }
 
 
