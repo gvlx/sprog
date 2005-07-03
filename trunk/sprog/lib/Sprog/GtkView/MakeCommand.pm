@@ -12,6 +12,7 @@ use base qw(
 
 __PACKAGE__->mk_accessors(qw(
   app
+  chrome
   dialog
   gear_dir
   gear
@@ -25,15 +26,18 @@ __PACKAGE__->mk_accessors(qw(
 
 use Scalar::Util qw(weaken);
 
-my $mini_icons;
-
 use constant HELP_TOPIC => 'Sprog::help::make_command';
 
 
 sub invoke {
   my($class, $app, $gear_dir, $gear) = @_;
 
-  my $self = $class->new(app => $app, gear_dir => $gear_dir, gear => $gear);
+  my $self = $class->new(
+    app      => $app, 
+    chrome   => $app->view->chrome_class,
+    gear_dir => $gear_dir, 
+    gear     => $gear
+  );
 
   my $dialog = $self->dialog or return;
 
@@ -74,10 +78,15 @@ sub _init {
   my $app  = $self->app;
   my $view = $app->view;
 
-  $mini_icons = $view->chrome_class->mini_icons() unless(defined($mini_icons));
-  $gladexml->get_widget('image_input')->set_from_pixbuf($mini_icons->{_P});
-  $gladexml->get_widget('image_filter')->set_from_pixbuf($mini_icons->{PP});
-  $gladexml->get_widget('image_output')->set_from_pixbuf($mini_icons->{P_});
+  $gladexml->get_widget('image_input')->set_from_pixbuf(
+    $self->_gear_icon('_', 'P')
+  );
+  $gladexml->get_widget('image_filter')->set_from_pixbuf(
+    $self->_gear_icon('P', 'P')
+  );
+  $gladexml->get_widget('image_output')->set_from_pixbuf(
+    $self->_gear_icon('P', '_')
+  );
 
   $self->types($gladexml->get_widget('gear_type_input')->get_group);
   $self->title($gladexml->get_widget('title'));
@@ -88,6 +97,13 @@ sub _init {
   $gladexml->signal_autoconnect_from_package($self);
 
   return $self;
+}
+
+
+sub _gear_icon {
+  my $self = shift;
+
+  return $self->chrome->mini_gear_icon(@_);
 }
 
 
@@ -221,7 +237,7 @@ EOF
 
 
 sub glade_xml {
-#  return `cat /home/grant/projects/sf/sprog/glade/make_command.glade`;
+  return `cat /home/grant/projects/sf/sprog/glade/make_command.glade`;
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
 <!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
