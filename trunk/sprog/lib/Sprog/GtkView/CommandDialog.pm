@@ -158,7 +158,7 @@ sub save {
 
 
 sub glade_xml {
-  return `cat /home/grant/projects/sf/sprog/glade/make_command.glade`;
+#  return `cat /home/grant/projects/sf/sprog/glade/make_command.glade`;
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
 <!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
