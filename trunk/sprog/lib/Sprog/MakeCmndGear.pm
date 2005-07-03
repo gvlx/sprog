@@ -71,10 +71,13 @@ sub _init_from_gear {
     $self->type('input');
   }
 
-  $self->title($gear->title);
+  my $title = $gear->title;
+  $title =~ s{^Run (Filter )?Command$}{}i;
+  $self->title($title);
+
   $self->command($gear->command);
 
-  my $meta = $self->app->geardb->gear_class_info($gear_class);
+  my $meta = $self->app->gear_class_info($gear_class);
   my $keywords = $meta->keywords;
   substr($keywords, 0, length($gear->title) + 1) = '';  # strip title off
   $self->keywords($keywords);
@@ -110,6 +113,8 @@ sub default_filename {
 
   $title =~ s/[\W_]+/ /g;
 
+  return '' unless $title =~ /\S/;
+
   return join('', map { ucfirst lc $_ } split /\s+/, $title) . '.pm';
 }
 
@@ -117,11 +122,115 @@ sub default_filename {
 sub save {
   my $self = shift;
 
-  warn("Type: " .$self->type . "\n");
-  warn("Title: " .$self->title . "\n");
-  warn("Command: " .$self->command . "\n");
-  warn("Keywords: " .$self->keywords . "\n");
-  warn("Filename: " .$self->filename . "\n");
+  my $app = $self->app;
+
+  my $title = $self->title;
+  return $app->alert("You must enter a title")    unless length $title;
+
+  my $command = $self->command;
+  return $app->alert("You must enter a command")  unless length $command;
+
+  my $keywords = $self->keywords;
+
+  my $class = $self->filename;
+  return $app->alert("You must enter a filename") unless length $class;
+
+  $class =~ s/\.pm$//i;
+
+  if($class =~ /([^\w.])/) {
+    return $app->alert("Invalid character in filename: '$1'");
+  }
+
+  my $path = File::Spec->catfile($self->gear_dir, $class . '.pm');
+
+  return if -e $path
+            && !$app->confirm_yes_no('Save As', 'File exists.  Overwrite?');
+
+  my $type = $self->type;
+  my($conn_in, $conn_out, $parent);
+  if($type eq 'input') {
+    $conn_in  = '_';
+    $conn_out = 'P';
+    $parent   = 'CommandIn';
+  }
+  elsif($type eq 'filter') {
+    $conn_in  = 'P';
+    $conn_out = 'P';
+    $parent   = 'CommandFilter';
+  }
+  else {
+    $conn_in  = 'P';
+    $conn_out = '_';
+    $parent   = 'CommandOut';
+  }
+
+  $command =~ s{([()])}{\\$1}g;
+
+  open my $fh, '>', $path or return $self->app->alert(
+    "Error creating $path", "$!"
+  );
+
+  print $fh <<"EOF";
+package SprogEx::Gear::$class;
+
+=begin sprog-gear-metadata
+
+  title: $title
+  type_in: $conn_in
+  type_out: $conn_out
+  keywords: $keywords
+  no_properties: 1
+  custom_command_gear: 1
+
+=end sprog-gear-metadata
+
+=cut
+
+use strict;
+
+use base qw(Sprog::Gear::$parent);
+
+__PACKAGE__->declare_properties( -command => undef );
+
+sub command { q($command); }
+
+1;
+EOF
+
+  close($fh);
+  
+  my $inc_key = "SprogEx/Gear/$class.pm";
+  delete $INC{$inc_key};
+  delete $INC{$path};
+
+  $app->init_private_path;  # refresh palette view
+
+  return 1;
 }
+
+
+sub delete {
+  my $self = shift;
+
+  my $gear_class = 'SprogEx::Gear::' . $self->filename;
+  $gear_class =~ s/\.pm$//;
+
+  my $meta = $self->app->gear_class_info($gear_class) or return;
+  return unless $meta->custom_command_gear;
+
+  return unless $self->app->confirm_yes_no(
+    'Delete Gear?', 
+    "Are you sure you wish to delete the gear from\n" .
+    "the palette and from your personal gear folder?"
+  );
+  if(!unlink($meta->file)) {
+    return $self->app->alert("Error deleting custom command gear", "$!");
+  }
+
+  $self->app->init_private_path;  # refresh palette view
+  
+  return 1;
+}
+
 1;
 
