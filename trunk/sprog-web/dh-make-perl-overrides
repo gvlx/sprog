@@ -17,6 +17,7 @@ $overrides{'Sprog'} = {
             . "number of pre-written gears - most of which are configurable.  "
             . "It's relatively straightforward to write your own gears using "
             . "the supplied framework.  This allows you to make reusable "
-            . "components for the data transformations you use most often.",
+            . "components for the data transformations you use most often.\n.\n"
+            . "The Sprog project web site is: http://sprog.sourceforge.net/",
   section => 'contrib/X11',
 };
