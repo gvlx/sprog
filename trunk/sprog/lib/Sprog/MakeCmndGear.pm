@@ -199,9 +199,9 @@ EOF
 
   close($fh);
   
-  my $inc_key = "SprogEx/Gear/$class.pm";
-  delete $INC{$inc_key};
-  delete $INC{$path};
+  my $gear_class = "SprogEx::Gear::$class";
+  $self->app->machine->unload_gear_class($gear_class);
+  $self->app->machine->require_gear_class($gear_class);
 
   $app->init_private_path;  # refresh palette view
 
