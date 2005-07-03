@@ -127,8 +127,23 @@ sub add_title {
     text          => $text,
   );
   $self->label($label);
+
+  # Truncate title if necessary
+
   my $text_w = $label->get('text_width');
-  $label->set('x' => $text_x + $text_w / 2);  # Simulate left alignment
+  my $max_w = gear_width() - $text_x - 6;
+  if($text_w > $max_w) {
+    while(length($text) > 3) {
+      substr($text, -4) = '...';
+      $label->set(text => $text);
+      $text_w = $label->get('text_width');
+      last if $text_w <= $max_w;
+    }
+  }
+  
+  # Simulate left alignment
+
+  $label->set('x' => $text_x + $text_w / 2);
 }
 
 
