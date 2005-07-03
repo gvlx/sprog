@@ -155,6 +155,20 @@ sub last {
 }
 
 
+sub is_command_gear {
+  my $self = shift;
+
+  my $class = ref($self);
+  return 1 if(
+    $class eq 'Sprog::Gear::CommandIn'     or
+    $class eq 'Sprog::Gear::CommandFilter' or
+    $class eq 'Sprog::Gear::CommandOut'
+  );
+
+  return;
+}
+
+
 sub requeue_message_delayed {
   my $self = shift;
 
