@@ -67,6 +67,8 @@ sub make_test_machine {
 }
 
 
+sub reset_alerts { shift->alerts('') }
+
 sub alert {
   my($self, $alert, $detail) = @_;
 
