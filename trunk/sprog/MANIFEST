@@ -15,6 +15,7 @@ lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
 lib/Sprog/Gear/ImageBorder.pm
 lib/Sprog/Gear/InputByLine.pm
+lib/Sprog/Gear/InputByPara.pm
 lib/Sprog/Gear/InputFromFH.pm
 lib/Sprog/Gear/ListToCSV.pm
 lib/Sprog/Gear/ListToRecord.pm
@@ -51,6 +52,7 @@ lib/Sprog/GtkView.pm
 lib/Sprog/GtkView/AboutDialog.pm
 lib/Sprog/GtkView/AlertDialog.pm
 lib/Sprog/GtkView/Chrome.pm
+lib/Sprog/GtkView/CommandDialog.pm
 lib/Sprog/GtkView/DnD.pm
 lib/Sprog/GtkView/HelpViewer.pm
 lib/Sprog/GtkView/Menubar.pm
@@ -67,6 +69,7 @@ lib/Sprog/help/gear_mixins.pod
 lib/Sprog/help/index.pod
 lib/Sprog/help/input_gears.pod
 lib/Sprog/help/internals.pod
+lib/Sprog/help/make_command.pod
 lib/Sprog/help/output_gears.pod
 lib/Sprog/help/palette.pod
 lib/Sprog/help/preferences.pod
@@ -76,6 +79,7 @@ lib/Sprog/help/scheduler.pod
 lib/Sprog/HelpParser.pm
 lib/Sprog/Machine.pm
 lib/Sprog/Machine/Scheduler.pm
+lib/Sprog/MakeCmndGear.pm
 lib/Sprog/Preferences.pm
 lib/Sprog/Preferences/Unix.pm
 lib/Sprog/Preferences/Win32.pm
@@ -127,8 +131,10 @@ t/46_list_to_csv.t
 t/48_tt2.t
 t/50_clf_parse.t
 t/52_retrieve_url.t
+t/60_make_cmnd_gear.t
 t/counter.sprog
 t/files.txt
+t/gears/TenRandomNumbers.pm
 t/lib/AcceptNothingGear.pm
 t/lib/AccTest.pm
 t/lib/Dummy.pm
@@ -144,6 +150,7 @@ t/lib/MessageSource.pm
 t/lib/RecordSink.pm
 t/lib/TestApp.pm
 t/lib/TestMachine.pm
+t/lib/TestPrefs.pm
 t/lib/TestView.pm
 t/lib/TextSink.pm
 t/local_apache/index.html
