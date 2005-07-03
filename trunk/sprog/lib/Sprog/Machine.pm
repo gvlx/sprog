@@ -188,6 +188,20 @@ sub require_gear_class {
 }
 
 
+sub unload_gear_class {
+  my($self, $class) = @_;
+
+  my $inc_key = $class . '.pm';
+  $inc_key =~ s{::}{/}g;
+  my $path = $INC{$inc_key} or return;
+
+  eval "delete \$${class}::{\$_} foreach (keys %${class}::)";
+
+  delete $INC{$inc_key};
+  delete $INC{$path};
+}
+
+
 sub delete_gear_by_id {
   my($self, $id) = @_;
 
