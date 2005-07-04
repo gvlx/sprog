@@ -17,6 +17,9 @@ To connect gears together simply drop one gear on top of another - if the input
 and output L<connectors|Sprog::help::connectors> match then the gear you
 dropped should snap into place below the other.
 
+I<Hint: When dropping a gear, make sure that its top left corner is within the
+outline of the one you're dropping it on.>
+
 =head2 Configure the Gears
 
 Each gear has its own properties dialog with options to change the gear's
