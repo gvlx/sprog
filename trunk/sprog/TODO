@@ -1,4 +1,5 @@
 * Tests for InputByPara
+* Fix tests to not break under non-default locale
 * Add a save button to the TextWindow
 * WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
 * ReadFiles: implement gear
@@ -20,10 +21,13 @@
 * Add support for gear state (just PerlCode gears?)
 * Add support for machine state
 * Fix Drop Coordinates when palette is visible
+* Fix workspace scrolling (can currently drag outside scroll region)
 * Fix detach resulting from click-without-drag
+* Include some sample machines in the distribution
 * Implement a console window (capture warnings, STDERR?, exceptions)
 * PerlCode: unbind escape key from cancel (for vi users)
 * PerlCode: fixed pitch font in input box(?)
+* File|New: implement (multiple main windows?)
 * Warn about unsaved changes (before load, new or exit)
 * HelpViewer: hourglass cursor when loading a topic
 * HelpViewer: support URL links
@@ -32,12 +36,14 @@
 * Make floating palette an option
 * Allow output window to 'swallow' properties dialogs for other gears (eg: text in, pattern match etc)
 * File browse - remember last directory
+* Revise gear dragging code to allow gears to snap together when moved close
+* Implement keyboard alternatives to mouse actions
+* I18N: localise menu and button names (use Glade for main UI?)
 * Implement ApacheCustomLogParse
 * Highlight selected gear
 * Track 'Head' gear on add/delete
 * Work out why replacement syntax error causes exit
 * HelpViewer: Implement Edit menu (copy/paste)
-* Implement keyboard alternatives to mouse actions
 * Shrink the alert dialog after hiding details
 * Determine if calling ->destroy on a Gnome2::Canvas::Group is kocher
 * Cache the GearView paths
