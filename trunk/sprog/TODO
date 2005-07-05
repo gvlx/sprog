@@ -1,3 +1,4 @@
+* Fix the right-click menu (allow it to stay visible after initial release)
 * Tests for InputByPara
 * Fix tests to not break under non-default locale
 * Add a save button to the TextWindow
