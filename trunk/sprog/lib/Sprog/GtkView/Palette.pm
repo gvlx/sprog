@@ -94,6 +94,7 @@ sub _reset_filter {
 
   $self->search_entry->set_text('');
   $self->apply_filter;
+  $self->app->status_message('');
 }
 
 
