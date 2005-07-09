@@ -30,7 +30,9 @@ sub reset {
 sub show_chart {
   my($self, $data) = @_;
 
-  $self->create_window unless $self->gear_win;
+  if(!$self->gear_win) {
+    $self->create_window or return;
+  }
   $self->gear_win->show;
 }
 
@@ -47,7 +49,9 @@ sub create_window {
   );
   $dialog->signal_connect('delete_event' => sub { $dialog->hide; return 1 });
 
-  my $image = $self->chart_image or return;
+  my $image = eval { $self->chart_image };
+  return $self->app->alert("Error creating chart", "$@") if($@);
+  return unless $image;
 
   my $box = Gtk2::EventBox->new;
 #  $box->set_border_width(12);
@@ -77,7 +81,7 @@ sub chart_image {
   my $self = shift;
 
   my($width, $height) = (400, 300);
-  my $chart = GD::Graph::bars->new($width, $height);
+  my $chart = GD::Graph::bars->new($width, $height) or die GD::Graph->error . "\n";
   $chart->set(
     transparent   => 0,
     bar_spacing   => 1,
@@ -91,14 +95,15 @@ sub chart_image {
     b_margin      => CHART_MARGIN,
     l_margin      => CHART_MARGIN,
     r_margin      => CHART_MARGIN,
-  );
+  ) or die $chart->error . "\n";
 
-  my $data = $self->gear->data_series or return;
+  my $data = $self->gear->data_series or die "No data series for chart\n";
 
-  $chart->plot($data);
+  $chart->plot($data) or die $chart->error . "\n";
 
+  my $png = $chart->gd->png or die $chart->error . "\n";
   my $loader = Gtk2::Gdk::PixbufLoader->new;
-  $loader->write($chart->gd->png);
+  $loader->write($png);
   $loader->close;
 
   return Gtk2::Image->new_from_pixbuf($loader->get_pixbuf);
