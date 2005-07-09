@@ -39,30 +39,30 @@ sub create_window {
   );
   $self->gear_win($dialog);
   $dialog->resize(480, 360);
-  $dialog->signal_connect ('delete_event' => sub { $dialog->hide; return 1 });
+  $dialog->signal_connect('delete_event' => sub { $dialog->hide; return 1 });
 
   my $scrolled_window = Gtk2::ScrolledWindow->new;
-  $scrolled_window->set_policy ('automatic', 'automatic');
-  $scrolled_window->set_shadow_type ('in');
+  $scrolled_window->set_policy('automatic', 'automatic');
+  $scrolled_window->set_shadow_type('in');
 
   my $text_view = Gtk2::TextView->new;
   $self->text_view($text_view);
 
-  my $text_buffer = Gtk2::TextBuffer->new (undef);
+  my $text_buffer = Gtk2::TextBuffer->new(undef);
   $self->text_buffer($text_buffer);
-  $text_buffer->delete ($text_buffer->get_bounds);
+  $text_buffer->delete($text_buffer->get_bounds);
 
-  $text_view->set_buffer ($text_buffer);
-  $text_view->set_editable (FALSE);
-  $text_view->set_cursor_visible (FALSE);
+  $text_view->set_buffer($text_buffer);
+  $text_view->set_editable(FALSE);
+  $text_view->set_cursor_visible(FALSE);
 
   my $font_desc = Gtk2::Pango::FontDescription->from_string(
     "Bitstream Vera Sans Mono 9"
   );
-  $text_view->modify_font ($font_desc);
-  $text_view->set_wrap_mode ('none');
+  $text_view->modify_font($font_desc);
+  $text_view->set_wrap_mode('none');
 
-  $scrolled_window->add ($text_view);
+  $scrolled_window->add($text_view);
 
   $dialog->vbox->add($scrolled_window);
 
