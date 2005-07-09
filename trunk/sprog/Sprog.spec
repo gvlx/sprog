@@ -1,5 +1,5 @@
 Name:		Sprog
-Version:	0.12
+Version:	0.13
 Release:	1
 Epoch:		0
 Summary:	A graphical tool which anyone can use to build programs by plugging parts together.
