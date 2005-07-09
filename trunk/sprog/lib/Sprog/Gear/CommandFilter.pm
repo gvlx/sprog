@@ -53,6 +53,25 @@ sub disengage {
 }
 
 
+sub file_start {
+  my($self, $filename) = @_;
+
+  if(exists($self->{filename})) {
+    $self->msg_out(file_end => delete $self->{filename});
+  }
+  $self->{filename} = $filename;
+  $self->msg_out(file_start => $filename);
+}
+
+
+sub file_end {
+  my($self, $filename) = @_;
+}
+
+
+sub filename { return shift->{filename}; }
+
+
 sub _run_command {
   my($self, $command) = @_;
 
