@@ -1,3 +1,6 @@
+0.14  Jul ?? 2005
+        - fix bug: machine not stopping after syntax error in Perl gear
+
 0.13  Jul 03 2005
         - exporter fix for 5.8.1 (reported by Christian Renz)
         - fix for help viewer not finding POD in personal gear folder
