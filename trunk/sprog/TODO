@@ -1,3 +1,5 @@
+* Fix file_start/end event handling in CommandFilter
+* Text Window -> cat file: Error while writing: Broken pipe
 * Fix the right-click menu (allow it to stay visible after initial release)
 * Tests for InputByPara
 * Fix tests to not break under non-default locale
