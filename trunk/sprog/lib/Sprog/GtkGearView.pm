@@ -122,7 +122,7 @@ sub add_title {
     x             => $text_x,
     y             => $text_y,
     family        => 'sans',
-    size_points   => 17,
+    size_points   => 15,
     justification => 'center',
     text          => $text,
   );
