@@ -1,0 +1,47 @@
+=head1 User Preferences
+
+Sprog can be customised to suit you preferences.  If you adjust any of the 
+following window preferences, the changes will remain in effect for future
+Sprog sessions:
+
+=over 4
+
+=item Window Sizes for Main Window and Help Window
+
+Adjust the window size by dragging the lower righthand corner.
+
+=item Palette Visibility
+
+Show or hide the palette using the B<View> menu, the B<F9> key, or the palette
+button on the toolbar.
+
+=item Toolbar Visibility
+
+Show or hide the toolbar using the B<View> menu.
+
+=item Toolbar Style
+
+Set the toolbar style (icons or text) using the B<View> menu.
+
+=back
+
+=head2 The Preferences Menu
+
+The following settings can be changed using the B<Tools> | B<Preferences>
+menu:
+
+=over 4
+
+=item Personal Gear Folder
+
+The personal gear folder is used to store Sprog gear files - possibly ones
+you've written yourself, or ones you've downloaded.
+
+=item Workspace Background Colour
+
+You can change the background colour of the Sprog workspace using the colour
+selection button.  (The default value is #007F00 if you want to change it
+back).
+
+=back
+

@@ -1,0 +1,24 @@
+=head1 Understanding Connectors
+
+The component parts of a Sprog machine are called I<gears>.  Gears have input
+and output I<connectors> which are used to hook the gears together.
+
+You can only connect two gears together if the output connector of the first
+gear matches the input connector of the second.
+
+There are currently two types of connector:
+
+=head2 Pipe Connectors
+
+The pipe connector is an unstructured stream of data.  It is most commonly
+used for passing text data line-by-line, but it can also be used for binary
+data streams such as image files.
+
+=head2 Record Connectors
+
+The record connector is used to pass structured data as a sequences of records.
+Each record is a Perl hash.
+
+Generally if a gear has a record output connector, the help page for the gear
+will list what keys you can expect to find in each record hash.
+

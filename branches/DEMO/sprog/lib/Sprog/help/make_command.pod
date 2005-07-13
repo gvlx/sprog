@@ -1,0 +1,80 @@
+=head1 Making Command Gears
+
+'Command' gears are gears which run external commands.  You can use a command
+gears as a data L<source|Sprog::Gear::CommandIn>, a 
+L<filter|Sprog::Gear::CommandFilter>, or to L<output|Sprog::Gear::CommandOut>
+results.
+
+The simplest way to use command gears is to drag one of the 'Run Command' gears
+from the palette and then use the gear properties dialog to enter the command
+name and options.
+
+If you find yourself using the same command in more than one machine, then you
+might like to make your own gear and add it to the palette.  Not only is this
+possible, it's very easy.
+
+Before you start, you must have a 'Personal Gear Folder' set up.  This is simply
+a place to store the gear definitions.  You can set one up using 
+L<preferences|Sprog::help::preferences>.
+
+=head2 Step 1: Configure Your Gear
+
+If you're already using a 'Run Command' gear in your machine then you've
+completed this step.  If not, drag a Run Command gear into your machine and
+configure the command to do what you want.
+
+=head2 Step 2: Add the Gear to The Palette
+
+Right click on the command gear you want to save and select 'Make Command Gear'.
+This will pop up a dialog for you to specify how you want the gear to be saved:
+
+=over 4
+
+=item Title
+
+The title is what will appear in the palette and on the gear when you drag it
+into a machine.  You must give your gear a title and you probably don't want
+to use the title of a gear that already exists.  This is the only box that
+you really have to fill in.
+
+=item Command
+
+This box should be filled out for you already.  You can edit it if you want to.
+
+=item Keywords
+
+Keywords are used when searching for gears in the palette.  You don't have to
+add keywords, but it might be necessary if you can't fit all the important
+information into the title.
+
+=item File name
+
+This box should be filled out for you already but you can edit it if you want
+to.  Don't use the same filename as another gear in your personal gear folder
+or you'll overwrite it (you will be warned first though).
+
+=back
+
+When you're happy with the information you've entered, press B<Save> and
+your gear will be added to the palette.
+
+=head2 Editing a Custom Command Gear
+
+Once you've added a command gear to the palette you can edit it by right
+clicking on the gear and selecting 'Edit Command Gear'.  Your changes will be
+reflected in all machines that use the gear.
+
+You can also copy a custom command gear by editing it and saving it to a
+different filename.
+
+To remove the gear from the palette (and delete it from your Personal Gear
+Folder), right click on the gear in the palette and select 'Delete Command
+Gear'.
+
+=head2 Sharing Custom Command Gears
+
+If you want to share your custom command gears with someone else, simply give
+them the files from your personal gear folder.  Once they've saved the files in
+their personal gear folder, the gears will appear in their palette next time
+they run Sprog.
+
