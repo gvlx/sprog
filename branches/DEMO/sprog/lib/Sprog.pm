@@ -2,7 +2,7 @@ package Sprog;
 
 use strict;
 
-our $VERSION = '0.13';
+our $VERSION = '0.13d';
 
 use base qw(Sprog::Accessor);
 
