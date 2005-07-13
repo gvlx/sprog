@@ -43,6 +43,7 @@ sub file_end {
 
   my @headers;
   my $data = $self->{_data};
+  return unless @$data;
   foreach (@$data) {
     push @headers, shift @$_;
   }
