@@ -34,6 +34,7 @@ sub invoke {
 #      $self->app->show_help(HELP_TOPIC);
 #      next;
 #    }
+    last if($resp eq 'cancel');
     if($resp eq 'ok') {
       last if $self->save
     }
@@ -121,7 +122,7 @@ sub save {
   my $entry  = $self->priv_gear_entry;
   my $folder = $entry->get_text;
 
-  if(!-d $folder) {
+  if(length($folder)  and  !-d $folder) {
     $app->confirm_yes_no(
       'Make folder?',
       "Folder $folder does not exist.\nDo you wish to create it?"
