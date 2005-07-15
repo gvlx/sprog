@@ -10,6 +10,7 @@ __PACKAGE__->mk_accessors(qw(
   group
   block
   label
+  full_title
   last_mouse_x
   last_mouse_y
   dragging
@@ -27,7 +28,7 @@ use constant BLINK_OFF => 2;
 sub new {
   my $class = shift;
 
-  my $self = bless { @_ }, $class;
+  my $self = bless { @_, full_title => '' }, $class;
   weaken($self->{app});
 
   $self->_init_classes unless $classes;
@@ -158,9 +159,10 @@ sub set_title_text {
 
   my $text  = $self->gear->title;
   my $label = $self->label or return;
-  return if $label->get('text') eq $text;  # Fixme: truncated?
+  return if $text eq $self->full_title;
 
   $label->set(text => $text);
+  $self->full_title($text);
 
   # Truncate title if necessary
 
