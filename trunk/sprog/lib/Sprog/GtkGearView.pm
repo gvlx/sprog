@@ -21,6 +21,7 @@ use Scalar::Util qw(weaken);
 use Glib qw(TRUE FALSE);
 
 my $classes;
+my $gear_title_font = 'Sans 15';
 
 use constant BLINK_ON  => 1;
 use constant BLINK_OFF => 2;
@@ -143,13 +144,22 @@ sub add_title {
     fill_color    => 'black',
     x             => $text_x,
     y             => $text_y,
-    family        => 'sans',
-    size_points   => 15,
     justification => 'center',
     text          => '',
   );
   $self->label($label);
 
+  $self->set_title_text;
+}
+
+
+sub set_title_font {
+  my($self, $font) = @_;
+
+  $gear_title_font = $font;
+  return unless ref $self;
+
+  $self->full_title('');
   $self->set_title_text;
 }
 
@@ -161,7 +171,7 @@ sub set_title_text {
   my $label = $self->label or return;
   return if $text eq $self->full_title;
 
-  $label->set(text => $text);
+  $label->set(text => $text, font => $gear_title_font);
   $self->full_title($text);
 
   # Truncate title if necessary

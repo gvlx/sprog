@@ -217,6 +217,7 @@ sub gear_view_by_id        { shift->workbench->gear_view_by_id(@_);        }
 sub delete_gear_view_by_id { shift->workbench->delete_gear_view_by_id(@_); }
 sub add_gear_view          { shift->workbench->add_gear_view(@_);          }
 sub drop_gear              { shift->workbench->drop_gear(@_);              }
+sub set_gear_title_font    { shift->workbench->set_gear_title_font(@_);    }
 
 
 sub _build_statusbar {
