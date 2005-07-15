@@ -40,7 +40,7 @@ sub new {
   weaken($self->{app});
   weaken($self->{machine});
 
-  my $meta = $self->{app}->geardb->gear_class_info($class)
+  my $meta = $self->class_metadata
     or die "Could not find sprog-gear-metadata for $class";
 
   $self->{title}         = $meta->title;
@@ -53,6 +53,23 @@ sub new {
   $self->{y} = 0 unless defined($self->{y});
   
   return $self;
+}
+
+
+sub class_metadata {
+  my $self  = shift;
+  my $class = ref($self);
+
+  return $self->app->geardb->gear_class_info($class)
+}
+
+sub default_title { shift->class_metadata->title; }
+
+
+sub view {
+  my $self = shift;
+  
+  return $self->app->gear_view_by_id($self->id);
 }
 
 
@@ -139,7 +156,7 @@ sub serialise {
   
   my %defs = $self->_defaults;
 
-  foreach my $property ( keys %defs ) {
+  foreach my $property ( 'title', keys %defs ) {
     $data{prop}->{$property} = $self->$property;
   }
 
