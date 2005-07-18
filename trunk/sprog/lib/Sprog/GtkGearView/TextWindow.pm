@@ -23,7 +23,7 @@ sub add_data {
   $text_buffer->insert ($end, $data);
   $self->text_view->scroll_to_iter($end, 0, 0, 0, 0) if($self->gear->auto_scroll);
 
-  $self->gear_win->show;
+  $self->show_window unless $self->gear_win->visible;
 }
 
 
@@ -56,10 +56,6 @@ sub create_window {
   $text_view->set_editable(FALSE);
   $text_view->set_cursor_visible(FALSE);
 
-  my $font_desc = Gtk2::Pango::FontDescription->from_string(
-    "Bitstream Vera Sans Mono 9"
-  );
-  $text_view->modify_font($font_desc);
   $text_view->set_wrap_mode('none');
 
   $scrolled_window->add($text_view);
@@ -76,7 +72,8 @@ sub create_window {
 
   $dialog->signal_connect( "key_press_event" => sub { $self->on_key_press(@_); } );
 
-  $dialog->show_all;
+  $dialog->vbox->show_all;
+  $self->show_window;
 }
 
 
@@ -110,11 +107,24 @@ sub toggle_window_visibility {
 
   my $gear_win = $self->gear_win;
   if($gear_win) {
-    $gear_win->visible ? $gear_win->hide : $gear_win->show;
+    $gear_win->visible ? $gear_win->hide : $self->show_window;
   }
   else {
     $self->create_window;
   }
+}
+
+
+sub show_window {
+  my $self = shift;
+
+  my $gear_win  = $self->gear_win;
+  my $font_desc = Gtk2::Pango::FontDescription->from_string(
+    $self->view->text_window_font
+  );
+  $self->text_view->modify_font($font_desc);
+
+  $gear_win->show;
 }
 
 

@@ -77,10 +77,14 @@ sub _init {
   $bg_btn->set_color($colour);
 
   my $fb_gear_title = $self->font_gear_title($gladexml->get_widget('font_gear_title'));
-  if(my $font = $app->get_pref('gearview.title_font')) {
+  if(my $font = $app->view->gear_title_font) {
     $fb_gear_title->set_font_name($font);
   }
+
   my $fb_text_win   = $self->font_text_window($gladexml->get_widget('font_text_window'));
+  if(my $font = $app->view->text_window_font) {
+    $fb_text_win->set_font_name($font);
+  }
 
   $gladexml->signal_autoconnect(
     sub { $self->autoconnect(@_) }
@@ -149,15 +153,20 @@ sub save {
 
   my $fb_gear_title = $self->font_gear_title;
   my $font = $fb_gear_title->get_font_name;
-  $app->set_pref('gearview.title_font', $font);
+  $app->set_pref('font.gear_title', $font);
   $app->view->set_gear_title_font($font);
+
+  my $fb_text_window = $self->font_text_window;
+  $font = $fb_text_window->get_font_name;
+  $app->set_pref('font.text_window', $font);
+  $app->view->set_text_window_font($font);
 
   return 1;
 }
 
 
 sub glade_xml {
-  return `cat /home/grant/projects/sf/sprog/glade/preferences.glade`;
+#  return `cat /home/grant/projects/sf/sprog/glade/preferences.glade`;
   return <<'END_XML';
 <?xml version="1.0" standalone="no"?> <!--*- mode: xml -*-->
 <!DOCTYPE glade-interface SYSTEM "http://glade.gnome.org/glade-2.0.dtd">
