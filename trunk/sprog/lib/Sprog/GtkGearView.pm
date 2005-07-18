@@ -7,6 +7,7 @@ use base qw(Sprog::Accessor);
 __PACKAGE__->mk_accessors(qw(
   app
   gear
+  view
   group
   block
   label
@@ -21,7 +22,6 @@ use Scalar::Util qw(weaken);
 use Glib qw(TRUE FALSE);
 
 my $classes;
-my $gear_title_font = 'Sans 15';
 
 use constant BLINK_ON  => 1;
 use constant BLINK_OFF => 2;
@@ -30,7 +30,9 @@ sub new {
   my $class = shift;
 
   my $self = bless { @_, full_title => '' }, $class;
+  $self->{view} = $self->{app}->view;
   weaken($self->{app});
+  weaken($self->{view});
 
   $self->_init_classes unless $classes;
 
@@ -153,11 +155,8 @@ sub add_title {
 }
 
 
-sub set_title_font {
-  my($self, $font) = @_;
-
-  $gear_title_font = $font;
-  return unless ref $self;
+sub update_title {
+  my $self = shift;
 
   $self->full_title('');
   $self->set_title_text;
@@ -171,7 +170,7 @@ sub set_title_text {
   my $label = $self->label or return;
   return if $text eq $self->full_title;
 
-  $label->set(text => $text, font => $gear_title_font);
+  $label->set(text => $text, font => $self->view->gear_title_font);
   $self->full_title($text);
 
   # Truncate title if necessary

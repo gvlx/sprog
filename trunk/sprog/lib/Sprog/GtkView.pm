@@ -34,6 +34,10 @@ use constant DEFAULT_WIN_WIDTH  => 750;
 use constant DEFAULT_WIN_HEIGHT => 560;
 use constant DEFAULT_PAL_WIDTH  => 220;
 
+my $gear_title_font  = undef;
+my $text_window_font = undef;
+
+
 sub new {
   my $class = shift;
 
@@ -213,17 +217,47 @@ sub _build_workbench {
   return $frame;
 }
 
-sub gear_view_by_id        { shift->workbench->gear_view_by_id(@_);        }
-sub delete_gear_view_by_id { shift->workbench->delete_gear_view_by_id(@_); }
-sub add_gear_view          { shift->workbench->add_gear_view(@_);          }
-sub drop_gear              { shift->workbench->drop_gear(@_);              }
-sub set_gear_title_font    { shift->workbench->set_gear_title_font(@_);    }
-
 
 sub _build_statusbar {
   my($self) = @_;
 
   return $self->statusbar(Gtk2::Statusbar->new);
+}
+
+sub gear_view_by_id        { shift->workbench->gear_view_by_id(@_);        }
+sub delete_gear_view_by_id { shift->workbench->delete_gear_view_by_id(@_); }
+sub add_gear_view          { shift->workbench->add_gear_view(@_);          }
+sub drop_gear              { shift->workbench->drop_gear(@_);              }
+
+
+sub gear_title_font {
+  my $self = shift;
+
+  $gear_title_font ||= $self->app->get_pref('font.gear_title') || 'Sans 15';
+  return $gear_title_font;
+}
+
+
+sub set_gear_title_font {
+  my($self, $new_font) = @_;
+
+  $gear_title_font = $new_font;
+  $self->workbench->update_titles;
+}
+
+
+sub text_window_font {
+  my $self = shift;
+
+  $text_window_font ||= $self->app->get_pref('font.text_window') || 'Monospace 10';
+  return $text_window_font;
+}
+
+
+sub set_text_window_font {
+  my($self, $new_font) = @_;
+
+  $text_window_font = $new_font;
 }
 
 
