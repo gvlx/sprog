@@ -200,11 +200,11 @@ sub update_gear_view {
 };
 
 
-sub set_gear_title_font {
-  my($self, $font) = @_;
+sub update_titles {
+  my $self = shift;
 
   foreach my $gearview (values %{$self->{gears}}) {
-    $gearview->set_title_font($font);
+    $gearview->update_title;
   }
 }
 
