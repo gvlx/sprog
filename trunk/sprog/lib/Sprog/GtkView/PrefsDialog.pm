@@ -36,7 +36,7 @@ sub invoke {
 #      $self->app->show_help(HELP_TOPIC);
 #      next;
 #    }
-    last if($resp eq 'cancel');
+    last if($resp eq 'cancel' or $resp eq 'delete-event');
     if($resp eq 'ok') {
       last if $self->save
     }
