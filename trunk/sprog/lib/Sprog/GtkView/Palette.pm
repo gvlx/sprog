@@ -303,14 +303,14 @@ sub _on_button_press {
 
   my $info = $self->filtered_list->[$path->to_string] or return FALSE;
 
-  $self->_post_context_menu($info);
+  $self->_post_context_menu($info, 3, $event->time);
 
   return TRUE;
 }
 
 
 sub _post_context_menu {
-  my($self, $info) = @_;
+  my($self, $info, $button, $time) = @_;
 
   my $menu = Gtk2::Menu->new;
 
@@ -340,14 +340,7 @@ sub _post_context_menu {
   $menu->append($menu_item);
   $menu_item->show;
 
-  $menu->popup(undef, undef, \&menu_pos, undef, 3, 0);
-}
-
-
-sub menu_pos {
-  my($menu, $x, $y, $data) = @_;
-
-  return($x-2, $y-2);
+  $menu->popup(undef, undef, undef, undef, $button, $time);
 }
 
 

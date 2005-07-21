@@ -255,7 +255,7 @@ sub event {
   my $type = $event->type;
 
   if($type eq 'button-press'  and  $event->button == 3) {
-    $self->post_context_menu;
+    $self->post_context_menu(3, $event->time);
   }
   elsif($type eq 'button-press'  and  $event->button == 1) {
     $self->app->detach_gear($self->gear);
@@ -336,7 +336,7 @@ sub delete_view {
 
 
 sub post_context_menu {
-  my $self = shift;
+  my($self, $button, $time) = @_;
 
   my $menu = Gtk2::Menu->new;
 
@@ -354,7 +354,7 @@ sub post_context_menu {
     $menu_item->show;
   }
 
-  $menu->popup(undef, undef, \&menu_pos, undef, 3, 0);
+  $menu->popup(undef, undef, undef, undef, $button, $time);
 }
 
 
@@ -399,13 +399,6 @@ sub context_menu_entries {
     };
 
   return \@items;
-}
-
-
-sub menu_pos {
-  my($menu, $x, $y, $data) = @_;
-
-  return($x-2, $y-2);
 }
 
 

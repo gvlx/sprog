@@ -1,5 +1,9 @@
 0.14  Jul ?? 2005
         - fix bug: machine not stopping after syntax error in Perl gear
+        - fix bug: broken cancel button in tools/prefs dialog
+        - add ability to rename gears
+        - make gear title and text window fonts configurable
+        - make right click menu stay visible on click-release
 
 0.13  Jul 03 2005
         - exporter fix for 5.8.1 (reported by Christian Renz)
