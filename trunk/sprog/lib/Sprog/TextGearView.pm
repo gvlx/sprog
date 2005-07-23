@@ -20,6 +20,11 @@ sub new {
 }
 
 
+# NULL-methods - placeholders
+
+sub set_title_text { }
+
+
 1;
 
 
