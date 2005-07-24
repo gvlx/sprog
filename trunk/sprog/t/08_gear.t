@@ -1,5 +1,5 @@
 use strict;
-use Sprog::TestHelper tests => 17;
+use Sprog::TestHelper tests => 20;
 
 use_ok('DummyGear');
 
@@ -44,6 +44,14 @@ is_deeply($ref, {
     NEXT  => undef,
     X     => 10,
     Y     => 20,
-    prop  => { },
+    prop  => { title => 'Dummy Gear' },
 }, 'serialised structure looks good');
+
+$gear->title('New Title');
+is($gear->title, 'New Title', 'renamed gear');
+$ref = $gear->serialise;
+
+is($ref->{prop}->{title}, 'New Title', 'new name serialised successfully');
+
+is($gear->default_title, 'Dummy Gear', 'original title is still available');
 
