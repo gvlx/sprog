@@ -53,6 +53,14 @@ a window.
 
 Constructor.  Called from L<Sprog::TextView>.
 
+=head1 NULL METHODS
+
+The following methods are required to exist by the Sprog framework, but are
+implemented as methods that do nothing.  They can of course be overridden by
+text view classes that want to handle them.
+
+=head2 set_title_text
+
 =head1 COPYRIGHT 
 
 Copyright 2005 Grant McLean E<lt>grantm@cpan.orgE<gt>
