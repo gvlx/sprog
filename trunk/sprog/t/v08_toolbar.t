@@ -1,5 +1,5 @@
 use strict;
-use Sprog::TestHelper tests => 21, display => 1;
+use Sprog::TestHelper tests => 21, display => 1, clocale => 1;
 
 use Gtk2::Gdk::Keysyms;
 

@@ -1,8 +1,8 @@
+* allow '-' on command-line to mean STDIN
 * Add an 'Edit' option to palette right-click menu
 * Fix file_start/end event handling in CommandFilter
 * Text Window -> cat file: Error while writing: Broken pipe
 * Tests for InputByPara
-* Fix tests to not break under non-default locale
 * Add a save button to the TextWindow
 * WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
 * ReadFiles: implement gear
