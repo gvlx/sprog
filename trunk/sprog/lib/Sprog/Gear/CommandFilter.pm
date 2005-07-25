@@ -35,6 +35,7 @@ sub engage {
     return;
   }
 
+  delete $self->{filename};
   $self->_run_command($command) or return;
 
   return $self->SUPER::engage;
