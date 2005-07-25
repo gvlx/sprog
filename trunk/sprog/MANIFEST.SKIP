@@ -20,4 +20,5 @@ blib
 ^t/output.txt$
 ^ptst$
 ^sprog\.dbg$
+(^|/)\.#
 ChartWindow.pm$
