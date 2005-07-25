@@ -140,6 +140,8 @@ sub _create_gears_from_file {
     while(my($p, $v) = each %{$g->{prop}}) {
       $gear->$p($v);
     }
+    my $gearview = $gear->view;
+    $gearview->set_title_text if $gearview;
   }
 
   foreach my $g (@$gears) {

@@ -14,6 +14,8 @@ __PACKAGE__->mk_accessors(qw(
   app dialog
   priv_gear_entry
   bg_colour_button
+  font_gear_title
+  font_text_window
 ));
 
 use Scalar::Util qw(weaken);
@@ -34,7 +36,7 @@ sub invoke {
 #      $self->app->show_help(HELP_TOPIC);
 #      next;
 #    }
-    last if($resp eq 'cancel');
+    last if($resp eq 'cancel' or $resp eq 'delete-event');
     if($resp eq 'ok') {
       last if $self->save
     }
@@ -73,6 +75,16 @@ sub _init {
   my $bg_btn = $self->bg_colour_button($gladexml->get_widget('bg_colour_button'));
   my $colour = Gtk2::Gdk::Color->parse($bg_clr);
   $bg_btn->set_color($colour);
+
+  my $fb_gear_title = $self->font_gear_title($gladexml->get_widget('font_gear_title'));
+  if(my $font = $app->view->gear_title_font) {
+    $fb_gear_title->set_font_name($font);
+  }
+
+  my $fb_text_win   = $self->font_text_window($gladexml->get_widget('font_text_window'));
+  if(my $font = $app->view->text_window_font) {
+    $fb_text_win->set_font_name($font);
+  }
 
   $gladexml->signal_autoconnect(
     sub { $self->autoconnect(@_) }
@@ -138,6 +150,16 @@ sub save {
   my $bg_rgb = sprintf("#%04X%04X%04X", map { $bg_clr->$_ } qw(red green blue));
   $app->set_pref('workbench.bg_colour', $bg_rgb);
   $app->view->workbench->set_bg_colour;
+
+  my $fb_gear_title = $self->font_gear_title;
+  my $font = $fb_gear_title->get_font_name;
+  $app->set_pref('font.gear_title', $font);
+  $app->view->set_gear_title_font($font);
+
+  my $fb_text_window = $self->font_text_window;
+  $font = $fb_text_window->get_font_name;
+  $app->set_pref('font.text_window', $font);
+  $app->view->set_text_window_font($font);
 
   return 1;
 }
@@ -215,7 +237,8 @@ sub glade_xml {
       <child>
 	<widget class="GtkNotebook" id="notebook1">
 	  <property name="visible">True</property>
-	  <property name="show_tabs">False</property>
+	  <property name="can_focus">True</property>
+	  <property name="show_tabs">True</property>
 	  <property name="show_border">False</property>
 	  <property name="tab_pos">GTK_POS_TOP</property>
 	  <property name="scrollable">False</property>
@@ -265,7 +288,7 @@ sub glade_xml {
 		  <property name="text" translatable="yes"></property>
 		  <property name="has_frame">True</property>
 		  <property name="invisible_char">*</property>
-		  <property name="activates_default">False</property>
+		  <property name="activates_default">True</property>
 		</widget>
 		<packing>
 		  <property name="left_attach">0</property>
@@ -348,6 +371,7 @@ sub glade_xml {
 		  <property name="bottom_attach">3</property>
 		  <property name="y_padding">10</property>
 		  <property name="x_options">fill</property>
+		  <property name="y_options">fill</property>
 		</packing>
 	      </child>
 	    </widget>
@@ -361,6 +385,128 @@ sub glade_xml {
 	    <widget class="GtkLabel" id="label1">
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">Paths</property>
+	      <property name="use_underline">False</property>
+	      <property name="use_markup">False</property>
+	      <property name="justify">GTK_JUSTIFY_LEFT</property>
+	      <property name="wrap">False</property>
+	      <property name="selectable">False</property>
+	      <property name="xalign">0.5</property>
+	      <property name="yalign">0.5</property>
+	      <property name="xpad">0</property>
+	      <property name="ypad">0</property>
+	    </widget>
+	    <packing>
+	      <property name="type">tab</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkTable" id="table2">
+	      <property name="border_width">10</property>
+	      <property name="visible">True</property>
+	      <property name="n_rows">2</property>
+	      <property name="n_columns">2</property>
+	      <property name="homogeneous">False</property>
+	      <property name="row_spacing">2</property>
+	      <property name="column_spacing">2</property>
+
+	      <child>
+		<widget class="GtkFontButton" id="font_gear_title">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="show_style">True</property>
+		  <property name="show_size">True</property>
+		  <property name="use_font">True</property>
+		  <property name="use_size">True</property>
+		  <property name="focus_on_click">True</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">2</property>
+		  <property name="top_attach">0</property>
+		  <property name="bottom_attach">1</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="label6">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Gear title font</property>
+		  <property name="use_underline">False</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">0</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">0</property>
+		  <property name="right_attach">1</property>
+		  <property name="top_attach">0</property>
+		  <property name="bottom_attach">1</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkFontButton" id="font_text_window">
+		  <property name="visible">True</property>
+		  <property name="can_focus">True</property>
+		  <property name="show_style">True</property>
+		  <property name="show_size">True</property>
+		  <property name="use_font">True</property>
+		  <property name="use_size">True</property>
+		  <property name="focus_on_click">True</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">2</property>
+		  <property name="top_attach">1</property>
+		  <property name="bottom_attach">2</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="label8">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Text window font</property>
+		  <property name="use_underline">False</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">0</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">0</property>
+		  <property name="right_attach">1</property>
+		  <property name="top_attach">1</property>
+		  <property name="bottom_attach">2</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+	    </widget>
+	    <packing>
+	      <property name="tab_expand">False</property>
+	      <property name="tab_fill">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkLabel" id="label5">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">Fonts</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>

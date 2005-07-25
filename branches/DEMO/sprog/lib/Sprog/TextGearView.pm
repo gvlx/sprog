@@ -20,6 +20,11 @@ sub new {
 }
 
 
+# NULL-methods - placeholders
+
+sub set_title_text { }
+
+
 1;
 
 
@@ -47,6 +52,14 @@ a window.
 =head2 new ( key => value, ... )
 
 Constructor.  Called from L<Sprog::TextView>.
+
+=head1 NULL METHODS
+
+The following methods are required to exist by the Sprog framework, but are
+implemented as methods that do nothing.  They can of course be overridden by
+text view classes that want to handle them.
+
+=head2 set_title_text
 
 =head1 COPYRIGHT 
 

@@ -200,6 +200,15 @@ sub update_gear_view {
 };
 
 
+sub update_titles {
+  my $self = shift;
+
+  foreach my $gearview (values %{$self->{gears}}) {
+    $gearview->update_title;
+  }
+}
+
+
 sub drop_gear {
   my($self, $gearv, $x, $y) = @_;
 

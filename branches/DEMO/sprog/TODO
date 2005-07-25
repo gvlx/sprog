@@ -1,8 +1,8 @@
+* allow '-' on command-line to mean STDIN
+* Add an 'Edit' option to palette right-click menu
 * Fix file_start/end event handling in CommandFilter
 * Text Window -> cat file: Error while writing: Broken pipe
-* Fix the right-click menu (allow it to stay visible after initial release)
 * Tests for InputByPara
-* Fix tests to not break under non-default locale
 * Add a save button to the TextWindow
 * WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
 * ReadFiles: implement gear
@@ -11,7 +11,6 @@
 * TmplMasonLite: implement gear
 * BasicStatistics: implement gear
 * DBIQuery: implement gear
-* Rename gears function
 * Tools: create desktop shortcut
 * HTML2PDF: implement gear using htmldoc?
 * User-selectable fonts for text windows (and help viewer)
@@ -23,6 +22,7 @@
 * RetrieveURL: Do a proper implementation
 * Add support for gear state (just PerlCode gears?)
 * Add support for machine state
+* Open properties dialogs on double click too.
 * Fix Drop Coordinates when palette is visible
 * Fix workspace scrolling (can currently drag outside scroll region)
 * Fix detach resulting from click-without-drag

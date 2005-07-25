@@ -13,6 +13,12 @@ sub import {
 
   plan skip_all => $opt{skip_all} if $opt{skip_all};
 
+  if($opt{clocale}) {
+    if(defined($ENV{LANG})  and  $ENV{LANG} ne 'C') {
+      plan 'skip_all' => "test not localised for $ENV{LANG}"
+    }
+  }
+
   if($opt{display}) {
     if(!defined($ENV{DISPLAY})  or  !$ENV{DISPLAY} =~ /:\d/) {
       plan 'skip_all' => 'display needed'

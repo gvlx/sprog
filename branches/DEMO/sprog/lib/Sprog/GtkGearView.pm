@@ -7,9 +7,11 @@ use base qw(Sprog::Accessor);
 __PACKAGE__->mk_accessors(qw(
   app
   gear
+  view
   group
   block
   label
+  full_title
   last_mouse_x
   last_mouse_y
   dragging
@@ -19,24 +21,48 @@ use Scalar::Util qw(weaken);
 
 use Glib qw(TRUE FALSE);
 
-use Sprog::GtkGearView::Paths;
-use Sprog::GtkAutoDialog;
+my $classes;
 
 use constant BLINK_ON  => 1;
 use constant BLINK_OFF => 2;
 
-*gear_width  = \&Sprog::GtkGearView::Paths::gBW;
-*gear_height = \&Sprog::GtkGearView::Paths::gBH;
-*gCW = \&Sprog::GtkGearView::Paths::gCW;
-*gCH = \&Sprog::GtkGearView::Paths::gCH;
-
 sub new {
   my $class = shift;
 
-  my $self = bless { @_ }, $class;
+  my $self = bless { @_, full_title => '' }, $class;
+  $self->{view} = $self->{app}->view;
   weaken($self->{app});
+  weaken($self->{view});
+
+  $self->_init_classes unless $classes;
 
   return $self;
+}
+
+
+sub _init_classes {
+  my($self) = @_;
+
+  my $app = $self->app or return;
+
+  $app->inject(
+    '/app/view/gear/paths'    => 'Sprog::GtkGearView::Paths',
+    '/app/view/auto_dialog'   => 'Sprog::GtkAutoDialog',
+    '/app/view/rename_dialog' => 'Sprog::GtkView::RenameDialog',
+  );
+
+  $classes = {
+    gear_paths    => $app->load_class('/app/view/gear/paths'),
+    auto_dialog   => $app->load_class('/app/view/auto_dialog'),
+    rename_dialog => $app->load_class('/app/view/rename_dialog'),
+  };
+
+  my $paths_class = $classes->{gear_paths} or return;
+
+  *gear_width  = \&{"${paths_class}::gBW"};
+  *gear_height = \&{"${paths_class}::gBH"};
+  *gCW         = \&{"${paths_class}::gCW"};
+  *gCH         = \&{"${paths_class}::gCH"};
 }
 
 
@@ -55,7 +81,7 @@ sub add_gear {
   
   my $self = $class->new_gear_view($app, $gear, $group) || return;
 
-  my $shape = Sprog::GtkGearView::Paths->gear_path($gear);
+  my $shape = $classes->{gear_paths}->gear_path($gear);
 
   my $block = Gnome2::Canvas::Item->new(
     $group,
@@ -68,7 +94,7 @@ sub add_gear {
   $block->set_path_def($shape);
   $self->block($block);
 
-  $self->add_title($group, $gear);
+  $self->add_title($group);
   $self->init_cog_frames($group);
 
   $group->signal_connect(event => sub { $self->event(@_) });
@@ -110,9 +136,8 @@ sub new_gear_view {
 
 
 sub add_title {
-  my($self, $group, $gear) = @_;
+  my($self, $group) = @_;
 
-  my $text = $gear->title || return;
   my $text_x = &gCW * 3.6;
   my $text_y = &gear_height / 2;
   my $label = Gnome2::Canvas::Item->new(
@@ -121,17 +146,39 @@ sub add_title {
     fill_color    => 'black',
     x             => $text_x,
     y             => $text_y,
-    family        => 'sans',
-    size_points   => 17,
     justification => 'center',
-    text          => $text,
+    text          => '',
   );
   $self->label($label);
 
+  $self->set_title_text;
+}
+
+
+sub update_title {
+  my $self = shift;
+
+  $self->full_title('');
+  $self->set_title_text;
+}
+
+
+sub set_title_text {
+  my($self) = @_;
+
+  my $text  = $self->gear->title;
+  my $label = $self->label or return;
+  return if $text eq $self->full_title;
+
+  $label->set(text => $text, font => $self->view->gear_title_font);
+  $self->full_title($text);
+
   # Truncate title if necessary
 
+  my $text_x = &gCW * 3.6;
   my $text_w = $label->get('text_width');
-  my $max_w = gear_width() - $text_x - 6;
+  my $max_w  = gear_width() - $text_x - 6;
+
   if($text_w > $max_w) {
     while(length($text) > 3) {
       substr($text, -4) = '...';
@@ -208,7 +255,7 @@ sub event {
   my $type = $event->type;
 
   if($type eq 'button-press'  and  $event->button == 3) {
-    $self->post_context_menu;
+    $self->post_context_menu(3, $event->time);
   }
   elsif($type eq 'button-press'  and  $event->button == 1) {
     $self->app->detach_gear($self->gear);
@@ -289,7 +336,7 @@ sub delete_view {
 
 
 sub post_context_menu {
-  my $self = shift;
+  my($self, $button, $time) = @_;
 
   my $menu = Gtk2::Menu->new;
 
@@ -307,7 +354,7 @@ sub post_context_menu {
     $menu_item->show;
   }
 
-  $menu->popup(undef, undef, \&menu_pos, undef, 3, 0);
+  $menu->popup(undef, undef, undef, undef, $button, $time);
 }
 
 
@@ -326,7 +373,11 @@ sub context_menu_entries {
       title    => 'Properties',
       callback => sub { $self->properties; },
       disabled => $gear->no_properties,
-    }
+    },
+    {
+      title    => 'Rename',
+      callback => sub { $self->rename; },
+    },
   );
 
   if($gear->is_command_gear) {
@@ -351,13 +402,6 @@ sub context_menu_entries {
 }
 
 
-sub menu_pos {
-  my($menu, $x, $y, $data) = @_;
-
-  return($x-2, $y-2);
-}
-
-
 sub properties {
   my $self = shift;
 
@@ -370,7 +414,7 @@ sub auto_properties {
   my $self = shift;
 
   $self->gear->has_error(0);
-  return Sprog::GtkAutoDialog->invoke(gearview => $self);
+  return $classes->{auto_dialog}->invoke(gearview => $self);
 }
 
 
@@ -402,6 +446,15 @@ sub dialog_name {
   my $gear = shift->gear;
 
   return $gear->can('dialog_name') ? $gear->dialog_name : 'properties';
+}
+
+
+sub rename {
+  my $self = shift;
+
+  
+  $classes->{rename_dialog}->invoke($self->app_win, $self->gear);
+  $self->set_title_text;
 }
 
 

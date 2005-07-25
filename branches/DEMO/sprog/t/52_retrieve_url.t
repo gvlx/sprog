@@ -25,6 +25,7 @@ like($source->dialog_xml, qr{<glade-interface>.*</glade-interface>}s,
 is($source->url, '', "default URL is blank");
 
 my $props = $source->serialise->{prop};
+delete $props->{title};
 is_deeply($props, { url => '' }, 'command property was uninherited OK');
 
 $source->url('http://localhost/sprogtest/index.html');

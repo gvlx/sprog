@@ -179,6 +179,7 @@ sub not_implemented   { shift->alert('Not implemented');         }
 
 sub confirm_yes_no    { shift->view->confirm_yes_no(@_);         }
 
+sub gear_view_by_id   { shift->view->gear_view_by_id(@_);        }
 sub drop_gear         { shift->view->drop_gear(@_);              }
 sub detach_gear       { shift->machine->detach_gear(@_);         }
 sub dnd_drop_uris     { shift->machine->dnd_drop_uris(@_);       }
