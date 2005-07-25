@@ -197,6 +197,7 @@ sub msg_out {
   my $self = shift;
 
   my $sched = $self->scheduler or return;
+  $DBG && $DBG->(ref($self) . "->msg_out($_[0], ...)");
   $sched->msg_from($self->id, @_);
 }
 
