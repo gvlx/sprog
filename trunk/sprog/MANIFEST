@@ -58,6 +58,7 @@ lib/Sprog/GtkView/HelpViewer.pm
 lib/Sprog/GtkView/Menubar.pm
 lib/Sprog/GtkView/Palette.pm
 lib/Sprog/GtkView/PrefsDialog.pm
+lib/Sprog/GtkView/RenameDialog.pm
 lib/Sprog/GtkView/Toolbar.pm
 lib/Sprog/GtkView/WorkBench.pm
 lib/Sprog/help/build_machine.pod
