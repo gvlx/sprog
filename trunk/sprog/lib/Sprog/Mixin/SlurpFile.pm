@@ -1,4 +1,4 @@
-package Sprog::Gear::SlurpFile;
+package Sprog::Mixin::SlurpFile;
 
 sub file_start {
   my($self, $filename) = @_;
@@ -31,12 +31,12 @@ sub file_end {
 
 =head1 NAME
 
-Sprog::Gear::SlurpFile - a 'mixin' class for gears reading a file at a time
+Sprog::Mixin::SlurpFile - a 'mixin' class for gears reading a file at a time
 
 =head1 SYNOPSIS
 
   use base qw(
-    Sprog::Gear::SlurpFile
+    Sprog::Mixin::SlurpFile
     Sprog::Gear
   );
 
