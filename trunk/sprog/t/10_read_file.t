@@ -22,7 +22,7 @@ $sink->text('');
 my $reader = Sprog::Gear::ReadFile->new(app => $app, machine => $machine);
 
 isa_ok($reader, 'Sprog::Gear::ReadFile');
-isa_ok($reader, 'Sprog::Gear::InputFromFH');
+isa_ok($reader, 'Sprog::Mixin::InputFromFH');
 isa_ok($reader, 'Sprog::Gear');
 ok(!$reader->has_input, 'has no input');
 ok($reader->has_output, 'has output');

@@ -13,8 +13,8 @@ package Sprog::Gear::CommandFilter;
 use strict;
 
 use base qw(
-  Sprog::Gear::OutputToFH
-  Sprog::Gear::InputFromFH
+  Sprog::Mixin::OutputToFH
+  Sprog::Mixin::InputFromFH
   Sprog::Gear::CommandDialog
   Sprog::Gear
 );

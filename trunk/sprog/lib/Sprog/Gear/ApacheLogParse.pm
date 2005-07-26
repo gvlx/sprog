@@ -13,7 +13,7 @@ package Sprog::Gear::ApacheLogParse;
 use strict;
 
 use base qw(
-  Sprog::Gear::InputByLine
+  Sprog::Mixin::InputByLine
   Sprog::Gear
 );
 

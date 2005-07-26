@@ -14,7 +14,7 @@ use strict;
 use warnings;
 
 use base qw(
-  Sprog::Gear::InputByLine
+  Sprog::Mixin::InputByLine
   Sprog::Gear::PerlBase
 );
 

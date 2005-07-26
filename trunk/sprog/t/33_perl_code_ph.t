@@ -14,9 +14,9 @@ my($source, $perl, $sink) = $app->make_test_machine(qw(
 is($app->alerts, '', 'no alerts while creating machine');
 
 
-isa_ok($perl, 'Sprog::Gear::PerlCodePH',  'perl gear     ');
-isa_ok($perl, 'Sprog::Gear::InputByLine', 'perl gear also');
-isa_ok($perl, 'Sprog::Gear',              'perl gear also');
+isa_ok($perl, 'Sprog::Gear::PerlCodePH',   'perl gear     ');
+isa_ok($perl, 'Sprog::Mixin::InputByLine', 'perl gear also');
+isa_ok($perl, 'Sprog::Gear',               'perl gear also');
 
 ok($perl->has_input, 'has input');
 ok($perl->has_output, 'has output');

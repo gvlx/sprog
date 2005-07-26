@@ -13,7 +13,7 @@ package Sprog::Gear::ImageBorder;
 use strict;
 
 use base qw(
-  Sprog::Gear::SlurpFile
+  Sprog::Mixin::SlurpFile
   Sprog::Gear
 );
 

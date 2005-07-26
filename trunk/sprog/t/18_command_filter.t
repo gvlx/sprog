@@ -14,8 +14,8 @@ my($src, $filter, $sink) = $app->make_test_machine(qw(
 is($app->alerts, '', 'no alerts while creating machine');
 
 isa_ok($filter, 'Sprog::Gear::CommandFilter', 'filter gear');
-isa_ok($filter, 'Sprog::Gear::OutputToFH',    'filter gear also');
-isa_ok($filter, 'Sprog::Gear::InputFromFH',   'filter gear also');
+isa_ok($filter, 'Sprog::Mixin::OutputToFH',   'filter gear also');
+isa_ok($filter, 'Sprog::Mixin::InputFromFH',  'filter gear also');
 isa_ok($filter, 'Sprog::Gear',                'filter gear also');
 
 ok($filter->has_input,   'has input');

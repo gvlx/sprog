@@ -14,7 +14,7 @@ package Sprog::Gear::FindReplace;
 use strict;
 
 use base qw(
-  Sprog::Gear::InputByLine
+  Sprog::Mixin::InputByLine
   Sprog::Gear
 );
 

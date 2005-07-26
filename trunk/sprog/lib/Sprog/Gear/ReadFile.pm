@@ -13,7 +13,7 @@ package Sprog::Gear::ReadFile;
 use strict;
 
 use base qw(
-  Sprog::Gear::InputFromFH
+  Sprog::Mixin::InputFromFH
   Sprog::Gear
 );
 

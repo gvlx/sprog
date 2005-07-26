@@ -18,9 +18,9 @@ my($reader, $subst, $sink) = $app->make_test_machine(qw(
 is($app->alerts, '', 'no alerts while creating machine');
 
 
-isa_ok($subst, 'Sprog::Gear::FindReplace', 'find/replace gear');
-isa_ok($subst, 'Sprog::Gear::InputByLine', 'find/replace gear');
-isa_ok($subst, 'Sprog::Gear',              'find/replace gear');
+isa_ok($subst, 'Sprog::Gear::FindReplace',  'find/replace gear');
+isa_ok($subst, 'Sprog::Mixin::InputByLine', 'find/replace gear');
+isa_ok($subst, 'Sprog::Gear',               'find/replace gear');
 
 ok($subst->has_input, 'has input');
 ok($subst->has_output, 'has output');

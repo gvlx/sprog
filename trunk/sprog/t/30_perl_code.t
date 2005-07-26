@@ -30,7 +30,7 @@ is($app->alerts, '', 'no alerts while creating machine');
 
 
 isa_ok($perl, 'Sprog::Gear::PerlCode');
-isa_ok($perl, 'Sprog::Gear::InputByLine');
+isa_ok($perl, 'Sprog::Mixin::InputByLine');
 isa_ok($perl, 'Sprog::Gear');
 
 ok($perl->has_input, 'has input');

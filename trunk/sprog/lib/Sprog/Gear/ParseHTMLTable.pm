@@ -13,7 +13,7 @@ package Sprog::Gear::ParseHTMLTable;
 use strict;
 
 use base qw(
-  Sprog::Gear::SlurpFile
+  Sprog::Mixin::SlurpFile
   Sprog::Gear
 );
 

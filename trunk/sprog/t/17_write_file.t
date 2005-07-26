@@ -13,9 +13,9 @@ my($input, $writer) = $app->make_test_machine(qw(
 ));
 is($app->alerts, '', 'no alerts while creating machine');
 
-isa_ok($writer, 'Sprog::Gear::WriteFile',  'writer gear');
-isa_ok($writer, 'Sprog::Gear::OutputToFH', 'writer gear also');
-isa_ok($writer, 'Sprog::Gear',             'writer gear also');
+isa_ok($writer, 'Sprog::Gear::WriteFile',   'writer gear');
+isa_ok($writer, 'Sprog::Mixin::OutputToFH', 'writer gear also');
+isa_ok($writer, 'Sprog::Gear',              'writer gear also');
 
 ok($writer->has_input, 'has input');
 ok(!$writer->has_output, 'has no output');
