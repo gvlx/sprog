@@ -1,4 +1,4 @@
-package Sprog::Gear::InputFromFH;
+package Sprog::Mixin::InputFromFH;
 
 use Sprog::Debug qw($DBG);
 
@@ -58,13 +58,13 @@ sub stop {
 
 =head1 NAME
 
-Sprog::Gear::InputFromFH - a 'mixin' class for gears reading input from a file handle
+Sprog::Mixin::InputFromFH - a 'mixin' class for gears reading input from a file handle
 
 =head1 SYNOPSIS
 
   use base qw(
+    Sprog::Mixin::InputFromFH
     Sprog::Gear
-    Sprog::Gear::InputFromFH
   );
 
   sub engage {
