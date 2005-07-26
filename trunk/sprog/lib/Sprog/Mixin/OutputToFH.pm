@@ -1,4 +1,4 @@
-package Sprog::Gear::OutputToFH;
+package Sprog::Mixin::OutputToFH;
 
 use Sprog::Debug qw($DBG);
 
@@ -106,13 +106,13 @@ sub stop {
 
 =head1 NAME
 
-Sprog::Gear::OutputToFH - a 'mixin' class for gears writing output to a file handle
+Sprog::Mixin::OutputToFH - a 'mixin' class for gears writing output to a file handle
 
 =head1 SYNOPSIS
 
   use base qw(
+    Sprog::Mixin::OutputToFH
     Sprog::Gear
-    Sprog::Gear::OutputToFH
   );
 
   sub engage {
