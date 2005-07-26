@@ -1,4 +1,4 @@
-package Sprog::Gear::InputByLine;
+package Sprog::Mixin::InputByLine;
 
 sub data {
   my($self, $buf) = @_;
@@ -35,12 +35,12 @@ sub data {
 
 =head1 NAME
 
-Sprog::Gear::InputByLine - a 'mixin' class for gears reading input line-by-line
+Sprog::Mixin::InputByLine - a 'mixin' class for gears reading input line-by-line
 
 =head1 SYNOPSIS
 
   use base qw(
-    Sprog::Gear::InputByLine
+    Sprog::Mixin::InputByLine
     Sprog::Gear
   );
 
