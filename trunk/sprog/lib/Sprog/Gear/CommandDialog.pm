@@ -150,12 +150,12 @@ __END__
 
 =head1 NAME
 
-Sprog::Gear::CommandDialog - Mixin: properties dialog for command gears
+Sprog::Gear::CommandDialog - base class provides properties dialog for command gears
 
 =head1 DESCRIPTION
 
 Gears that use a configurable external command (for input, output or filtering)
-can use this mixin class to define the properties dialog.
+can use this base class to define the properties dialog.
 
 =head1 COPYRIGHT 
 
