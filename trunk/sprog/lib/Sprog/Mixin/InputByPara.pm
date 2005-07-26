@@ -1,4 +1,4 @@
-package Sprog::Gear::InputByPara;
+package Sprog::Mixin::InputByPara;
 
 sub data {
   my($self, $buf) = @_;
@@ -35,12 +35,12 @@ sub data {
 
 =head1 NAME
 
-Sprog::Gear::InputByPara - a 'mixin' class for gears reading input by empty line-separated paragraphs
+Sprog::Mixin::InputByPara - a 'mixin' class for gears reading input by empty line-separated paragraphs
 
 =head1 SYNOPSIS
 
   use base qw(
-    Sprog::Gear::InputByPara
+    Sprog::Mixin::InputByPara
     Sprog::Gear
   );
 
@@ -87,7 +87,7 @@ A class that uses this mixin is expected to implement a C<para> method.
 =head1 ACKNOWLEDGEMENTS
 
 Chris Benson had the original idea for this gear and created the initial
-implementation by adapting the L<Sprog::Gear::InputByLine> class.
+implementation by adapting the L<Sprog::Mixin::InputByLine> class.
 
 =head1 COPYRIGHT 
 
