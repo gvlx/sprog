@@ -296,6 +296,10 @@ by dragging a file and dropping into the Sprog window
 
 =back
 
+I<Note: setting the file name to '-' (a hyphen) will cause input to be read
+from standard input.  This is probably only useful in 
+L<--nogui|Sprog::help::commandline> mode.>
+
 =head2 See Also
 
 Instead of reading data directly from a file, you might want to consider
