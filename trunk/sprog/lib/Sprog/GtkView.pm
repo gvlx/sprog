@@ -333,13 +333,15 @@ sub file_save_as_filename {
     'gtk-ok'     => 'ok'
   );
   $self->_add_sprog_file_filter($file_chooser);
-  #$file_chooser->set_default_response('ok');
+  $file_chooser->set_default_response('ok');
   my $default = $self->app->filename;
   $file_chooser->set_filename($default) if $default;
 
   my $filename = undef;
-  while($file_chooser->run ne 'cancel') {
+  while(my $resp = $file_chooser->run) {
+    last if(!$resp or $resp eq 'cancel' or $resp eq 'delete-event');
     $filename = $file_chooser->get_filename;
+    next unless length $filename;
     $filename .= '.sprog' if $filename !~ /\.sprog$/;
     last if ! -f $filename ||
             $self->confirm_yes_no('Save As', 'File exists.  Overwrite?');
