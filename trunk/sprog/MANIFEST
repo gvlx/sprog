@@ -56,11 +56,6 @@ lib/Sprog/GtkView/PrefsDialog.pm
 lib/Sprog/GtkView/RenameDialog.pm
 lib/Sprog/GtkView/Toolbar.pm
 lib/Sprog/GtkView/WorkBench.pm
-lib/Sprog/Mixin/InputByLine.pm
-lib/Sprog/Mixin/InputByPara.pm
-lib/Sprog/Mixin/InputFromFH.pm
-lib/Sprog/Mixin/OutputToFH.pm
-lib/Sprog/Mixin/SlurpFile.pm
 lib/Sprog/help/build_machine.pod
 lib/Sprog/help/commandline.pod
 lib/Sprog/help/connectors.pod
@@ -81,6 +76,11 @@ lib/Sprog/HelpParser.pm
 lib/Sprog/Machine.pm
 lib/Sprog/Machine/Scheduler.pm
 lib/Sprog/MakeCmndGear.pm
+lib/Sprog/Mixin/InputByLine.pm
+lib/Sprog/Mixin/InputByPara.pm
+lib/Sprog/Mixin/InputFromFH.pm
+lib/Sprog/Mixin/OutputToFH.pm
+lib/Sprog/Mixin/SlurpFile.pm
 lib/Sprog/Preferences.pm
 lib/Sprog/Preferences/Unix.pm
 lib/Sprog/Preferences/Win32.pm
@@ -113,6 +113,7 @@ t/18_command_filter.t
 t/18_command_out.t
 t/19_replace_file.t
 t/20_line_input.t
+t/21_para_input.t
 t/22_pattern_match.t
 t/24_find_repl.t
 t/26_casing.t
@@ -148,6 +149,7 @@ t/lib/LineSink.pm
 t/lib/ListSink.pm
 t/lib/MessageSink.pm
 t/lib/MessageSource.pm
+t/lib/ParaTest.pm
 t/lib/RecordSink.pm
 t/lib/TestApp.pm
 t/lib/TestMachine.pm
