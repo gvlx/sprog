@@ -42,7 +42,14 @@ sub _open_file {
   }
 
   my($fh);
-  if(!open $fh, '<', $filename) {
+  if($filename eq '-') {
+    if(!open $fh, '<&STDIN') {
+      $self->alert(qq(Error preparing to read from STDIN), "$!");
+      return;
+    }
+    $filename = undef;
+  }
+  elsif(!open $fh, '<', $filename) {
     $self->alert(qq(Can't open "$filename"), "$!");
     return;
   }
@@ -63,7 +70,7 @@ sub accept_dropped_uris {
   my $filename = shift;
   return unless length $filename;
 
-  if(not $filename =~ s{^file://}{}) {
+  if($filename ne '-'  and  not $filename =~ s{^file://}{}) {
     $self->alert(
       "Unsupported file path", "Expected 'file:///...'\nGot '$filename'"
     );

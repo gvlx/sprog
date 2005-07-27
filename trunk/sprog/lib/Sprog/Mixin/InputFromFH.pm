@@ -35,6 +35,7 @@ sub _can_read {
     $self->fh_in(undef);
     my $filename = undef;
     $filename = $self->filename if($self->can('filename'));
+    $filename = undef if($filename and $filename eq '-');
     $self->msg_out(file_end => $filename);
     $self->disengage();
   }

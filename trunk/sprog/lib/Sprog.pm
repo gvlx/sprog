@@ -123,7 +123,7 @@ sub _getopt {
 
   if(@ARGV) {
     my @uris = map {
-      if(!/^\w\w+:/) {
+      if(!/^\w\w+:/  and !/^-$/) {
         $_ = 'file://' . File::Spec->rel2abs($_);
       }
       $_;
