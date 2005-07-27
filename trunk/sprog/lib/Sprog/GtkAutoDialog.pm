@@ -147,6 +147,7 @@ sub connect_behaviour {
         'gtk-cancel' => 'cancel',
         'gtk-ok'     => 'ok'
       );
+      $file_chooser->set_default_response('ok') if $type eq 'save';
       if($file_chooser->run eq 'ok') {
         my $filename = $file_chooser->get_filename;
         $self->input($target)->set($filename);
