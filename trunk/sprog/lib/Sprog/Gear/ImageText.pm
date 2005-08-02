@@ -52,7 +52,7 @@ sub _add_text {
 
   my $font = Imager::Font->new(
     file  => '/usr/share/fonts/truetype/freefont/FreeSans.ttf',
-    color => $self->rgb_colour,
+    color => $self->_rgb_colour,
     size  => 10,
   );
 
@@ -92,7 +92,7 @@ sub _add_text {
 }
 
 
-sub rgb_colour {
+sub _rgb_colour {
   my $self = shift;
 
   my @rgb = map { int(hex($_) / 257) } $self->colour =~ /#(....)(....)(....)/;
