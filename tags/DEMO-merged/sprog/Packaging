@@ -1,0 +1,52 @@
+This file contains information for people who are packaging Sprog for different
+operating system distributions.
+
+Although building a Sprog machine requires a GUI, it is possible to run (some)
+machines in 'no GUI' mode.  Therefore, consideration should be given to 
+splitting the distribution into two packages:
+
+  sprog-base
+  sprog
+
+Currently the GUI-specific files are:
+
+  lib/Sprog/Gtk*
+  lib/Sprog/HelpParser.pm
+
+
+DEPENDENCIES
+
+Sprog itself is written in Perl (no XS).  It requires Perl 5.8.x.
+
+The sprog-base package would depend on the following CPAN modules:
+
+  Glib            1.081
+  YAML            0.38
+
+The sprog package would depend on the following CPAN modules:
+
+  Gtk2            1.081
+  Gnome2::Canvas  1.002
+  Gtk2::GladeXML  1.003
+  Pod::Simple     3.02
+
+The CPAN modules have library dependencies.
+
+
+GEAR DEPENDENCIES
+
+A number of gear classes are included in the Sprog distribution.  Many of those
+classes will have dependencies on CPAN modules and libaries not listed above.
+Those additional packages SHOULD NOT be indicated as dependencies for either
+the sprog-base or sprog packages.  The gears themselves SHOULD be included in
+the sprog-base package.  This implies that gear classes will be installed
+that may not be functional.  Sprog will develop capabilities for dealing with
+this situation.
+
+
+PACKAGING OF ADDITIONAL GEARS
+
+Conventions for packaging third-party gear classes have not been established
+yet.  If you have suggestions, please bring them to the sprog-users mailing
+list.
+

@@ -1,0 +1,28 @@
+=head1 Building a Machine
+
+=head2 Select Gears from the Palette
+
+The first step in building a machine is to display the
+L<palette|Sprog::help::palette>.  You can show or hide the palette using the
+B<F9> key, or using the palette button on the toolbar.  Next, drag gears from
+the palette to the workbench.  
+
+You would usually start with an L<input gear|Sprog::help::input_gears>; add
+some L<filter gears|Sprog::help::filter_gears>; and finish with an 
+L<output gear|Sprog::help::output_gears>.
+
+=head2 Connect Gears Together
+
+To connect gears together simply drop one gear on top of another - if the input
+and output L<connectors|Sprog::help::connectors> match then the gear you
+dropped should snap into place below the other.
+
+I<Hint: When dropping a gear, make sure that its top left corner is within the
+outline of the one you're dropping it on.>
+
+=head2 Configure the Gears
+
+Each gear has its own properties dialog with options to change the gear's
+behaviour.  To configure a gear, right-click and select I<Properties> from the
+pop-up menu.
+

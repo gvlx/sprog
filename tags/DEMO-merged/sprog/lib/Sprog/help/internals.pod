@@ -1,0 +1,43 @@
+=head1 Sprog Internals - Notes for Developers
+
+The Sprog application uses an MVC(ish) architecture:
+
+=over 4
+
+=item Model
+
+The L<Sprog::Machine> class tracks which L<gears|Sprog::help::gear_internals>
+have been placed in the workspace, as well as the connections between them.
+When a machine is set running, the machine class creates a
+L<scheduler|Sprog::help::scheduler> instance to handle the passing of messages
+between gears.  The scheduler object is discarded when the machine stops
+running.
+
+=item View
+
+The L<Sprog::GtkView> class handles the user interface.  It uses a number of
+specialised classes to implement elements such as the palette and the
+workspace.  The L<Sprog::GtkGearView> class handles the appearance and user
+interface for the gears themselves.
+
+=item Controller
+
+The L<Sprog> class controls the creation of the model and the view and the
+passing of messages between them.  It is also responsible for parsing
+command-line arguments and other setup tasks.
+
+=back
+
+=head2 Related Topics
+
+=over 4
+
+=item *
+
+L<gear internals|Sprog::help::gear_internals>
+
+=item *
+
+L<scheduler|Sprog::help::scheduler>
+
+=back
