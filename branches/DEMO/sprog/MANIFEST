@@ -14,14 +14,10 @@ lib/Sprog/Gear/CSVSplit.pm
 lib/Sprog/Gear/FindReplace.pm
 lib/Sprog/Gear/Grep.pm
 lib/Sprog/Gear/ImageBorder.pm
-lib/Sprog/Gear/InputByLine.pm
-lib/Sprog/Gear/InputByPara.pm
-lib/Sprog/Gear/InputFromFH.pm
 lib/Sprog/Gear/ListToCSV.pm
 lib/Sprog/Gear/ListToRecord.pm
 lib/Sprog/Gear/LowerCase.pm
 lib/Sprog/Gear/NameFields.pm
-lib/Sprog/Gear/OutputToFH.pm
 lib/Sprog/Gear/ParseHTMLTable.pm
 lib/Sprog/Gear/PerlBase.pm
 lib/Sprog/Gear/PerlCode.pm
@@ -34,7 +30,6 @@ lib/Sprog/Gear/ReplaceFile.pm
 lib/Sprog/Gear/RetrieveURL.pm
 lib/Sprog/Gear/SelectColumns.pm
 lib/Sprog/Gear/SelectFields.pm
-lib/Sprog/Gear/SlurpFile.pm
 lib/Sprog/Gear/StripWhitespace.pm
 lib/Sprog/Gear/TemplateTT2.pm
 lib/Sprog/Gear/TextInput.pm
@@ -81,6 +76,11 @@ lib/Sprog/HelpParser.pm
 lib/Sprog/Machine.pm
 lib/Sprog/Machine/Scheduler.pm
 lib/Sprog/MakeCmndGear.pm
+lib/Sprog/Mixin/InputByLine.pm
+lib/Sprog/Mixin/InputByPara.pm
+lib/Sprog/Mixin/InputFromFH.pm
+lib/Sprog/Mixin/OutputToFH.pm
+lib/Sprog/Mixin/SlurpFile.pm
 lib/Sprog/Preferences.pm
 lib/Sprog/Preferences/Unix.pm
 lib/Sprog/Preferences/Win32.pm
@@ -113,6 +113,7 @@ t/18_command_filter.t
 t/18_command_out.t
 t/19_replace_file.t
 t/20_line_input.t
+t/21_para_input.t
 t/22_pattern_match.t
 t/24_find_repl.t
 t/26_casing.t
@@ -148,6 +149,7 @@ t/lib/LineSink.pm
 t/lib/ListSink.pm
 t/lib/MessageSink.pm
 t/lib/MessageSource.pm
+t/lib/ParaTest.pm
 t/lib/RecordSink.pm
 t/lib/TestApp.pm
 t/lib/TestMachine.pm

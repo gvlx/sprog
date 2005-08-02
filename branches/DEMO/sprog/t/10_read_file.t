@@ -1,5 +1,5 @@
 use strict;
-use Sprog::TestHelper tests => 26;
+use Sprog::TestHelper tests => 28;
 
 use_ok('TextSink');
 use_ok('Sprog::Gear::ReadFile');
@@ -22,7 +22,7 @@ $sink->text('');
 my $reader = Sprog::Gear::ReadFile->new(app => $app, machine => $machine);
 
 isa_ok($reader, 'Sprog::Gear::ReadFile');
-isa_ok($reader, 'Sprog::Gear::InputFromFH');
+isa_ok($reader, 'Sprog::Mixin::InputFromFH');
 isa_ok($reader, 'Sprog::Gear');
 ok(!$reader->has_input, 'has no input');
 ok($reader->has_output, 'has output');
@@ -102,20 +102,46 @@ $app = TestApp->make_test_app;
 
 ($reader, $sink) = $app->make_test_machine(qw(
   Sprog::Gear::ReadFile
-  LineSink
+  MessageSink
 ));
 is($app->alerts, '', 'created a machine with a ReadFile gear');
+$sink->concatenate_data(1);
 
-$reader->filename(File::Spec->catfile('t', 'rgb.txt'));
+my $rgb_file = File::Spec->catfile('t', 'rgb.txt');
+$reader->filename($rgb_file);
 
 is($app->test_run_machine, '', 'running machine produced no alerts');
 
-is_deeply([ $sink->lines ], [
-    "#FF0000 Red\n",
-    "#00FF00 Green\n",
-    "#0000FF Blue\n",
-    "#FFFF00 Yellow\n",
-    "#00FFFF Cyan\n",
-    "#FF00FF Purple\n",
+is_deeply([ $sink->messages ], [
+    [ file_start => $rgb_file ],
+    [ data => "#FF0000 Red\n"
+            . "#00FF00 Green\n"
+            . "#0000FF Blue\n"
+            . "#FFFF00 Yellow\n"
+            . "#00FFFF Cyan\n"
+            . "#FF00FF Purple\n" ],
+    [ file_end => $rgb_file ],
+  ],
+  "successfully read named file");
+
+
+open my $stdin,"<&STDIN" or die "error dup'ing STDIN";
+
+open STDIN, '<', $rgb_file;
+
+$reader->filename('-');
+$sink->reset;
+is($app->test_run_machine, '', 'ran machine to read from STDIN');
+
+is_deeply([ $sink->messages ], [
+    [ file_start => undef ],
+    [ data => "#FF0000 Red\n"
+            . "#00FF00 Green\n"
+            . "#0000FF Blue\n"
+            . "#FFFF00 Yellow\n"
+            . "#00FFFF Cyan\n"
+            . "#FF00FF Purple\n" ],
+    [ file_end => undef ],
   ],
   "successfully read contents of file");
+

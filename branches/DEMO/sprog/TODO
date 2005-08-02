@@ -1,8 +1,6 @@
-* allow '-' on command-line to mean STDIN
 * Add an 'Edit' option to palette right-click menu
 * Fix file_start/end event handling in CommandFilter
 * Text Window -> cat file: Error while writing: Broken pipe
-* Tests for InputByPara
 * Add a save button to the TextWindow
 * WriteFile, ReplaceFile: accept s{pattern}{replacement} regex
 * ReadFiles: implement gear
@@ -45,6 +43,7 @@
 * Implement ApacheCustomLogParse
 * Highlight selected gear
 * Track 'Head' gear on add/delete
+* Implement Undo
 * Work out why replacement syntax error causes exit
 * HelpViewer: Implement Edit menu (copy/paste)
 * Shrink the alert dialog after hiding details

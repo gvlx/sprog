@@ -1,9 +1,13 @@
-0.14  Jul ?? 2005
+0.14  Jul 27 2005
         - fix bug: machine not stopping after syntax error in Perl gear
         - fix bug: broken cancel button in tools/prefs dialog
+        - fix bug: extra file_end events from command_filter
+        - fix 'Enter' for default in file dialogs
         - add ability to rename gears
         - make gear title and text window fonts configurable
         - make right click menu stay visible on click-release
+        - implement filename = '-' for STDIN in ReadFile.pm
+        - rename mixin classes from Sprog::Gear::* to Sprog::Mixin::*
 
 0.13  Jul 03 2005
         - exporter fix for 5.8.1 (reported by Christian Renz)

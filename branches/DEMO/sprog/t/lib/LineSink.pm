@@ -11,8 +11,8 @@ package LineSink;
 =cut
 
 use base qw(
+  Sprog::Mixin::InputByLine
   Sprog::Gear
-  Sprog::Gear::InputByLine
 );
 
 

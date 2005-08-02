@@ -14,7 +14,7 @@ package Sprog::Gear::Grep;
 use strict;
 
 use base qw(
-  Sprog::Gear::InputByLine
+  Sprog::Mixin::InputByLine
   Sprog::Gear
 );
 
@@ -282,7 +282,7 @@ sense of the match.
 
 =head1 SEE ALSO
 
-The L<Sprog::Gear::InputByLine> mixin class is used to convert C<data> messages
+The L<Sprog::Mixin::InputByLine> mixin class is used to convert C<data> messages
 to calls to the C<line> method.
 
 All other methods are inherited from L<Sprog::Gear>.

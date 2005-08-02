@@ -4,6 +4,7 @@ use strict;
 
 use Glib qw(TRUE FALSE);
 use Gtk2::Gdk::Keysyms;
+use File::Basename ();
 
 use base qw(Sprog::Accessor);
 
@@ -332,6 +333,14 @@ sub _post_context_menu {
     $menu_item->show;
 
   }
+
+#  my $basename = File::Basename::basename($info->{file});
+#  $menu_item = Gtk2::MenuItem->new("Edit $basename");
+#  $menu_item->signal_connect(
+#    activate => sub { $self->app->edit_file($info->{file}); }
+#  );
+#  $menu->append($menu_item);
+#  $menu_item->show;
 
   $menu_item = Gtk2::MenuItem->new("Help about '$info->{title}'");
   $menu_item->signal_connect(

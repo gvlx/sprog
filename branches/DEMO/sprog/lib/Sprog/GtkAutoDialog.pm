@@ -147,6 +147,7 @@ sub connect_behaviour {
         'gtk-cancel' => 'cancel',
         'gtk-ok'     => 'ok'
       );
+      $file_chooser->set_default_response('ok') if $type eq 'save';
       if($file_chooser->run eq 'ok') {
         my $filename = $file_chooser->get_filename;
         $self->input($target)->set($filename);
@@ -257,6 +258,14 @@ sub new {
   my $name = $self->{name};
   my $buffer = $self->{widget}->get_buffer;
   $buffer->set_text($self->{gear}->$name || '');
+
+  if(my $app = $self->{gear}->app) {
+    my $font_desc = Gtk2::Pango::FontDescription->from_string(
+      $app->view->text_window_font
+    );
+    $self->{widget}->modify_font($font_desc);
+  }
+
   return $self;
 }
 

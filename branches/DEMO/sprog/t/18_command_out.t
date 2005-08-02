@@ -13,7 +13,7 @@ my($src, $output, $sink) = $app->make_test_machine(qw(
 is($app->alerts, '', 'no alerts while creating machine');
 
 isa_ok($output, 'Sprog::Gear::CommandOut',    'output gear');
-isa_ok($output, 'Sprog::Gear::OutputToFH',    'output gear also');
+isa_ok($output, 'Sprog::Mixin::OutputToFH',   'output gear also');
 isa_ok($output, 'Sprog::Gear',                'output gear also');
 
 ok($output->has_input,   'has input');

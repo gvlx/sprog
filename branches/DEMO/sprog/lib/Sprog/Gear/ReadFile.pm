@@ -13,7 +13,7 @@ package Sprog::Gear::ReadFile;
 use strict;
 
 use base qw(
-  Sprog::Gear::InputFromFH
+  Sprog::Mixin::InputFromFH
   Sprog::Gear
 );
 
@@ -42,7 +42,14 @@ sub _open_file {
   }
 
   my($fh);
-  if(!open $fh, '<', $filename) {
+  if($filename eq '-') {
+    if(!open $fh, '<&STDIN') {
+      $self->alert(qq(Error preparing to read from STDIN), "$!");
+      return;
+    }
+    $filename = undef;
+  }
+  elsif(!open $fh, '<', $filename) {
     $self->alert(qq(Can't open "$filename"), "$!");
     return;
   }
@@ -63,7 +70,7 @@ sub accept_dropped_uris {
   my $filename = shift;
   return unless length $filename;
 
-  if(not $filename =~ s{^file://}{}) {
+  if($filename ne '-'  and  not $filename =~ s{^file://}{}) {
     $self->alert(
       "Unsupported file path", "Expected 'file:///...'\nGot '$filename'"
     );
@@ -288,6 +295,10 @@ by using the B<Browse> button and selecting a file
 by dragging a file and dropping into the Sprog window
 
 =back
+
+I<Note: setting the file name to '-' (a hyphen) will cause input to be read
+from standard input.  This is probably only useful in 
+L<--nogui|Sprog::help::commandline> mode.>
 
 =head2 See Also
 

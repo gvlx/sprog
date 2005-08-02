@@ -2,7 +2,7 @@ package Sprog;
 
 use strict;
 
-our $VERSION = '0.13d';
+our $VERSION = '0.14d';
 
 use base qw(Sprog::Accessor);
 
@@ -123,7 +123,7 @@ sub _getopt {
 
   if(@ARGV) {
     my @uris = map {
-      if(!/^\w\w+:/) {
+      if(!/^\w\w+:/  and !/^-$/) {
         $_ = 'file://' . File::Spec->rel2abs($_);
       }
       $_;

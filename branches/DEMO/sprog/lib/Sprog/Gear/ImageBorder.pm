@@ -13,7 +13,7 @@ package Sprog::Gear::ImageBorder;
 use strict;
 
 use base qw(
-  Sprog::Gear::SlurpFile
+  Sprog::Mixin::SlurpFile
   Sprog::Gear
 );
 
@@ -39,6 +39,11 @@ sub _add_border {
   my($type) = ($filename =~ /\.(\w+)$/);
   return $self->alert("Can't get image type from file suffix") unless $type;
 
+  $type = lc($type);
+  $type = 'jpeg' if $type eq 'jpg';
+
+  my $channels = $type eq 'png' ? 4 : 3;
+
   my $src = Imager->new();
 
   $src->open(data => $data) or die $src->errstr();
@@ -50,19 +55,32 @@ sub _add_border {
   my $dw = $sw + 2 * $bw;
   my $dh = $sh + 2 * $bw;
 
-  my $dst = Imager->new(xsize => $dw, ysize => $dh, channels => 4);
+  my $dst = Imager->new(xsize => $dw, ysize => $dh, channels => $channels);
 
-  my @rgb = map { int(hex($_) / 257) } $self->colour =~ /#(....)(....)(....)/;
-  my $black = Imager::Color->new(@rgb);
-
-  $dst->box(color => $black, xmin => 0, ymin => 0, xmax => $dw, ymax => $dh, filled => 1);
+  $dst->box(
+    color => $self->_rgb_colour, 
+    xmin => 0, 
+    ymin => 0, 
+    xmax => $dw, 
+    ymax => $dh, 
+    filled => 1
+  );
 
   $dst->paste(left => $bw, top => $bw, img => $src);
 
   $dst->write(
     callback => sub { $self->msg_out(data => shift); },
     type => $type,
+    $type eq 'jpeg' ? (jpegquality => 90) : (),
   ) or die $dst->errstr();
+}
+
+
+sub _rgb_colour {
+  my $self = shift;
+
+  my @rgb = map { int(hex($_) / 257) } $self->colour =~ /#(....)(....)(....)/;
+  return Imager::Color->new(@rgb);
 }
 
 

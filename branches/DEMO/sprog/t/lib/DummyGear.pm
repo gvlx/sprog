@@ -12,7 +12,7 @@ package DummyGear;
 
 use base qw(
   Sprog::Gear
-  Sprog::Gear::InputByLine
+  Sprog::Mixin::InputByLine
 );
 
 

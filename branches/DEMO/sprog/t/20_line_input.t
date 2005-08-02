@@ -13,7 +13,7 @@ my($source, $sink) = $app->make_test_machine(qw(
 ));
 
 isa_ok($sink, 'LineSink');
-isa_ok($sink, 'Sprog::Gear::InputByLine');
+isa_ok($sink, 'Sprog::Mixin::InputByLine');
 isa_ok($sink, 'Sprog::Gear');
 
 $source->messages(

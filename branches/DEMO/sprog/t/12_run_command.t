@@ -30,7 +30,7 @@ isa_ok($sink, 'TextSink');
 $sink->text('');
 
 isa_ok($src, 'Sprog::Gear::CommandIn');
-isa_ok($src, 'Sprog::Gear::InputFromFH');
+isa_ok($src, 'Sprog::Mixin::InputFromFH');
 isa_ok($src, 'Sprog::Gear');
 is($src->title, 'Run Command', 'title looks good');
 like($src->dialog_xml, qr{<glade-interface>.*</glade-interface>}s, 

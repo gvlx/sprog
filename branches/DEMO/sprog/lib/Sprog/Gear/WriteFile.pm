@@ -13,7 +13,7 @@ package Sprog::Gear::WriteFile;
 use strict;
 
 use base qw(
-  Sprog::Gear::OutputToFH
+  Sprog::Mixin::OutputToFH
   Sprog::Gear
 );
 
