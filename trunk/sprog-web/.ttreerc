@@ -8,7 +8,7 @@ copy = \bRelease$
 start_tag = <%
 end_tag = %>
 
-perl5lib = /home/grant/projects/sf/sprog-web/ttt/lib
+perl5lib = /home/grant/projects/sf/sprog-web/lib
 plugin_base = SprogWeb::Template::Plugin
 
 lib = inc
