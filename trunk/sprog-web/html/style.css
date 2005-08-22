@@ -49,7 +49,7 @@ dt {
 #headline {
   position: absolute;
   top:  0;
-  left: 200px;
+  left: 166px;
   padding: 2px;
 }
 
@@ -62,7 +62,7 @@ dt {
 
 #hline {
   position: absolute;
-  top:  114px;
+  top:  100px;
   left: 0;
   width: 98%;
   height: 10px;
@@ -74,9 +74,9 @@ dt {
 
 #indent-content {
   position: absolute;
-  top:  124px;
+  top:  108px;
   left: 0;
-  padding: 0 4px 0 186px;
+  padding: 0 4px 0 158px;
 }
 
 #content {
@@ -87,9 +87,9 @@ dt {
 
 #navlinks {
   position: absolute;
-  top:  124px;
+  top:  108px;
   left: 0;
-  width: 180px;
+  width: 154px;
   padding: 6px;
 }
 
@@ -126,9 +126,16 @@ dt {
   margin-bottom: 0.4em;
 }
 
-#banner {
+#promo {
   float: right;
-  padding: 0.2em 0.2em 1.6em 1.0em;
+  width: 150px;
+  font-size: small;
+  border: 2px solid #007F00;
+  margin: 0.2em 0.2em 1.6em 1.0em;
+}
+
+#promo p {
+  margin: 0 0.5em 0.4em 0.5em;
 }
 
 .gear-list {
