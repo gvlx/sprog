@@ -1,0 +1,16 @@
+src = html
+dest = docroot
+
+copy = .htaccess$
+copy = .deb$
+copy = \bRelease$
+
+start_tag = <%
+end_tag = %>
+
+perl5lib = /home/grant/projects/sf/sprog-web/ttt/lib
+plugin_base = SprogWeb::Template::Plugin
+
+lib = inc
+
+depend *=site_nav.inc,site_nav.yaml
