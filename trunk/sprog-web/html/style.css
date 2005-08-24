@@ -10,16 +10,19 @@ img {
 }
 
 h1 {
+  font-size: 1.6em;
   margin-top: 0.5em;
   margin-bottom: 0.2em;
 }
 
 h2 {
+  font-size: 1.2em;
   margin-top: 0.5em;
   margin-bottom: 0.2em;
 }
 
 h3 {
+  font-size: 1.0em;
   margin-top: 2.0em;
   margin-bottom: 0.2em;
 }
@@ -130,7 +133,6 @@ td {
   margin-bottom: 0.4em;
 }
 
-<<<<<<< style.css
 #features {
   float: right;
   width: 150px;
@@ -172,9 +174,6 @@ td {
 
 #promo {
   display: none;
-=======
-#promo {
->>>>>>> 1.8
   float: right;
   width: 150px;
   font-size: small;
