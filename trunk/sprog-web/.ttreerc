@@ -1,8 +1,15 @@
 src = html
 dest = docroot
 
-copy = .htaccess$
-copy = .deb$
+ignore = \.cvsignore$
+ignore = \.#
+
+copy = \.css$
+copy = \.jpe?g$
+copy = \.htaccess$
+copy = \.deb$
+copy = \.rpm$
+copy = \.spec$
 copy = \bRelease$
 
 start_tag = <%
