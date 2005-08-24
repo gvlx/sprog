@@ -3,6 +3,7 @@ dest = docroot
 
 ignore = \.cvsignore$
 ignore = \.#
+ignore = \.swp$
 
 copy = \.css$
 copy = \.jpe?g$
