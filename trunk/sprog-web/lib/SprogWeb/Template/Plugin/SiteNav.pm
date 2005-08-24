@@ -49,7 +49,13 @@ sub links {
 
   my $rel_links = $self->relative_links();
 
-  $self->{_CONTEXT}->include($self->{_TEMPLATE}, { links => $rel_links });
+  $self->{_CONTEXT}->include(
+    $self->{_TEMPLATE}, 
+    {
+      links => $rel_links, 
+      root  => $self->abs2rel('/', $self->current_path),
+    }
+  );
 }
 
 
