@@ -14,9 +14,9 @@
     <dl>
       <dt>Powered by:</dt>
       <dd><a href="http://gtk2-perl.sourceforge.net/"><img
-        src="images/gtk-logo-rgb.gif" alt="gtk2-perl" /></a></dd>
+        src="<% root %>images/gtk-logo-rgb.gif" alt="gtk2-perl" /></a></dd>
       <dd><a href="http://www.perl.com/"><img
-        src="images/perl_id_bw_sm_bu.gif" alt="Perl" /></a></dd>
+        src="<% root %>images/perl_id_bw_sm_bu.gif" alt="Perl" /></a></dd>
 
       <dt>Hosted by:</dt>
       <dd><a href="http://sourceforge.net"><img

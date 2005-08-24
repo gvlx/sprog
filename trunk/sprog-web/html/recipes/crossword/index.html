@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Solving Crossword Puzzles</title>
+  <link rel="stylesheet" type="text/css" href="../../style.css" />
+</head>
+<body>
+
+<div id="logo"><img src="../../images/sprog-logo.png" alt="Sprog Logo" /></div>
+<div id="headline"><img src="../../images/sprog-heading.png" alt="Sprog!" /></div>
+<div id="hline"></div>
+
+<div id="indent-content">
+<div id="content">
+
+<h1>Solving Crossword Puzzles</h1>
+
+<p>This machine allows you to find words that fit a particular spot in a
+crossword puzzle.  For example, to solve 3 down in the puzzle below, we need
+to find a word that matches the pattern:</p>
+
+<p><i>something</i> A <i>something</i> A <i>something</i> Y <i>something</i> T</p>
+
+<p><img src="crossword.png" alt="A crossword puzzle" /></p>
+
+<h2>The Completed Machine</h2>
+
+<p><img src="crossword-machine.png" alt="Completed machine" /></p>
+
+<p>This machine works by applying a pattern match to the contents of a
+dictionary file.  Unix/Linux systems will typically have a suitable dictionary
+file (one word per line) at /usr/share/dict/words.  If you don't have a one,
+there are a number available for download from <a
+href="http://wordlist.sourceforge.net/">wordlist.sourceforge.net</a>.</p>
+
+<p>The machine is made a little more complex by the need to filter out things
+that occur in dictionary files, but not in crosswords:</p>
+
+<ul>
+<li>Proper Nouns - names of people, places and things - identified by an initial
+capital letter</li>
+<li>Apostrophes - in contractions (e.g.: don't) and possessives (e.g.: earth's)</li>
+</ul>
+
+<p>This extra filtering is achieved with more pattern matching.</p>
+
+<h2>Step-by-Step</h2>
+
+<table class="steps-table">
+
+  <tr>
+    <td><img src="01_read_file.png" alt="Read File properties" /></td>
+    <td><p>The data source for this machine is the system dictionary file,
+    accessed via a <b>Read File</b> gear.  Just select the name of the file to
+    read.</p>
+    <p>Because the dictionary file contains one word on each line,
+    gears which operate a-line-at-a-time also operate a-word-at-a-time.</p></td>
+  </tr>
+
+  <tr>
+    <td><img src="02_pattern_match.png" alt="Pattern Match 1 properties" /></td>
+    <td><p>The <b>Pattern Match</b> gear allows you use a Perl Regular 
+    Expression (or 'regex') to specify the pattern of letters in the word you 
+    want to match.  Right-click on the gear and select <b>Help</b>, to read
+    <i>An Introduction to Perl Regular Expressions</i>.  The bare basics:</p>
+    <ul>
+      <li>'^' matches the start of the line</li>
+      <li>'$' matches the end</li>
+      <li>'.' matches any character</li>
+      <li>a letter matches itself</li>
+    </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <td><img src="03_skip_apos.png" alt="Pattern Match 2 properties" /></td>
+    <td><p>A second <b>Pattern Match</b> gear is used to filter out lines
+    containing apostrophes.  The 'pattern' is just a single apostrophe.</p>
+    <p>Remember to check the box to 'Pass all lines <i>except</i> matches'. 
+    It doesn't really matter whether you leave 'Ignore case' on or off.</p>
+    <p>Since the machine contains multiple Pattern Match gears, you might like 
+    to <b>rename</b> this one to: <b>Skip Apostrophes</b>.</p></td>
+  </tr>
+
+  <tr>
+    <td><img src="04_skip_proper.png" alt="Pattern Match 3 properties" /></td>
+    <td><p>The third <b>Pattern Match</b> gear eliminates proper nouns by 
+    matching lines that start with a capital letter.  This will only work if
+    you <b>untick</b> 'Ignore case' and <b>untick</b> 'Pass all lines 
+    <i>except</i> matches'.</p>
+    <p>You might like to <b>rename</b> this gear to: <b>Skip Proper
+    Nouns</b>.</p></td>
+  </tr>
+
+  <tr>
+    <td><img src="05_text_win.png" alt="Text Window properties" /></td>
+    <td>The <b>Text Window</b> gear displays the matching words.  The default
+    property values are all fine.</td>
+  </tr>
+
+</table>
+
+<h2>Variations</h2>
+
+<p>If you're solving lots of crosswords, it's a little inefficient to filter
+out the apostrophes and the proper nouns every time you run the machine.  A
+better solution would be to create your own dictionary file that does not 
+include those lines.  You can adapt this machine for that purpose by removing
+the initial Pattern Match gear and replacing the Text Window gear with a Write 
+File gear.</p>
+
+<p>&nbsp;</p>
+
+</div>
+</div>
+
+<% USE SiteNav %><% SiteNav.links %>
+
+</body>
+</html>

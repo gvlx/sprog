@@ -39,6 +39,10 @@ dt {
   font-weight: bold;
 }
 
+td {
+  vertical-align: top;
+}
+
 #logo {
   position: absolute;
   top:  0;
@@ -126,7 +130,51 @@ dt {
   margin-bottom: 0.4em;
 }
 
+<<<<<<< style.css
+#features {
+  float: right;
+  width: 150px;
+  font-size: small;
+  margin: 0.5em 0.2em 1.6em 1.0em;
+  background-image: url('images/vline.png');
+  background-repeat: repeat-y;
+  padding: 0 0 0 10px;
+}
+
+#features h1 {
+  position: relative;
+  top: -8px;
+  font-size: 120%;
+  text-align: center;
+  font-weight: bold;
+  margin: 0;
+  padding: 1.0em 0 0 0;
+  background-image: url('images/hline.png');
+  background-repeat: repeat-x;
+}
+
+#features ul {
+  margin: 0.2em 0 0.6em 1.0em;
+  padding: 0;
+}
+
+#features ul li {
+  margin-left: 0.1em;
+}
+
+#end-features {
+  position: relative;
+  top: 10px;
+  height: 10px;
+  background-image: url('images/hline.png');
+  background-repeat: repeat-x;
+}
+
 #promo {
+  display: none;
+=======
+#promo {
+>>>>>>> 1.8
   float: right;
   width: 150px;
   font-size: small;
@@ -145,5 +193,16 @@ dt {
 .gear-list td,th {
   border: 1px solid #666666;
   padding: 2px 1em 2px 1em;
+}
+
+.steps-table {
+  border-collapse: collapse;
+  margin-right: 0.6em;
+}
+
+.steps-table td,th {
+  border: 1px solid #999999;
+  padding: 6px;
+  font-size: 90%;
 }
 
