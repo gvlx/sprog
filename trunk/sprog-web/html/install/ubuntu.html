@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Installing Sprog</title>
+  <link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+<body>
+
+<div id="logo"><img src="../images/sprog-logo.png" alt="Sprog Logo" /></div>
+<div id="headline"><img src="../images/sprog-heading.png" alt="Sprog!" /></div>
+<div id="hline"></div>
+
+<div id="indent-content">
+<div id="content">
+
+<h1>Installing Sprog on Ubuntu</h1>
+
+<p>The <a href="index.html#debian">Debian packages</a> are known to work on the
+recent 5.10 ('Breezy Badger') release of Ubuntu as well as the earlier 5.04
+('Hoary Hedgehog') and 4.10 (Warty Warthog) releases.  The only caveat is the
+libgnome2-canvas-perl package in 5.10 is broken as described below.</p>
+
+<h2>Broken libgnome2-canvas-perl package</h2>
+
+<p>The libgnome2-canvas-perl package contains the Perl bindings for the
+libgnomecanvas library.  It appears that the Perl package was compiled against
+the 2.10 release of libgnomecanvas rather than the 2.12 release that ships
+in Ubuntu 5.10 ('Breezy').  A minor change in the API means that some canvas
+functionality (such as the bezier paths used to draw Sprog gears) is broken.</p>
+
+<p>Until an official fix is released, the workaround is to rebuild the source
+package, which will be linked against the installed version of the GNOME canvas
+library.</p>
+
+<p>The easiest approach is to download <a
+href="libgnome2-canvas-perl_1.002-1_i386.deb">this package</a> and install it
+using this command:</p>
+
+<pre>  sudo dpkg -i libgnome2-canvas-perl_1.002-1_i386.deb</pre>
+
+<p>Alternatively, you can download the source package and recompile is using 
+this command (and then install it as above):</p>
+
+<pre>  sudo apt-get --compile source libgnome2-canvas-perl</pre>
+
+<h3>Acknowledgements</h3>
+
+<p>Many thanks to <a
+href="http://mail.gnome.org/archives/gtk-perl-list/2005-December/msg00012.html"
+>muppet</a> for helping sort out this problem.</p>
+
+<p>&nbsp;</p>
+
+</div>
+</div>
+
+<% USE SiteNav %><% SiteNav.links %>
+
+</body>
+</html>

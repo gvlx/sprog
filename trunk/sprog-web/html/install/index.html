@@ -29,14 +29,23 @@ generic installation instructions are listed towards the end of this page.</p>
 
 <h2><a name="debian"></a>Debian apt Repository</h2>
 
-<p>Debian '.deb' package files are available here for testing ('Sarge') and
-unstable distributions.  Add this line to your /etc/apt/sources.list:</p>
+<p>Debian '.deb' package files are available here.  They are known to work
+with the following distributions:</p>
+
+<ul>
+<li>Debian stable ('Sarge'), testing and unstable</li>
+<li>Ubuntu 5.10 (Breezy Badger) <a href="ubuntu.html">see note</a>, 5.04 (Hoary
+Hedghog) and 4.10 (Warty Warthog)</li>
+</ul>
+
+<p>The same package works for all distributions.  Add this line to your
+/etc/apt/sources.list:</p>
 
 <pre>  deb http://sprog.sourceforge.net/debian unstable contrib</pre>
 
 <p>Then after refreshing your package listings, install the package
 'libsprog-perl'.  This will resolve any dependencies and install prerequisite
-packages from your standard Debian sources.</p>
+packages from your standard sources.</p>
 
 <h2><a name="rpm"></a>Linux RPM Packages</h2>
 
