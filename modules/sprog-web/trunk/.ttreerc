@@ -1,0 +1,25 @@
+src = html
+dest = docroot
+
+ignore = \.cvsignore$
+ignore = \.#
+ignore = \.swp$
+ignore = (?:^|/)\.svn$
+
+copy = \.css$
+copy = \.jpe?g$
+copy = \.htaccess$
+copy = \.deb$
+copy = \.rpm$
+copy = \.spec$
+copy = \bRelease$
+
+start_tag = <%
+end_tag = %>
+
+perl5lib = ./lib
+plugin_base = SprogWeb::Template::Plugin
+
+lib = inc
+
+depend *=site_nav.inc,site_nav.yaml
