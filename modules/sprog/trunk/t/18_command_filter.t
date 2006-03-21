@@ -1,5 +1,5 @@
 use strict;
-use Sprog::TestHelper tests => 19;
+use Sprog::TestHelper tests => 18;
 
 use_ok('TestApp');
 use_ok('Sprog::Gear::CommandFilter');
@@ -32,16 +32,16 @@ $src->text($data);
 like($app->test_run_machine, qr/you must enter a filter command/i, 
   'got expected alert when no command entered');
 
-SKIP: {
-  open my $save_fd, '>&', STDERR;
-  open STDERR, '>', '/dev/null' or skip 'unable to redirect STDERR', 1;
-
-  $filter->command('bogus_non_existant_script.pl');
-  is($app->test_run_machine, '', 
-    "unfortunately exec errors after the fork aren't caught");
-
-  open STDERR, '>&', $save_fd or die "$!";
-}
+#SKIP: {
+#  open my $save_fd, '>&', STDERR;
+#  open STDERR, '>', '/dev/null' or skip 'unable to redirect STDERR', 1;
+#
+#  $filter->command('bogus_non_existant_script.pl');
+#  is($app->test_run_machine, '', 
+#    "unfortunately exec errors after the fork aren't caught");
+#
+#  open STDERR, '>&', $save_fd or die "$!";
+#}
 
 $filter->command(q(perl -e '$|=1; print uc while sysread STDIN, $_, 1'));
 $src->text($data);
