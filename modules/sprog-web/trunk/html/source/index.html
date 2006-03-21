@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Sprog Source Code</title>
+  <link rel="stylesheet" type="text/css" href="../style.css" />
+</head>
+<body>
+
+<div id="logo"><img src="../images/sprog-logo.png" alt="Sprog Logo" /></div>
+<div id="headline"><img src="../images/sprog-heading.png" alt="Sprog!" /></div>
+<div id="hline"></div>
+
+<div id="indent-content">
+<div id="content">
+
+<h1>Sprog Source Code</h1>
+
+<p>The Sprog source code is maintained in a Subversion repository hosted by
+SourceForge.  You can <a href="http://svn.sourceforge.net/sprog">browse the
+repository</a> via the web, but if you want to submit patches then you'll want
+to install the subversion client software and check out a working copy of the
+source.</p>
+
+<h2>Checking Out the Source</h2>
+
+<p>To check out the latest Sprog code from the trunk, use this command:</p>
+
+<pre>svn co https://svn.sourceforge.net/svnroot/sprog/modules/sprog/trunk sprog</pre>
+
+<p>To check out a particular tagged version, use a command like this:</p>
+
+<pre>svn co https://svn.sourceforge.net/svnroot/sprog/modules/sprog/tags/TAGNAME sprog-TAGNAME</pre>
+
+<p>A typical value for TAGNAME would be 'RELEASE_0_14'.  You can view all
+release tags <a
+href="https://svn.sourceforge.net/svnroot/sprog/modules/sprog/tags/">here</a>.</p>
+
+<p>By default, your working copy will be an anonymous checkout, but if you have
+commit rights, you can use the <code>--username</code> option to specify your
+SourceForge login.</p>
+
+<p style="height: 24em;">&nbsp;</p>
+
+</div>
+</div>
+
+<% USE SiteNav %><% SiteNav.links %>
+
+</body>
+</html>
