@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 15;
 
 my $app = make_app(               # Imported from ClassFactory.pm

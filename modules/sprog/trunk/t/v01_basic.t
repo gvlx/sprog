@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 2, display => 1;
 
 BEGIN {

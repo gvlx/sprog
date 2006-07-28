@@ -1,4 +1,3 @@
-use strict;
 use File::Spec;
 
 my $test_command;

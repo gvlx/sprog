@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 54, display => 1;
 
 use Glib qw(TRUE FALSE);

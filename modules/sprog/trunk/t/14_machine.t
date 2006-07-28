@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 26;
 
 my $test_file = File::Spec->catfile('t', 'ffff.sprog'); # Does not exist yet

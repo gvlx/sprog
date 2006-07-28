@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 28;
 
 use_ok('TextSink');

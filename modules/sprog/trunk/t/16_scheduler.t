@@ -2,7 +2,6 @@
 # It never actually runs the scheduler though - plenty of other test scripts
 # do that.
 
-use strict;
 use Sprog::TestHelper tests => 47;
 
 use_ok('TestApp');

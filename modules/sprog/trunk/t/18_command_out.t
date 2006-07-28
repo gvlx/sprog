@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 16;
 
 use_ok('TestApp');

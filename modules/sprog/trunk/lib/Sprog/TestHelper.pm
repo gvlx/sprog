@@ -1,5 +1,8 @@
 package Sprog::TestHelper;
 
+use strict;
+use warnings;
+
 use Test::More;
 use Carp;
 
@@ -46,6 +49,9 @@ sub import {
     plan tests => $opt{tests};
   }
 
+  $^W = 1;
+  @_  = ();
+  goto &strict::import;
 }
 
 
@@ -67,9 +73,6 @@ sub local_apache {
 package main;
 
 use Test::More;  # imports subs etc into caller
-
-use strict;      # this is file-scoped so it doesn't affect the caller :-(
-$^W = 1;         # brutal but effective
 
 use Sprog::ClassFactory;  # everyone needs this
 

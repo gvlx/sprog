@@ -1,4 +1,3 @@
-use strict;
 use  Sprog::TestHelper tests => -5;
 
 use_ok('Sprog::Accessor');

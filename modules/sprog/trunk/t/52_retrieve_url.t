@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 15, requires => [ 'LWP', '{local_apache}' ];
 
 use_ok('TestApp');

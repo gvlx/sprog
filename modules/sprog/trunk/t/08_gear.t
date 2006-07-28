@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 20;
 
 use_ok('DummyGear');

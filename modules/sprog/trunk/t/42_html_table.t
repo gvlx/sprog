@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 32, requires => 'XML::LibXML';
 
 use_ok('TestApp');

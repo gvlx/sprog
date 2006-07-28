@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 22;
 
 my $data_file = File::Spec->catfile('t', 'files.txt');

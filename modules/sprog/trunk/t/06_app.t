@@ -1,6 +1,5 @@
 # Test some obscurish corner cases not otherwise tested
 
-use strict;
 use Sprog::TestHelper tests => 4;
 
 use_ok('Sprog');

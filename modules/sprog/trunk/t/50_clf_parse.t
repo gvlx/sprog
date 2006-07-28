@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 17, requires => 'Apache::LogRegex';
 
 use_ok('TestApp');

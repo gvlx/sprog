@@ -1,4 +1,3 @@
-use strict;
 use Sprog::TestHelper tests => 24;
 
 my $data = <<'EOF';
