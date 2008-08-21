@@ -6,7 +6,7 @@ and output I<connectors> which are used to hook the gears together.
 You can only connect two gears together if the output connector of the first
 gear matches the input connector of the second.
 
-There are currently two types of connector:
+There are currently three types of connector:
 
 =head2 Pipe Connectors
 
@@ -17,8 +17,14 @@ data streams such as image files.
 =head2 Record Connectors
 
 The record connector is used to pass structured data as a sequences of records.
-Each record is a Perl hash.
+Each record is a Perl hash (i.e.: fields are name => value pairs).
 
 Generally if a gear has a record output connector, the help page for the gear
 will list what keys you can expect to find in each record hash.
+
+=head2 List Connectors
+
+The list connector is similar to a record connector but each record is a Perl
+array rather than a hash (i.e.: a record is a list of field values, the record
+does not include field names).
 
