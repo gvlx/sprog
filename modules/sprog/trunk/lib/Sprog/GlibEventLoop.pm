@@ -2,6 +2,7 @@ package Sprog::GlibEventLoop;
 
 
 use Glib ();
+use IO::Handle ();
 
 my $loop;
 
@@ -28,6 +29,7 @@ sub add_idle_handler {
 sub add_io_reader {
   my($class, $fh, $sub) = @_;
 
+  $fh->blocking(0);
   return Glib::IO->add_watch(fileno($fh), ['in', 'err', 'hup'], $sub);
 }
 
@@ -35,6 +37,7 @@ sub add_io_reader {
 sub add_io_writer {
   my($class, $fh, $sub) = @_;
 
+  $fh->blocking(0);
   return Glib::IO->add_watch(fileno($fh), ['out', 'err', 'hup'], $sub);
 }
 

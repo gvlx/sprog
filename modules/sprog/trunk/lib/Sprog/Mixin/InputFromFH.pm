@@ -25,11 +25,11 @@ sub _can_read {
   delete $self->{in_tag};
   my $buf;
   my $fh = $self->fh_in;
-  if(sysread($fh, $buf, BUF_SIZE)) {
+  while(sysread($fh, $buf, BUF_SIZE)) {
     $DBG && $DBG->(ref($self) . ' read ' . length($buf) . ' bytes');
     $self->msg_out(data => $buf);
   }
-  else {
+  if(eof($fh)) {
     $DBG && $DBG->(ref($self) . ' EOF');
     close($fh) if $fh;
     $self->fh_in(undef);
